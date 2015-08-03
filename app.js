@@ -1,8 +1,9 @@
 var http = require('http');
+var analyze = require('./app/analyze');
+var baseManager = require('./app/base-manager');
+
 var defaultPort = 9966;
 var port = defaultPort;
-var analyze = require('./analyze');
-var baseManager = require('./base-manager');
 
 baseManager.readBase();
 baseManager.saveBase();
@@ -20,14 +21,22 @@ http.createServer(function (req, res) {
             if (req.method == "POST") {
                 req.on('data', function (chunk) {
                     var data = JSON.parse(chunk);
-                    console.log(data.moves);
-                    analyze.analyzeLater(data.moves, baseManager.getBase());
+                    if(data.moves) {
+                        console.log(data.moves);
+                        analyze.analyzeLater(data.moves, baseManager.getBase());
+                    } else {
+                        console.error("Incorrect data received:", data);
+                    }
                 });
                 res.writeHead(200, {'Access-Control-Allow-Origin': '*'});
                 res.end("");
             }
             break;
+        case "/favicon.ico":
+            res.end();
+            break;
         case "/api/getbase":
+        case "/":
         default:
             res.writeHead(200, {
                 'Content-Type': 'text/plain',
@@ -36,4 +45,6 @@ http.createServer(function (req, res) {
             res.end(baseManager.getBaseAsString());
     }
 }).listen(port);
+
+baseManager.optimize();
 

@@ -1,4 +1,5 @@
 var fs = require('fs');
+var baseSerializer = require('./base-serializer');
 
 module.exports = (function() {
     var base;
@@ -13,7 +14,7 @@ module.exports = (function() {
         return null;
     };
     var saveBase = function () {
-        fs.writeFile('base-new.json', JSON.stringify(base, null, 1));
+        fs.writeFile('base-new.json', baseSerializer.stringify(base, true));
     };
     return {
         findSubPositionObject: findSubPositionObject,
@@ -45,12 +46,14 @@ module.exports = (function() {
         },
         readBase: function () {
             var baseFileContent = fs.readFileSync('base.json');
-            // JSON could not be totally good, so base = JSON.parse(baseFileContent) does not work
-            base = (new Function("var base = " + baseFileContent + "; return base;"))();
+            base = baseSerializer.parse(baseFileContent);
         },
         saveBase: saveBase,
         getBaseAsString: function() {
-            return JSON.stringify(base);
+            return baseSerializer.stringify(base);
+        },
+        optimize: function() {
+            //TODO: implement finding weak nodes to analyze deeper
         }
 
     }

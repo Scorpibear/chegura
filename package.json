@@ -1,0 +1,12 @@
+{
+  "name": "chegura",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node app.js",
+    "test": "karma start karma.conf.js"
+  },
+  "dependencies": {
+    "uci": "^0.3.3"
+  }
+}
