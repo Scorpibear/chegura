@@ -4,9 +4,26 @@
   "private": true,
   "scripts": {
     "start": "node app.js",
-    "test": "karma start karma.conf.js"
+    "test": "jasmine-node spec"
   },
   "dependencies": {
     "uci": "^0.3.3"
-  }
+  },
+  "description": "chegura is a chess-guru - server providing best chess moves",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Scorpibear/chegura.git"
+  },
+  "keywords": [
+    "chess",
+    "server"
+  ],
+  "author": "Mikhail Subach",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Scorpibear/chegura/issues"
+  },
+  "homepage": "https://github.com/Scorpibear/chegura#readme"
 }

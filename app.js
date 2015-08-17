@@ -1,5 +1,5 @@
 var http = require('http');
-var analyze = require('./app/analyze');
+var analyzer = require('./app/analyzer');
 var baseManager = require('./app/base-manager');
 
 var defaultPort = 9966;
@@ -7,6 +7,8 @@ var port = defaultPort;
 
 baseManager.readBase();
 baseManager.saveBase();
+analyzer.setBaseManager(baseManager)
+analyzer.readQueue();
 
 http.createServer(function (req, res) {
     switch (req.url) {
@@ -22,8 +24,7 @@ http.createServer(function (req, res) {
                 req.on('data', function (chunk) {
                     var data = JSON.parse(chunk);
                     if(data.moves) {
-                        console.log(data.moves);
-                        analyze.analyzeLater(data.moves, baseManager.getBase());
+                        analyzer.analyzeLater(data.moves, baseManager.getBase());
                     } else {
                         console.error("Incorrect data received:", data);
                     }
@@ -46,5 +47,6 @@ http.createServer(function (req, res) {
     }
 }).listen(port);
 
-baseManager.optimize();
+baseManager.optimize(analyzer);
 
+console.log("Chegura is ready to process your requests on " + port + " port")

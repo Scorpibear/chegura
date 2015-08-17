@@ -58,10 +58,7 @@ module.exports = (function() {
             if(readable) {
                 return toReadableString(baseObject)
             } else {
-                var str = toShortestString(baseObject);
-                console.log("Bytes in shortest base vs JSON base:", str.length, "/", JSON.stringify(baseObject).length);
-
-                return str;
+                return toShortestString(baseObject);
             }
         },
         parse: function(str) {
