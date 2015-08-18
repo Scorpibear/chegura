@@ -9,7 +9,7 @@ var saveBase = function () {
     fs.writeFile('base-new.json', baseSerializer.stringify(base, true));
 }
 
-var createChildPositionObject = function (parentObject, childMove, evaluationObject) {
+var createChildPositionObject = function (parentObject, childMove, isBest) {
     var n, c;
     if (parentObject.c == 'w') {
         n = parentObject.n
@@ -18,8 +18,14 @@ var createChildPositionObject = function (parentObject, childMove, evaluationObj
         n = parentObject.n + 1
         c = 'w'
     }
-    var newChildObject = { m: childMove,  n: n, c: c, e: evaluationObject}
-    parentObject.s.push(newChildObject)
+    var newChildObject = {m: childMove, n: n, c: c}
+	if(!parentObject.s)
+	    parentObject.s = []
+    if(isBest) {
+	    parentObject.s.unshift(newChildObject)
+	} else {
+	    parentObject.s.push(newChildObject)
+	}    
     return newChildObject;
 }
 
@@ -28,23 +34,20 @@ module.exports.addToBase = function (moves, bestAnswer, scoreValue, depth) {
     var positionObject = base;
     var parent;
     for (var i = 0; i < moves.length; i++) {
-        parent = positionObject;
-        positionObject = baseIterator.findSubPositionObject(parent, moves[i]);
-        if (positionObject == null) {
-            if (!parent.s)
-                parent.s = [];
-            positionObject = createChildPositionObject(parent, moves[i], evaluationObject);
+        parent = positionObject
+        positionObject = baseIterator.findSubPositionObject(parent, moves[i])
+        if (!positionObject) {
+            positionObject = createChildPositionObject(parent, moves[i])
         }
     }
+	positionObject.e = evaluationObject
     if (positionObject != null) {
-        if (!positionObject.s)
-            positionObject.s = [];
-        var subPositionObject = baseIterator.findSubPositionObject(positionObject, bestAnswer);
+	    parent = positionObject
+        var subPositionObject = baseIterator.findSubPositionObject(parent, bestAnswer);
         if (!subPositionObject) {
-            createChildPositionObject(positionObject, bestAnswer, evaluationObject);
-        } else {
-            subPositionObject.e = evaluationObject;
+            subPositionObject = createChildPositionObject(parent, bestAnswer, true);
         }
+		subPositionObject.e = evaluationObject
         saveBase();
     }
 }

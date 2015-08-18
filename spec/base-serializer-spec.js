@@ -12,5 +12,8 @@ describe("baseSerializer", function () {
         it("simple stringify", function() {
             expect(serializer.stringify({m: '', n: 0, c: 'b', t: 'wb', s: []}, true)).toEqual("{m: '', n: 0, c: 'b', t: 'wb', s: []}");
         })
+		it("saves evaluation for start position", function() {
+		    expect(serializer.stringify({m: '', n: 0, c: 'b', t: 'wb', e: {v: 0.12, d: 34}, s: []}, true)).toEqual("{m: '', n: 0, c: 'b', t: 'wb', e: {v: 0.12, d: 34}, s: []}")
+		})
     })
-});
+})

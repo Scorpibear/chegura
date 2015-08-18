@@ -5,22 +5,22 @@ var baseIterator = require('./base-iterator')
 var defaultChessEnginePath = "stockfish-6-64.exe"
 var pathToChessEngine = (process.argv.length > 2) ? process.argv[2] : defaultChessEnginePath
 var engine = new Engine(pathToChessEngine)
+var fs = require('fs')
 
 var isAnalysisInProgress = false;
 var REQUIRED_DEPTH = 30;
 var toAnalyzeList = [];
 var ANALYZE_TIMEOUT = 100;
 
-console.log("ANALYZER INITIALIZED")
-
 var analyze = function () {
     if (isAnalysisInProgress || toAnalyzeList.length == 0)
         return;
-    isAnalysisInProgress = true;
-    var moves = toAnalyzeList.shift();
-    console.log("start to analyze moves: ", moves);
-    var resultBestmove;
-    var chess = new Chess();
+    isAnalysisInProgress = true
+    var moves = toAnalyzeList.shift()
+    console.log("start to analyze moves: ", moves)
+    var resultBestmove
+    var chess = new Chess()
+	var depth = REQUIRED_DEPTH
     moves.forEach(function (move) {
         chess.move(move);
     });
@@ -34,16 +34,17 @@ var analyze = function () {
     }).then(function () {
         return engine.positionCommand(fen);
     }).then(function () {
-        return engine.goDepthCommand(REQUIRED_DEPTH, function infoHandler(info) {
-            // to display score for each depth
-            if(info.search('nodes') != -1) console.log(info) 
+        return engine.goDepthCommand(depth, function infoHandler(info) {
         });
     }).then(function(data) {
         resultBestmove = chess.move(data.bestmove).san
         var scoreValue = data.score / 100.0
-        console.log("best move for '", moves.join('|'), "' is ", resultBestmove, " with score ", scoreValue)
+        console.log("best move for ", moves, " is ", resultBestmove, " with score/depth ", scoreValue, "/", depth)
+		fs.appendFile('evaluations.log', moves.join(' ') + ' ' + resultBestmove + ' ' + scoreValue + '/' + depth, function (err) {
+			if (err) console.error("could not append to 'evaluations.log' :", err)
+		})
         if(!baseManager) throw Error('base manager is not defined. Call analyzer.setBaseManager before')
-        baseManager.addToBase(moves, resultBestmove, scoreValue, REQUIRED_DEPTH)
+        baseManager.addToBase(moves, resultBestmove, scoreValue, depth)
         isAnalysisInProgress = false
         analyzeLater()
     }).fail(function (error) {
@@ -63,24 +64,18 @@ var analyzeLater = function (moves, base) {
 }
 
 var splitSequentially = function (base, moves) {
-    console.log('splitSequentially started')
-    console.log('moves: ', moves)
     var list = [];
     var positionObject = base;
     moves.forEach(function (move, index) {
-        console.log('positionObject: ', positionObject)
-        console.log('move: ', move)
         var subObject = baseIterator.findSubPositionObject(positionObject, move);
-        console.log('subObject: ', subObject)
         if (subObject == null) {
-            var movesToAdd = moves.slice(0, index)
-            console.log('movesToAdd: ', movesToAdd)
+            var movesToAdd = moves.slice(0, index+1)
             list.push(movesToAdd);
         }
         positionObject = subObject;
     });
-    console.log('movesToAdd (finally): ', moves)
-    list.push(moves);
+    if(list.length == 0)
+		list.push(moves);
     return list;
 }
 
@@ -90,10 +85,13 @@ module.exports.getQueue = function () {
     return toAnalyzeList;
 }
 
-module.exports.setBaseManager = function (baseManager) {
-    this.baseManager = baseManager
+module.exports.setBaseManager = function (newBaseManager) {
+    baseManager = newBaseManager
 }
 
 module.exports.readQueue = function () {
+}
 
+module.exports.resetQueue = function () {
+	toAnalyzeList = [];
 }
