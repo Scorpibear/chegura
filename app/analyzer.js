@@ -18,7 +18,6 @@ var analyze = function () {
     isAnalysisInProgress = true
     var moves = toAnalyzeList.shift()
     console.log("start to analyze moves: ", moves)
-    var resultBestmove
     var chess = new Chess()
 	var depth = REQUIRED_DEPTH
     moves.forEach(function (move) {
@@ -37,15 +36,21 @@ var analyze = function () {
         return engine.goDepthCommand(depth, function infoHandler(info) {
         });
     }).then(function(data) {
-        resultBestmove = chess.move(data.bestmove).san
-        var scoreValue = data.score / 100.0
+		var move = chess.move(data.bestmove)
+		// move to evaluation.register
+		// evaluation.register(moves, move, data.score, depth)
+        var resultBestmove = move.san
+		var scoreValue = data.score / 100.0
+		if (move.color == 'b')
+		    scoreValue = -scoreValue
         console.log("best move for ", moves, " is ", resultBestmove, " with score/depth ", scoreValue, "/", depth)
 		fs.appendFile('evaluations.log', moves.join(' ') + ' ' + resultBestmove + ' ' + scoreValue + '/' + depth, function (err) {
 			if (err) console.error("could not append to 'evaluations.log' :", err)
 		})
         if(!baseManager) throw Error('base manager is not defined. Call analyzer.setBaseManager before')
         baseManager.addToBase(moves, resultBestmove, scoreValue, depth)
-        isAnalysisInProgress = false
+        // end
+		isAnalysisInProgress = false
         analyzeLater()
     }).fail(function (error) {
         console.log(error);
