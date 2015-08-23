@@ -6,11 +6,11 @@ var optimizeSync = function (base, analyzer) {
     var movesList = baseIterator.getMovesToInsufficientEvaluationDepth(base, MIN_DEPTH_REQUIRED);
     console.log("Moves identified for deeper analysis: ", movesList);
     movesList.forEach(function(moves) {
-        analyzer.analyzeLater(moves, base)
+        analyzer.analyzeLater(moves, base, 2)
     })
     movesList = baseIterator.getMovesWithSameFenButDifferentEvaluation(base)
     movesList.forEach(function(moves) {
-        analyzer.analyzeLater(moves, base)
+        analyzer.analyzeLater(moves, base, 2)
     })
 }
 

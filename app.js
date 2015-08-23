@@ -8,7 +8,6 @@ var port = defaultPort;
 baseManager.readBase();
 baseManager.saveBase();
 analyzer.setBaseManager(baseManager)
-analyzer.readQueue();
 
 http.createServer(function (req, res) {
     switch (req.url) {
@@ -24,7 +23,7 @@ http.createServer(function (req, res) {
                 req.on('data', function (chunk) {
                     var data = JSON.parse(chunk);
                     if(data.moves) {
-                        analyzer.analyzeLater(data.moves, baseManager.getBase());
+                        analyzer.analyzeLater(data.moves, baseManager.getBase(), 1);
                     } else {
                         console.error("Incorrect data received:", data);
                     }

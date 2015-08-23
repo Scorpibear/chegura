@@ -2,21 +2,27 @@ var Chess = require('./chess')
 var Engine = require('uci')
 var baseManager = null
 var baseIterator = require('./base-iterator')
+var evaluation = require('./evaluation')
 var defaultChessEnginePath = "stockfish-6-64.exe"
 var pathToChessEngine = (process.argv.length > 2) ? process.argv[2] : defaultChessEnginePath
 var engine = new Engine(pathToChessEngine)
 var fs = require('fs')
+var analysisQueue = require('./analysis-queue')
 
 var isAnalysisInProgress = false;
 var REQUIRED_DEPTH = 30;
-var toAnalyzeList = [];
 var ANALYZE_TIMEOUT = 100;
 
 var analyze = function () {
-    if (isAnalysisInProgress || toAnalyzeList.length == 0)
+    if (isAnalysisInProgress)
         return;
     isAnalysisInProgress = true
-    var moves = toAnalyzeList.shift()
+    var moves = analysisQueue.getFirst()
+    if (moves == null) {
+        isAnalysisInProgress = false;
+        console.error('Queue is empty, nothing to analyze!');
+        return
+    }
     console.log("start to analyze moves: ", moves)
     var chess = new Chess()
 	var depth = REQUIRED_DEPTH
@@ -37,19 +43,7 @@ var analyze = function () {
         });
     }).then(function(data) {
 		var move = chess.move(data.bestmove)
-		// move to evaluation.register
-		// evaluation.register(moves, move, data.score, depth)
-        var resultBestmove = move.san
-		var scoreValue = data.score / 100.0
-		if (move.color == 'b')
-		    scoreValue = -scoreValue
-        console.log("best move for ", moves, " is ", resultBestmove, " with score/depth ", scoreValue, "/", depth)
-		fs.appendFile('evaluations.log', moves.join(' ') + ' ' + resultBestmove + ' ' + scoreValue + '/' + depth, function (err) {
-			if (err) console.error("could not append to 'evaluations.log' :", err)
-		})
-        if(!baseManager) throw Error('base manager is not defined. Call analyzer.setBaseManager before')
-        baseManager.addToBase(moves, resultBestmove, scoreValue, depth)
-        // end
+		evaluation.register(moves, move, data.score, depth)
 		isAnalysisInProgress = false
         analyzeLater()
     }).fail(function (error) {
@@ -58,11 +52,12 @@ var analyze = function () {
     }).done();
 }
 
-var analyzeLater = function (moves, base) {
+var analyzeLater = function (moves, base, priority) {
     if (moves) {
+        if(!base) throw Error('analyzeLater is called with moves without base');
         var movesList = splitSequentially(base, moves);
         movesList.forEach(function (moves) {
-            toAnalyzeList.push(moves);
+            analysisQueue.push(moves, priority)
         })
     }
     setTimeout(analyze, 100);
@@ -87,16 +82,13 @@ var splitSequentially = function (base, moves) {
 module.exports.analyzeLater = analyzeLater
 
 module.exports.getQueue = function () {
-    return toAnalyzeList;
+    return analysisQueue.getQueue()
 }
 
 module.exports.setBaseManager = function (newBaseManager) {
     baseManager = newBaseManager
 }
 
-module.exports.readQueue = function () {
-}
-
 module.exports.resetQueue = function () {
-	toAnalyzeList = [];
+    analysisQueue.empty();
 }
