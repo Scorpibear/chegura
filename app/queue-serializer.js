@@ -1,19 +1,15 @@
-var fs = require('fs')
-
-var filename = 'analysis-queue.json'
-
-module.exports.save = function(queue) {
-    fs.writeFile(filename, JSON.stringify({q: queue}))
+module.exports.stringify = function(queue) {
+    return JSON.stringify({q: [queue[0],queue[1],[],[]]})
 }
 
-module.exports.load = function() {
+module.exports.parse = function(str) {
     var emptyQueue = [[],[],[],[]]
     var loadedQueue = emptyQueue;
     try {
-        var fileContent = fs.readFileSync(filename)
-        var jsonQueue = JSON.parse(fileContent)
-        if(jsonQueue.q && jsonQueue.q.length && jsonQueue.q.length == 4) {
-            loadedQueue = jsonQueue.q
+        var jsonQueue = JSON.parse(str)
+        if(jsonQueue.q && jsonQueue.q.length && jsonQueue.q.length > 1) {
+            loadedQueue[0] = jsonQueue.q[0]
+            loadedQueue[1] = jsonQueue.q[1]
         }
     } catch (e) {
         loadedQueue = emptyQueue;

@@ -3,9 +3,29 @@
 // P2 - optimizations of not analyzed deep enough
 // P3 - main line clarification
 
-var priorities = 4;
-
+var fs = require('fs')
 var queueSerializer = require('./queue-serializer')
+var filename = 'analysis-queue.json'
+
+var save = function(queue) {
+    try {
+        fs.writeFile(filename, queueSerializer.stringify(queue))
+    } catch (err) {
+        console.error("Could not save analysis queue: " + err)
+    }
+}
+
+var load = function() {
+    try {
+        var fileContent = fs.readFileSync(filename)
+        return queueSerializer.parse(fileContent)
+    } catch (err) {
+        console.error("Could not load analysis queue: " + err)
+        return emptyQueue;
+    }
+}
+
+var priorities = 4;
 
 // attach the .equals method to Array's prototype to call it on any array
 Array.prototype.equals = function (array) {
@@ -32,7 +52,7 @@ Array.prototype.equals = function (array) {
     return true;
 }
 
-var queue = queueSerializer.load()
+var queue = load()
 
 module.exports.getFirst = function () {
     var item = null;
@@ -40,7 +60,7 @@ module.exports.getFirst = function () {
     while(!item && priority < priorities) {
         item = queue[priority++].shift();
     }
-    if(!item) queueSerializer.save(queue)
+    if(!item) save(queue)
     return item;
 }
 
@@ -56,14 +76,14 @@ module.exports.push = function(item, priority) {
     }
     queue[priority].push(item)
     console.log(item + ' is added to p' + priority + ' queue')
-    queueSerializer.save(queue)
+    save(queue)
 }
 
 module.exports.empty = function() {
     for(var i=0; i<priorities; i++) {
         queue[i] = []
     }
-    queueSerializer.save(queue)
+    save(queue)
 }
 
 module.exports.getQueue = function() {
