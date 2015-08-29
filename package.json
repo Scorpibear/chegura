@@ -3,14 +3,16 @@
   "version": "0.1.0",
   "scripts": {
     "start": "node app.js",
-    "test": "jasmine-node spec"
+    "test": "jasmine"
   },
   "dependencies": {
     "uci": "^0.3.3"
   },
   "description": "chegura is a chess-guru - server providing best chess moves",
   "main": "app.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "jasmine": "^2.3.2"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Scorpibear/chegura.git"

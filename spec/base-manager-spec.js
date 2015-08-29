@@ -31,5 +31,11 @@
 			baseManager.addToBase(['e4'], 'e6', 0.12, 34)
 		    expect(base.s[0].m).toEqual('d4')
 		})
+		it('promote answer to the top if it becomes the best', function() {
+			base.s = [{m: 'e4'},{m:'d4'}]
+			baseManager.addToBase([],'d4',0.1,40)
+			expect(base.s.length).toEqual(2)
+			expect(base.s[0].m).toEqual('d4')
+		})
     })
 })

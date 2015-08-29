@@ -5,7 +5,7 @@
             analyzer.resetQueue()
             var baseManager = { addToBase: function () { } }
             analyzer.setBaseManager(baseManager)
-            analyzer.analyzeLater(['e4'], { m: '', s: [{ m: 'd4' }]})
+            analyzer.analyzeLater(['e4'], { m: '', s: [{ m: 'd4' }]}, 1)
             var movesToAnalyze = analyzer.getQueue()
             done()
 			expect(movesToAnalyze).toEqual([['e4']])
@@ -14,7 +14,7 @@
             analyzer.resetQueue()
             var baseManager = { addToBase: function () { } }
             analyzer.setBaseManager(baseManager)
-            analyzer.analyzeLater(['d4', 'e6'], { m: '', s: [{ m: 'd4' }] })
+            analyzer.analyzeLater(['d4', 'e6'], { m: '', s: [{ m: 'd4' }] }, 1)
             var movesToAnalyze = analyzer.getQueue()
 			expect(movesToAnalyze).toEqual([['d4', 'e6']])
 			done()
@@ -23,7 +23,7 @@
 			analyzer.resetQueue()
             var baseManager = { addToBase: function () { } }
             analyzer.setBaseManager(baseManager)
-            analyzer.analyzeLater([], { m: '', s: [{ m: 'd4' }] })
+            analyzer.analyzeLater([], { m: '', s: [{ m: 'd4' }] }, 1)
             var movesToAnalyze = analyzer.getQueue()
             done()
 			expect(movesToAnalyze).toEqual([[]])
@@ -32,7 +32,7 @@
 			analyzer.resetQueue()
             var baseManager = { addToBase: function () { } }
             analyzer.setBaseManager(baseManager)
-            analyzer.analyzeLater(['d4'], { m: '', s: [{ m: 'd4' }] })
+            analyzer.analyzeLater(['d4'], { m: '', s: [{ m: 'd4' }] }, 1)
             var movesToAnalyze = analyzer.getQueue()
             done()
 			expect(movesToAnalyze).toEqual([['d4']])
@@ -41,7 +41,7 @@
 			analyzer.resetQueue()
             var baseManager = { addToBase: function () { done() } }
             analyzer.setBaseManager(baseManager)
-            analyzer.analyzeLater(['d4', 'e5'], { m: '', s: [{ m: 'd4', s: [{m: 'e5'}] }] })
+            analyzer.analyzeLater(['d4', 'e5'], { m: '', s: [{ m: 'd4', s: [{m: 'e5'}] }] }, 1)
             var movesToAnalyze = analyzer.getQueue()
 			expect(movesToAnalyze).toEqual([['d4', 'e5']])
 			done()

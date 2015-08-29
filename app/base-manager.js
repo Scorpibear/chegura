@@ -43,9 +43,21 @@ module.exports.addToBase = function (moves, bestAnswer, scoreValue, depth) {
 	positionObject.e = evaluationObject
     if (positionObject != null) {
 	    parent = positionObject
-        var subPositionObject = baseIterator.findSubPositionObject(parent, bestAnswer);
+        var index
+        var subPositionObject = (function() {
+            if (positionObject && positionObject.s) {
+                for (index = 0, l = positionObject.s.length; index < l; index++) {
+                    if (positionObject.s[index].m == bestAnswer) {
+                        return positionObject.s[index];
+                    }
+                }
+            }
+            return null;}())
         if (!subPositionObject) {
             subPositionObject = createChildPositionObject(parent, bestAnswer, true);
+        } else {
+            positionObject.s.splice(index, 1)
+            positionObject.s.unshift(subPositionObject)
         }
 		subPositionObject.e = evaluationObject
         saveBase();
