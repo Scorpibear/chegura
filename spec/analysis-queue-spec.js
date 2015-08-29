@@ -1,14 +1,11 @@
 describe('analysisQueue', function() {
     describe('push', function() {
-        var queueSerializer = null
-        beforeEach(function (){
-            queueSerializer = require('../app/queue-serializer')
-            spyOn(queueSerializer,'stringify')
-        })
-        it('calls queueSerializer.stringify', function() {
+        it('calls synchronizer.saveQueue', function() {
             var queue = require('../app/analysis-queue')
+            var synchronizer = require('../app/synchronizer')
+            spyOn(synchronizer,'saveQueue')
             queue.push([],0)
-            expect(queueSerializer.stringify).toHaveBeenCalled()
+            expect(synchronizer.saveQueue).toHaveBeenCalled()
         })
     })
 })
