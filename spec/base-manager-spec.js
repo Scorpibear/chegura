@@ -47,5 +47,13 @@
 			baseManager.addToBase([], 'd4', 0.1, 39)
 			expect(base.s[0].e).toEqual({v: 0.11, d: 40})
 		})
+		it('save to base.json', function() {
+			fs = require('fs')
+			spyOn(fs, 'writeFile')
+			delete base.e
+			delete base.s
+			baseManager.saveBase()
+			expect(fs.writeFile).toHaveBeenCalledWith('base.json', "{m: '', n: 0, c: 'b', t: 'wb', s: []}")
+		})
     })
 })

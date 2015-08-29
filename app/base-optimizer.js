@@ -2,9 +2,8 @@ var baseIterator = require('./base-iterator')
 
 var MIN_DEPTH_REQUIRED = 30;
 var optimizeSync = function (base, analyzer) {
-        
     var movesList = baseIterator.getMovesToInsufficientEvaluationDepth(base, MIN_DEPTH_REQUIRED);
-    console.log("Moves identified for deeper analysis: ", movesList);
+    console.log("Moves identified for deeper analysis: ", movesList.length);
     movesList.forEach(function(moves) {
         analyzer.analyzeLater(moves, base, 2)
     })

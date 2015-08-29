@@ -4,9 +4,10 @@ var baseOptimizer = require('./base-optimizer')
 var baseIterator = require('./base-iterator')
 
 var base = { m: '', n: 0, c: 'b', t: 'wb' }
+var filename = 'base.json'
 
 var saveBase = function () {
-    fs.writeFile('base-new.json', baseSerializer.stringify(base, true));
+    fs.writeFile(filename, baseSerializer.stringify(base, true));
 }
 
 var createChildPositionObject = function (parentObject, childMove, isBest) {
@@ -75,7 +76,7 @@ module.exports.getBase = function() {
 }
 
 module.exports.readBase = function () {
-    var baseFileContent = fs.readFileSync('base.json');
+    var baseFileContent = fs.readFileSync(filename);
     base = baseSerializer.parse(baseFileContent);
 }
 
