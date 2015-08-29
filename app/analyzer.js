@@ -23,7 +23,7 @@ var analyze = function () {
         console.error('Queue is empty, nothing to analyze!');
         return
     }
-    console.log("start to analyze moves: ", moves)
+    console.log("start to analyze moves: " + moves)
     var chess = new Chess()
 	var depth = REQUIRED_DEPTH
     moves.forEach(function (move) {
