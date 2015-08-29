@@ -29,6 +29,12 @@ var createChildPositionObject = function (parentObject, childMove, isBest) {
     return newChildObject;
 }
 
+var improveEvaluation = function(positionObject, evaluationObject) {
+    if(!positionObject.e || (evaluationObject.d > positionObject.e.d)) {
+        positionObject.e = evaluationObject
+    }
+}
+
 module.exports.addToBase = function (moves, bestAnswer, scoreValue, depth) {
     var evaluationObject = { v: scoreValue, d: depth };
     var positionObject = base;
@@ -40,7 +46,7 @@ module.exports.addToBase = function (moves, bestAnswer, scoreValue, depth) {
             positionObject = createChildPositionObject(parent, moves[i])
         }
     }
-	positionObject.e = evaluationObject
+    improveEvaluation(positionObject, evaluationObject)
     if (positionObject != null) {
 	    parent = positionObject
         var index
@@ -59,7 +65,7 @@ module.exports.addToBase = function (moves, bestAnswer, scoreValue, depth) {
             positionObject.s.splice(index, 1)
             positionObject.s.unshift(subPositionObject)
         }
-		subPositionObject.e = evaluationObject
+        improveEvaluation(subPositionObject, evaluationObject)
         saveBase();
     }
 }

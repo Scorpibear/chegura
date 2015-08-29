@@ -37,5 +37,15 @@
 			expect(base.s.length).toEqual(2)
 			expect(base.s[0].m).toEqual('d4')
 		})
+		it('does not update evaluation if it is lower than existent', function() {
+			base.e = {v: 0.12, d: 40}
+			baseManager.addToBase([], 'd4', 0.1, 39)
+			expect(base.e).toEqual({v: 0.12, d: 40})
+		})
+		it('does not update best answer evaluation if it is lower than existent', function() {
+			base.s = [{m: 'd4', e: {v: 0.11, d: 40}}]
+			baseManager.addToBase([], 'd4', 0.1, 39)
+			expect(base.s[0].e).toEqual({v: 0.11, d: 40})
+		})
     })
 })
