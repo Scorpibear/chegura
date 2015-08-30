@@ -45,7 +45,7 @@ module.exports.getFirst = function () {
     while(!item && priority < priorities) {
         item = queue[priority++].shift();
     }
-    if(!item) save()
+    if(item) save()
     return item;
 }
 

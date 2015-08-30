@@ -30,9 +30,16 @@ var analyze = function () {
         chess.move(move);
     });
     var fen = chess.fen();
+    var options = []
+    //var options = [{name:"Threads", value:4}, {name: "Hash", value: 4096}]
     engine.runProcess().then(function () {
         return engine.uciCommand();
     }).then(function () {
+        return engine.isReadyCommand();
+    }).then(function () {
+        options.forEach(function(option) {
+            engine.setOptionCommand(option.name, option.value);
+        })
         return engine.isReadyCommand();
     }).then(function () {
         return engine.uciNewGameCommand();
@@ -42,6 +49,7 @@ var analyze = function () {
         return engine.goDepthCommand(depth, function infoHandler(info) {
         });
     }).then(function(data) {
+        engine.quitCommand();
 		var move = chess.move(data.bestmove)
 		evaluation.register(moves, move, data.score, depth)
 		isAnalysisInProgress = false
