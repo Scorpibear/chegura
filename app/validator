@@ -1,0 +1,36 @@
+var Chess = require('../app/chess');
+var chess = new Chess();
+
+var validatePosition = function(preMoves, positionObject) {
+    // make a copy and modify then only it
+    preMoves = preMoves.slice(0);
+    chess.reset();
+    preMoves.forEach(function(move) {
+        chess.move(move);
+    });
+    var move = chess.move(positionObject.m);
+    if(!move) {
+        console.error("Not valid answer after '" + preMoves + "' identified: '" + positionObject.m +
+            "'! Please, investigate, fix the base and restart server")
+    } else {
+        if(positionObject.s && positionObject.s.length) {
+            preMoves.push(positionObject.m);
+            positionObject.s.forEach(function(positionObject) {
+                validatePosition(preMoves, positionObject)
+            })
+        }
+    }
+};
+
+var validatePositions = function(positionObject) {
+    var preMoves=[];
+    if(positionObject.s && positionObject.s.length) {
+        positionObject.s.forEach(function(positionObject) {
+            validatePosition(preMoves, positionObject)
+        })
+    }
+}
+
+module.exports.validate = function(base) {
+    validatePositions(base);
+};
