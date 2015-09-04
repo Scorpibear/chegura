@@ -36,6 +36,11 @@ describe("validator", function() {
             validator.validate(base);
             expect(console.error).toHaveBeenCalledWith("Not valid answer after 'e4' identified: 'Nf7'! Please, investigate, fix the base and restart server")
         });
+        it("identify duplicated moves", function() {
+            var base = {m:"", s:[{m:"d4"},{m:"d4"}]}
+            validator.validate(base);
+            expect(console.error).toHaveBeenCalledWith("Duplicated answer after '' identified: 'd4'! Please, investigate, fix the base and restart server")
+        })
     })
 });
 

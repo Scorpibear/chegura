@@ -12,7 +12,7 @@ describe('baseIterator', function () {
                 ]
             }, 30)).toEqual([['d4']])
         })
-        it("both answers are sended to evaluation", function () {
+        it("both answers are sent to evaluation", function () {
             expect(baseIterator.getMovesToInsufficientEvaluationDepth({
                 m: '', e: { v: 0.12, d: 30 }, s: [
                     { m: 'd4', e: { v: 0.1, d: 29 }, s: [] },
@@ -20,7 +20,7 @@ describe('baseIterator', function () {
                 ]
             }, 30)).toEqual([['d4'], ['e4']])
         })
-        it("sub item is send for revaluation", function () {
+        it("sub item is sent for revaluation", function () {
             expect(baseIterator.getMovesToInsufficientEvaluationDepth({
                 m: '', e: { v: 0.12, d: 35 }, s: [
                     {

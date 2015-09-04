@@ -8,7 +8,7 @@ module.exports.register = function(moveList, moveObject, relativeCentipawnScore,
 	if (moveObject.color == 'b')
 	    scoreValue = -scoreValue
 	console.log("best move for " + moveList + " is ", resultBestmove, " with score/depth ", scoreValue, "/", depth)
-	fs.appendFile(evaluationLogFileName, moveList.join(' ') + ' ' + resultBestmove + '! ' + scoreValue + '/' + depth + "\n", function (err) {
+	fs.appendFile(evaluationLogFileName, "" + moveList + ' ' + resultBestmove + '! ' + scoreValue + '/' + depth + "\n", function (err) {
 		if (err) console.error("could not append to '"+evaluationLogFileName+"' :", err)
 	})
 	//if(!baseManager) throw Error('base manager is not defined. Call analyzer.setBaseManager before')
