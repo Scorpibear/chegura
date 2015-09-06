@@ -39,13 +39,16 @@ var save = function() {
     synchronizer.saveQueue(filename, queue)
 }
 
+var needToSave = false;
+
 module.exports.getFirst = function () {
     var item = null;
     var priority = 0;
+    if(needToSave) save();
     while(!item && priority < priorities) {
         item = queue[priority++].shift();
     }
-    if(item) save()
+    needToSave = (item!=null);
     return item;
 }
 
