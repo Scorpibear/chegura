@@ -31,7 +31,8 @@ var analyze = function () {
     });
     var fen = chess.fen();
     var options = []
-    //var options = [{name:"Threads", value:4}, {name: "Hash", value: 4096}]
+    //options = [{name:"Threads", value:3}, {name: "Hash", value: 4096}]
+    options = [{name: "Hash", value: 256}]
     engine.runProcess().then(function () {
         return engine.uciCommand();
     }).then(function () {
@@ -47,6 +48,7 @@ var analyze = function () {
         return engine.positionCommand(fen);
     }).then(function () {
         return engine.goDepthCommand(depth, function infoHandler(info) {
+            //console.log(info)
         });
     }).then(function(data) {
         engine.quitCommand();

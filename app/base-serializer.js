@@ -60,8 +60,14 @@ module.exports.stringify = function(baseObject, readable){
     } else {
         return toShortestString(baseObject);
     }
-}
+};
 
 module.exports.parse = function(str) {
-    return (new Function("var base = " + str + "; return base;"))();
-}
+	var base = {};
+	try {
+		base = (new Function("var base = " + str + "; return base;"))();
+	} catch (err) {
+		console.error(err + ". Could not parse base from: " + str)
+	}
+    return base;
+};

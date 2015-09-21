@@ -7,5 +7,13 @@ describe('analysisQueue', function() {
             queue.push([],0)
             expect(synchronizer.saveQueue).toHaveBeenCalled()
         })
+    });
+    describe('getFirst', function() {
+        it("returns first from queue", function() {
+            var queue = require('../app/analysis-queue')
+            queue.empty();
+            queue.push(["d4"],1);
+            expect(queue.getFirst()).toEqual(["d4"])
+        })
     })
 })

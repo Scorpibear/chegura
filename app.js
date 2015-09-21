@@ -1,49 +1,29 @@
 var http = require('http');
 var analyzer = require('./app/analyzer');
 var baseManager = require('./app/base-manager');
-
+var requestProcessor = require('./app/request-processor');
 var defaultPort = 9966;
 var port = defaultPort;
 
 try {
     baseManager.readBase();
     baseManager.saveBase();
-    analyzer.setBaseManager(baseManager)
-
+    analyzer.setBaseManager(baseManager);
     http.createServer(function (req, res) {
         switch (req.url) {
             case "/api/analyze":
-                if (req.method == "OPTIONS") {
-                    res.writeHead(200, {
-                        'Access-Control-Allow-Origin': '*',
-                        'Access-Control-Allow-Headers': 'Origin, Content-Type'
-                    });
-                    res.end("");
-                }
-                if (req.method == "POST") {
-                    req.on('data', function (chunk) {
-                        var data = JSON.parse(chunk);
-                        if (data.moves) {
-                            analyzer.analyzeLater(data.moves, baseManager.getBase(), 1);
-                        } else {
-                            console.error("Incorrect data received:", data);
-                        }
-                    });
-                    res.writeHead(200, {'Access-Control-Allow-Origin': '*'});
-                    res.end("");
-                }
+                requestProcessor.analyze(req, res);
                 break;
             case "/favicon.ico":
-                res.end();
+                requestProcessor.getFavicon(res);
+                break;
+            case "/api/getuserscount":
+                requestProcessor.getUsersCount(req, res);
                 break;
             case "/api/getbase":
             case "/":
             default:
-                res.writeHead(200, {
-                    'Content-Type': 'text/plain',
-                    'Access-Control-Allow-Origin': '*'
-                });
-                res.end(baseManager.getBaseAsString());
+                requestProcessor.getBase(req, res);
         }
     }).listen(port);
 
