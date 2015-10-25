@@ -1,5 +1,5 @@
 describe('synchronizer', function() {
-    var synchronizer = require('../app/synchronizer')
+    var synchronizer = require('../../app/analysis/synchronizer')
     describe('loadQueue', function () {
         it('returns default queue if file not found', function() {
             var queue = [['h3']];
@@ -8,7 +8,7 @@ describe('synchronizer', function() {
     })
     describe('saveQueue', function() {
         it('calls queueSerializer.stringify', function() {
-            var queueSerializer = require('../app/queue-serializer')
+            var queueSerializer = require('../../app/analysis/queue-serializer')
             spyOn(queueSerializer,'stringify')
             synchronizer.saveQueue('test-filename.tmp',[[],[],[],[]])
             expect(queueSerializer.stringify).toHaveBeenCalled()

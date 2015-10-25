@@ -1,7 +1,7 @@
 var url = require('url');
 var baseManager = require('./base-manager');
 var usageStatistics = require('./usage-statistics');
-var analyzer = require('./analyzer')
+var analyzer = require('./analysis/analyzer')
 
 module.exports.getBase = function(req, res) {
     var query = url.parse(req.url, true).query;
