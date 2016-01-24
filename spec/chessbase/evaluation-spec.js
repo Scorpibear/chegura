@@ -1,10 +1,10 @@
 describe('evaluation', function() {
-    var evaluation = require('../app/evaluation')
+    var evaluation = require('../../app/chessbase/evaluation')
 
     describe('register', function() {
         var baseManager = null
         beforeEach(function () {
-            baseManager = require('../app/base-manager')
+            baseManager = require('../../app/chessbase/base-manager')
             spyOn(baseManager, 'addToBase')
 
         })

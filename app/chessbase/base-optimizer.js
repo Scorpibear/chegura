@@ -4,7 +4,7 @@ var MIN_DEPTH_REQUIRED = 30;
 
 var baseIterator = require('./base-iterator');
 var validator = require('./validator');
-
+var mainLineOptimizer = require('./optimization/main-line-optimizer');
 
 
 var optimizeSync = function (base, analyzer) {
@@ -17,7 +17,8 @@ var optimizeSync = function (base, analyzer) {
     movesList = baseIterator.getMovesWithSameFenButDifferentEvaluation(base);
     movesList.forEach(function(moves) {
         analyzer.analyzeLater(moves, base, 2)
-    })
+    });
+    mainLineOptimizer.goDeeper(base, baseIterator, analyzer);
 };
 
 module.exports.optimizeSync = optimizeSync;

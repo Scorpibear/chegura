@@ -1,8 +1,8 @@
 var Chess = require('./chess')
 var Engine = require('uci')
 var baseManager = null
-var baseIterator = require('../base-iterator')
-var evaluation = require('../evaluation')
+var baseIterator = require('../chessbase/base-iterator')
+var evaluation = require('../chessbase/evaluation')
 var defaultChessEnginePath = "./stockfish-6-64.exe"
 var pathToChessEngine = (process.argv.length > 2) ? process.argv[2] : defaultChessEnginePath
 var engine = new Engine(pathToChessEngine);

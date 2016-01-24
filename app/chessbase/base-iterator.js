@@ -46,3 +46,7 @@ module.exports.findSubPositionObject = function (positionObject, move) {
     }
     return null;
 }
+
+module.exports.findLatestMainLine = function(base) {
+    return [];
+}

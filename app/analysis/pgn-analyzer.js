@@ -1,7 +1,7 @@
 var types = {main: 'main', white: 'white', black: 'black', error: 'error'};
 
-var baseManager = require('../base-manager');
-var baseIterator = require('../base-iterator');
+var baseManager = require('../chessbase/base-manager');
+var baseIterator = require('../chessbase/base-iterator');
 
 module.exports.isError = function(moves) {
 	var base = baseManager.getBase();

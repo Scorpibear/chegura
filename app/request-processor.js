@@ -1,5 +1,5 @@
 var url = require('url');
-var baseManager = require('./base-manager');
+var baseManager = require('./chessbase/base-manager');
 var usageStatistics = require('./usage-statistics');
 var analyzer = require('./analysis/analyzer')
 

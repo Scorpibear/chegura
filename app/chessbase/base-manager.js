@@ -20,13 +20,14 @@ var createChildPositionObject = function (parentObject, childMove, isBest) {
         c = 'w'
     }
     var newChildObject = {m: childMove, n: n, c: c}
-	if(!parentObject.s)
+  	if(!parentObject.s) {
 	    parentObject.s = []
+    }
     if(isBest) {
 	    parentObject.s.unshift(newChildObject)
-	} else {
+	  } else {
 	    parentObject.s.push(newChildObject)
-	}    
+	  }
     return newChildObject;
 }
 

@@ -2,7 +2,7 @@ describe('pgnAnalyzer', function() {
 	describe('isError', function() {
 		var pgnAnalyzer = require('../../app/analysis/pgn-analyzer');
 		beforeEach(function() {
-			var baseManager = require('../../app/base-manager');
+			var baseManager = require('../../app/chessbase/base-manager');
             spyOn(baseManager, 'getBase').and.returnValue({m:'',s: [{m: 'd4'}, {m:'h4', s: [{m: 'e5'}]}]});
 		})
 		it('is false for start position', function() {

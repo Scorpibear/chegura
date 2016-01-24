@@ -1,5 +1,5 @@
 describe("validator", function() {
-    var validator = require('../app/validator');
+    var validator = require('../../app/chessbase/validator');
 
     describe("validate", function() {
         beforeEach(function () {
@@ -43,4 +43,3 @@ describe("validator", function() {
         })
     })
 });
-

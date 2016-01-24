@@ -1,6 +1,6 @@
 var http = require('http');
 var analyzer = require('./app/analysis/analyzer');
-var baseManager = require('./app/base-manager');
+var baseManager = require('./app/chessbase/base-manager');
 var requestProcessor = require('./app/request-processor');
 var defaultPort = 9966;
 var port = defaultPort;

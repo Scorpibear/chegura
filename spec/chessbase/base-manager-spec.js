@@ -1,8 +1,8 @@
 ﻿describe('baseManager', function () {
     describe('addToBase', function () {
-	    baseManager = require('../app/base-manager')
+	    baseManager = require('../../app/chessbase/base-manager')
 		var base = baseManager.getBase()
-		
+
         it('add number to base', function () {
             base.s = []
             baseManager.addToBase(['d4'], 'Nf6', 0.12, 30)

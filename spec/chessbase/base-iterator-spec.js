@@ -1,4 +1,4 @@
-﻿var baseIterator = require('../app/base-iterator.js')
+﻿var baseIterator = require('../../app/chessbase/base-iterator.js')
 
 describe('baseIterator', function () {
     describe('getMovesToInsufficientEvaluationDepth', function () {
@@ -44,5 +44,11 @@ describe('baseIterator', function () {
                 ]
             }, 30)).toEqual([['e4', 'e6'], ['d4', 'Nf6', 'Nf3']])
         })
-    })
+    });
+    /*describe('findLatestMainLine', function() {
+        it('returns latest', function() {
+            var base = {m: '', s:[{m: 'd4', s: [ {m: 'Nf6'}]}]}
+            expect(baseIterator.findLatestMainLine(base)).toEqual(['d4','Nf6']);
+        })
+    })*/
 })

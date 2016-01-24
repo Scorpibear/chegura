@@ -1,4 +1,4 @@
-var serializer = require("../app/base-serializer.js")
+var serializer = require("../../app/chessbase/base-serializer.js")
 
 describe("baseSerializer", function () {
     describe("parse", function() {

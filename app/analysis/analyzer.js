@@ -1,6 +1,6 @@
 var baseManager = null
-var baseIterator = require('../base-iterator')
-var evaluation = require('../evaluation')
+var baseIterator = require('../chessbase/base-iterator')
+var evaluation = require('../chessbase/evaluation')
 var analysisQueue = require('./analysis-queue')
 
 var isAnalysisInProgress = false;

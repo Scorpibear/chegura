@@ -47,5 +47,9 @@
 			done();
 		});
     });
+    /*describe('analyze', function() {
+        it('add main line evaluation if optimization queue is empty', function() {
+            expect(false).toBe(true);
+        })
+    })*/
 });
-
