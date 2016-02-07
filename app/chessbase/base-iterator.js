@@ -48,5 +48,19 @@ module.exports.findSubPositionObject = function (positionObject, move) {
 }
 
 module.exports.findLatestMainLine = function(base) {
-    return [];
+    var result = [];
+    var positionObject = base;
+    if(positionObject.s && positionObject.s.length>0) {
+        positionObject = positionObject.s[0];
+    }
+    while(positionObject && positionObject.hasOwnProperty("m")) {
+        result.push(positionObject.m);
+        if(positionObject.s && positionObject.s.length>0) {
+            positionObject = positionObject.s[0];
+        } else {
+            break;
+        }
+    }
+    console.log('after while');
+    return result;
 }

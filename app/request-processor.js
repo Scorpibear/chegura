@@ -1,7 +1,8 @@
 var url = require('url');
 var baseManager = require('./chessbase/base-manager');
 var usageStatistics = require('./usage-statistics');
-var analyzer = require('./analysis/analyzer')
+var analyzer = require('./analysis/analyzer');
+var analysisPriority = require('./analysis/analysis-priority');
 
 module.exports.getBase = function(req, res) {
     var query = url.parse(req.url, true).query;
@@ -29,7 +30,7 @@ module.exports.analyze = function(req, res) {
         req.on('data', function (chunk) {
             var data = JSON.parse(chunk);
             if (data.moves) {
-                analyzer.analyzeLater(data.moves, baseManager.getBase(), 1);
+                analyzer.analyzeLater(data.moves, baseManager.getBase(), analysisPriority.ExternalRequestsForNewPositions);
             } else {
                 console.error("Incorrect data received:", data);
             }

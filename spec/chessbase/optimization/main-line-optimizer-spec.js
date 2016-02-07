@@ -1,5 +1,6 @@
 describe('mailLineOptimizer', function() {
   var mainLineOptimizer = require('../../../app/chessbase/optimization/main-line-optimizer');
+  var analysisPriority = require('../../../app/analysis/analysis-priority');
   var base = { m: '', s: [
     {m: 'd4', s: [
       {m: 'Nf6' } ] } ] };
@@ -11,7 +12,7 @@ describe('mailLineOptimizer', function() {
       var baseIterator = {findLatestMainLine: function(){}};
       spyOn(baseIterator, 'findLatestMainLine').and.returnValue(['d4', 'Nf6']);
       mainLineOptimizer.goDeeper(base, baseIterator, analyzer);
-      expect(analyzer.analyzeLater).toHaveBeenCalledWith(['d4', 'Nf6'])
+      expect(analyzer.analyzeLater).toHaveBeenCalledWith(['d4', 'Nf6'], base, analysisPriority.MainLineOptimization)
       expect(baseIterator.findLatestMainLine).toHaveBeenCalledWith(base)
     })
 
