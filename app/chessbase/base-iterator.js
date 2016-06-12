@@ -61,6 +61,10 @@ module.exports.findLatestMainLine = function(base) {
             break;
         }
     }
-    console.log('after while');
+    return result;
+}
+
+module.exports.findMinDepthMainLinePath = function(base) {
+    var result = [];
     return result;
 }

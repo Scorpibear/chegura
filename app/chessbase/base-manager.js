@@ -1,6 +1,6 @@
 var fs = require('fs')
 var baseSerializer = require('./base-serializer')
-var baseOptimizer = require('./base-optimizer')
+var baseOptimizer = require('./optimization/base-optimizer')
 var baseIterator = require('./base-iterator')
 
 var base = { m: '', n: 0, c: 'b', t: 'wb' }
@@ -88,5 +88,5 @@ module.exports.getBaseAsString = function() {
 }
 
 module.exports.optimize = function(analyzer) {
-    baseOptimizer.optimize(base, analyzer);
+    baseOptimizer.optimize(base, analyzer, baseIterator);
 }

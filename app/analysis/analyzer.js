@@ -1,15 +1,13 @@
-var baseManager = null
-var baseIterator = require('../chessbase/base-iterator')
-var evaluation = require('../chessbase/evaluation')
-var analysisQueue = require('./analysis-queue')
+"use strict";
 
-var isAnalysisInProgress = false;
-var analyzerSync = require('./analyzer-sync')
+const baseIterator = require('../chessbase/base-iterator')
+const analysisQueue = require('./analysis-queue')
+const analyzerSync = require('./analyzer-sync')
 
-var analyzeLater = function (moves, base, priority) {
+const analyzeLater = function (moves, base, priority) {
     if (moves) {
         if(!base) throw Error('analyzeLater is called with moves without base');
-        var movesList = splitSequentially(base, moves);
+        let movesList = splitSequentially(base, moves);
         movesList.forEach(function (moves) {
             analysisQueue.push(moves, priority)
         })
@@ -17,13 +15,13 @@ var analyzeLater = function (moves, base, priority) {
     setTimeout(analyzerSync.analyze, 100);
 }
 
-var splitSequentially = function (base, moves) {
-    var list = [];
-    var positionObject = base;
+const splitSequentially = function (base, moves) {
+    let list = [];
+    let positionObject = base;
     moves.forEach(function (move, index) {
-        var subObject = baseIterator.findSubPositionObject(positionObject, move);
+        let subObject = baseIterator.findSubPositionObject(positionObject, move);
         if (subObject == null) {
-            var movesToAdd = moves.slice(0, index+1)
+            let movesToAdd = moves.slice(0, index+1)
             list.push(movesToAdd);
         }
         positionObject = subObject;
@@ -39,14 +37,8 @@ module.exports.getQueue = function () {
     return analysisQueue.getQueue();
 };
 
-module.exports.setBaseManager = function (newBaseManager) {
-    baseManager = newBaseManager;
-};
-
 module.exports.resetQueue = function () {
     analysisQueue.empty();
 };
 
-module.exports.isAnalysisInProgress = function () {
-	return isAnalysisInProgress;
-};
+module.exports.isAnalysisInProgress = analyzerSync.isAnalysisInProgress;

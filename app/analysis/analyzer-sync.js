@@ -1,28 +1,32 @@
-var Chess = require('./chess')
-var Engine = require('uci')
-var baseManager = null
-var baseIterator = require('../chessbase/base-iterator')
-var evaluation = require('../chessbase/evaluation')
-var defaultChessEnginePath = "./stockfish-6-64.exe"
-var pathToChessEngine = (process.argv.length > 2) ? process.argv[2] : defaultChessEnginePath
-var engine = new Engine(pathToChessEngine);
-var analysisQueue = require('./analysis-queue');
-var isAnalysisInProgress = false;
-var REQUIRED_DEPTH = 30;
+"use strict";
 
-var analyzer = require('./analyzer');
-var pgnAnalyzer = require('./pgn-analyzer')
+const Chess = require('./chess')
+const Engine = require('uci')
+const baseIterator = require('../chessbase/base-iterator')
+const evaluation = require('../chessbase/evaluation')
+const baseManager = require('../chessbase/base-manager')
+const defaultChessEnginePath = "./stockfish-6-64.exe"
+const pathToChessEngine = (process.argv.length > 2) ? process.argv[2] : defaultChessEnginePath
+const engine = new Engine(pathToChessEngine);
+const analysisQueue = require('./analysis-queue');
+let isAnalysisInProgress = false;
+const REQUIRED_DEPTH = 32;
 
-var analyze = function () {
+const analyzer = require('./analyzer');
+const pgnAnalyzer = require('./pgn-analyzer')
+
+const analyze = function () {
     if (isAnalysisInProgress)
         return;
     isAnalysisInProgress = true;
 
-    var moves = analysisQueue.getFirst();
+    let moves = analysisQueue.getFirst();
 
     if (moves == null) {
         isAnalysisInProgress = false;
-        console.error('Queue is empty, nothing to analyze!');
+        if(baseManager) {
+            baseManager.optimize(analyzer);
+        }
         return;
     }
     if (pgnAnalyzer.isError(moves)) {
@@ -31,13 +35,13 @@ var analyze = function () {
         return;
     }
     console.log("start to analyze moves: " + moves);
-    var chess = new Chess();
-    var depth = REQUIRED_DEPTH;
+    let chess = new Chess();
+    let depth = REQUIRED_DEPTH;
     moves.forEach(function (move) {
         chess.move(move);
     });
-    var fen = chess.fen();
-    var options = [];
+    let fen = chess.fen();
+    let options = [];
     //options = [{name:"Threads", value:3}, {name: "Hash", value: 4096}]
     options = [{name: "Hash", value: 256}]
     engine.runProcess().then(function () {
@@ -59,7 +63,7 @@ var analyze = function () {
         });
     }).then(function(data) {
         engine.quitCommand();
-        var move = chess.move(data.bestmove);
+        let move = chess.move(data.bestmove);
         evaluation.register(moves, move, data.score, depth);
         isAnalysisInProgress = false;
         analyzer.analyzeLater()

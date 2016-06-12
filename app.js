@@ -1,3 +1,5 @@
+"use strict";
+
 var http = require('http');
 var analyzer = require('./app/analysis/analyzer');
 var baseManager = require('./app/chessbase/base-manager');
@@ -8,7 +10,6 @@ var port = defaultPort;
 try {
     baseManager.readBase();
     baseManager.saveBase();
-    analyzer.setBaseManager(baseManager);
     http.createServer(function (req, res) {
         switch (req.url) {
             case "/api/analyze":
@@ -29,7 +30,7 @@ try {
 
     baseManager.optimize(analyzer);
 
-    console.log("Chegura is ready to process your requests on " + port + " port")
+    console.log("Chegura is ready to process your requests on " + port + " port");
 } catch (err) {
-    console.error('Unexpected error: ' + err)
+    console.error('Unexpected error: ' + err);
 }
