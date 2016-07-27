@@ -5,14 +5,16 @@ var MIN_DEPTH_REQUIRED = 32;
 var validator = require('./validator');
 var mainLineOptimizer = require('./main-line-optimizer');
 var analysisPriority = require('../../analysis/analysis-priority');
-var timeoutInMilliseconds = 1000;
+var timeoutInMilliseconds = 100;
+var optimizeInProgress = false;
 
 var optimizeSync = function (base, analyzer, baseIterator) {
+    if(optimizeInProgress) return;
+    optimizeInProgress = true;
     validator.validate(base);
     if(baseIterator) {
         let movesList = baseIterator.getMovesToInsufficientEvaluationDepth(base, MIN_DEPTH_REQUIRED);
         if(movesList) {
-          console.log("Moves identified for deeper analysis: ", movesList.length);
           movesList.forEach(function(moves) {
             analyzer.analyzeLater(moves, base, analysisPriority.OptimizationOfNotAnalyzedEnough)
           });
@@ -23,6 +25,7 @@ var optimizeSync = function (base, analyzer, baseIterator) {
         }
         mainLineOptimizer.goDeeper(base, baseIterator, analyzer);
     }
+    optimizeInProgress = false;
 };
 
 module.exports.optimizeSync = optimizeSync;

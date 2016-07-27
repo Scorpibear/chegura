@@ -5,7 +5,7 @@ const Engine = require('uci')
 const baseIterator = require('../chessbase/base-iterator')
 const evaluation = require('../chessbase/evaluation')
 const baseManager = require('../chessbase/base-manager')
-const defaultChessEnginePath = "./stockfish-6-64.exe"
+const defaultChessEnginePath = "./stockfish-7-x64.exe"
 const pathToChessEngine = (process.argv.length > 2) ? process.argv[2] : defaultChessEnginePath
 const engine = new Engine(pathToChessEngine);
 const analysisQueue = require('./analysis-queue');
@@ -19,19 +19,20 @@ const analyze = function () {
     if (isAnalysisInProgress)
         return;
     isAnalysisInProgress = true;
-
     let moves = analysisQueue.getFirst();
 
     if (moves == null) {
-        isAnalysisInProgress = false;
         if(baseManager) {
             baseManager.optimize(analyzer);
         }
+        isAnalysisInProgress = false;
+        //analyzer.analyzeLater();
         return;
     }
-    if (pgnAnalyzer.isError(moves)) {
-        isAnalysisInProgress = false;
+    if (pgnAnalyzer.isError(moves, baseManager.getBase())) {
         console.log('Not optimal position will not be analyzed: ' + moves);
+        isAnalysisInProgress = false;
+        analyzer.analyzeLater();
         return;
     }
     console.log("start to analyze moves: " + moves);
@@ -64,12 +65,14 @@ const analyze = function () {
     }).then(function(data) {
         engine.quitCommand();
         let move = chess.move(data.bestmove);
+        //console.log('Data, data.bestmove, move: ', data, data.bestmove, move);
         evaluation.register(moves, move, data.score, depth);
         isAnalysisInProgress = false;
         analyzer.analyzeLater()
     }).fail(function (error) {
         console.log(error);
         isAnalysisInProgress = false;
+        analyzer.analyzeLater();
     }).done();
 };
 

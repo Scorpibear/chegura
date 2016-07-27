@@ -1,9 +1,11 @@
-var addMoves = function (result, moves, parentObject, requiredDepth, objectsToLookDeeper) {
+var pgnAnalyzer = require('../analysis/pgn-analyzer');
+
+var addMoves = function (result, moves, parentObject, requiredDepth, objectsToLookDeeper, base) {
     if (parentObject.s) {
         parentObject.s.forEach(function (childObject) {
             var movesWithChild = moves.slice();
             movesWithChild.push(childObject.m);
-            if (!childObject.e || childObject.e.d < requiredDepth) {
+            if ((!childObject.e || childObject.e.d < requiredDepth) && (!pgnAnalyzer.isError(movesWithChild, base))) {
                 result.push(movesWithChild);
             } else {
                 objectsToLookDeeper.push({ positionObject: childObject, moves: movesWithChild });
@@ -19,11 +21,11 @@ module.exports.getMovesToInsufficientEvaluationDepth = function (base, requiredD
         result.push(moves);
     }
     var objectsToLookDeeper = []
-    addMoves(result, moves, base, requiredDepth, objectsToLookDeeper)
+    addMoves(result, moves, base, requiredDepth, objectsToLookDeeper, base)
     while (objectsToLookDeeper.length > 0) {
         var nextLevelOfObjects = [];
         objectsToLookDeeper.forEach(function (objectData) {
-            addMoves(result, objectData.moves, objectData.positionObject, requiredDepth, nextLevelOfObjects)
+            addMoves(result, objectData.moves, objectData.positionObject, requiredDepth, nextLevelOfObjects, base)
         })
         objectsToLookDeeper = nextLevelOfObjects
     }

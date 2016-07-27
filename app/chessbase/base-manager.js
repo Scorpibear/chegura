@@ -77,7 +77,12 @@ module.exports.getBase = function() {
 }
 
 module.exports.readBase = function () {
-    var baseFileContent = fs.readFileSync(filename);
+    var baseFileContent = "{}";
+    try{
+        baseFileContent = fs.readFileSync(filename);
+    }catch(err) {
+        console.error("Could not read " + filename + ": " + err);
+    }
     base = baseSerializer.parse(baseFileContent);
 }
 

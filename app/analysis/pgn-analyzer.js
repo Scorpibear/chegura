@@ -1,10 +1,8 @@
 var types = {main: 'main', white: 'white', black: 'black', error: 'error'};
 
-var baseManager = require('../chessbase/base-manager');
 var baseIterator = require('../chessbase/base-iterator');
 
-module.exports.isError = function(moves) {
-	var base = baseManager.getBase();
+module.exports.isError = function(moves, base) {
     var position = base;
     var possibilities = {white: true, black: true};
 	for(var i=0; position != null && i < moves.length; i++) {

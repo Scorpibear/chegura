@@ -44,6 +44,17 @@ describe('baseIterator', function () {
                 ]
             }, 30)).toEqual([['e4', 'e6'], ['d4', 'Nf6', 'Nf3']])
         })
+        it("skips evaluation of moves after not the best", function() {
+            expect(baseIterator.getMovesToInsufficientEvaluationDepth({
+                m: '', e: { v: 0.12, d: 30 }, s: [
+                    { m: 'e4', e: { v: 0.1, d: 30 }, s: [] },
+                    { m: 'd4', e: { v: 0.1, d: 30 }, s: [
+                        {m: 'Nf6', e: {v: 0.1, d: 30}, s: []},
+                        {m: 'd5', e: {v:0.1, d: 29}, s: []}    
+                    ]}
+                ]
+            }, 30)).toEqual([])
+        })
     });
     describe('findLatestMainLine', function() {
         it('returns latest', function() {
