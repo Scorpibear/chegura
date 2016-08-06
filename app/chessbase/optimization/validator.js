@@ -1,4 +1,4 @@
-var Chess = require('../../analysis/chess');
+var Chess = require('../../analysis/chess').Chess;
 var chess = new Chess();
 
 var validatePosition = function(preMoves, positionObject) {

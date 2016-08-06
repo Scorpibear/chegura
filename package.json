@@ -1,6 +1,6 @@
 {
   "name": "chegura",
-  "version": "0.5.1",
+  "version": "0.6.0",
   "scripts": {
     "start": "node app.js",
     "test": "jasmine"
@@ -11,6 +11,8 @@
   "description": "chegura is a chess-guru - server providing best chess moves",
   "main": "app.js",
   "devDependencies": {
+    "eslint": "^3.2.2",
+    "eslint-config-google": "^0.6.0",
     "jasmine": "^2.3.2",
     "jshint": "^2.9.1"
   },
