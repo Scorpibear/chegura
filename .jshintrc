@@ -1,8 +1,8 @@
 {
   "globalstrict": true,
   "globals": {
-    "describe": false,
-    "it": false,
+    "describe": true,
+    "it": true,
     "expect": false,
     "beforeEach": false,
     "afterEach": false,

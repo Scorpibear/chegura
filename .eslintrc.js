@@ -5,5 +5,11 @@ module.exports = {
       'indent': [2, 2, {
          SwitchCase: 1
        }],
+    },
+    "globals": {
+      "describe": true,
+      "it": true,
+      "spyOn": true,
+      "expect": true
     }
 };

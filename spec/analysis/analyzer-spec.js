@@ -47,6 +47,17 @@
 			done();
 		});
     });
+    describe('setUciOptions', function() {
+      it('calls setUciOptions of analyzer-sync', function() {
+        let options = {};
+        let analyzerSync = require('../../app/analysis/analyzer-sync');
+        spyOn(analyzerSync, 'setUciOptions');
+
+        analyzer.setUciOptions(options);
+        
+        expect(analyzerSync.setUciOptions).toHaveBeenCalledWith(options);
+      })
+    })
     /*describe('analyze', function() {
         it('add main line evaluation if optimization queue is empty', function() {
             expect(false).toBe(true);

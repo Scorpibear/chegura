@@ -1,6 +1,7 @@
 {
   "optimizeSettings": {
-    "optimize": false
+    "optimize": true
   },
-  "port": 9966
+  "port": 9966,
+  "uciOptions": [{"name":"Threads", "value":4}, {"name": "Hash", "value": 4096}]
 }

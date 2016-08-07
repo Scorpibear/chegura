@@ -11,9 +11,9 @@ const engine = new Engine(pathToChessEngine);
 const analysisQueue = require('./analysis-queue');
 let isAnalysisInProgress = false;
 const REQUIRED_DEPTH = 32;
-
 const analyzer = require('./analyzer');
 const pgnAnalyzer = require('./pgn-analyzer');
+let uciOptions = [];
 
 const analyze = function() {
   if (isAnalysisInProgress)
@@ -41,15 +41,12 @@ const analyze = function() {
     chess.move(move);
   });
   let fen = chess.fen();
-  let options = [];
-  // options = [{name:"Threads", value:3}, {name: "Hash", value: 4096}]
-  options = [{name: "Hash", value: 256}];
   engine.runProcess().then(function() {
     return engine.uciCommand();
   }).then(function() {
     return engine.isReadyCommand();
   }).then(function() {
-    options.forEach(function(option) {
+    uciOptions.forEach(function(option) {
       engine.setOptionCommand(option.name, option.value);
     });
     return engine.isReadyCommand();
@@ -84,4 +81,8 @@ module.exports.analyze = analyze;
 
 module.exports.isAnalysisInProgress = function() {
   return isAnalysisInProgress;
+};
+
+module.exports.setUciOptions = function(options) {
+  uciOptions = options;
 };
