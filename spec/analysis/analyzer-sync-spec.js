@@ -24,5 +24,15 @@ describe('analyzerSync', function() {
 
       expect(baseManager.optimize).toHaveBeenCalled();
     });
+    it('get depth from depthSelector', function() {
+      let depthSelector = require('../../app/analysis/depth-selector');
+      spyOn(depthSelector, 'getDepthToAnalyze');
+      let analysisQueue = require('../../app/analysis/analysis-queue');
+      spyOn(analysisQueue, 'getFirst').and.returnValue(['h3']);
+
+      analyzerSync.analyze();
+
+      expect(depthSelector.getDepthToAnalyze).toHaveBeenCalled();
+    })
   });
 });

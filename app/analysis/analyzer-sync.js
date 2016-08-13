@@ -10,8 +10,8 @@ const pathToChessEngine = (process.argv.length > 2) ?
 const engine = new Engine(pathToChessEngine);
 const analysisQueue = require('./analysis-queue');
 let isAnalysisInProgress = false;
-const REQUIRED_DEPTH = 32;
 const analyzer = require('./analyzer');
+const depthSelector = require('./depth-selector');
 const pgnAnalyzer = require('./pgn-analyzer');
 let uciOptions = [];
 
@@ -36,7 +36,7 @@ const analyze = function() {
   }
   console.log("start to analyze moves: " + moves);
   let chess = new Chess();
-  let depth = REQUIRED_DEPTH;
+  let depth = depthSelector.getDepthToAnalyze(moves, baseManager.getBase());
   moves.forEach(function(move) {
     chess.move(move);
   });
@@ -62,9 +62,10 @@ const analyze = function() {
     engine.quitCommand();
     let move = chess.move(data.bestmove);
     if (chess.game_over()) {
-      console.log('Game over!', 'In draw:', chess.in_draw(),
-        'In checkmate:', chess.in_checkmate(),
-        'In threefold repetition:', chess.in_threefold_repetition());
+      depth = depthSelector.MAX_DEPTH;
+      if (chess.in_draw) {
+        data.score = 0;
+      }
     }
     // console.log('Data, data.bestmove, move: ', data, data.bestmove, move);
     evaluation.register(moves, move, data.score, depth);
