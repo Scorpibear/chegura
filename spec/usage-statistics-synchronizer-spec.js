@@ -1,5 +1,6 @@
 describe('usageStatisticsSynchronizer', function() {
-  let usageStatisticsSynchronizer = require('../app/usage-statistics-synchronizer');
+  let usageStatisticsSynchronizer =
+    require('../app/usage-statistics-synchronizer');
 
   describe('save', function() {
     it('saves it to file', function() {
@@ -11,7 +12,9 @@ describe('usageStatisticsSynchronizer', function() {
       usageStatisticsSynchronizer.save(jsonContent);
 
       expect(JSON.stringify).toHaveBeenCalledWith(jsonContent);
-      expect(fs.writeFileSync).toHaveBeenCalledWith(usageStatisticsSynchronizer.FILE_NAME, 'json as string');
+      expect(fs.writeFileSync)
+        .toHaveBeenCalledWith(usageStatisticsSynchronizer.FILE_NAME,
+          'json as string');
     });
   });
   describe('load', function() {
@@ -25,7 +28,15 @@ describe('usageStatisticsSynchronizer', function() {
 
       expect(content).toEqual(expectedObject);
       expect(JSON.parse).toHaveBeenCalledWith('value from file');
-      expect(fs.readFileSync).toHaveBeenCalledWith(usageStatisticsSynchronizer.FILE_NAME);
-    })
-  })
+      expect(fs.readFileSync)
+        .toHaveBeenCalledWith(usageStatisticsSynchronizer.FILE_NAME);
+    });
+    it('returns null if file does not exist', function() {
+      let fs = require('fs');
+      spyOn(fs, 'readFileSync').and
+        .throwError("ENOENT: no such file or directory, open 'usage-statistics.json'");
+
+      expect(usageStatisticsSynchronizer.load()).toBeNull();
+    });
+  });
 });

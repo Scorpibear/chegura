@@ -11,6 +11,11 @@ module.exports.save = function(content) {
 };
 
 module.exports.load = function() {
-  let content = fs.readFileSync(FILE_NAME);
+  let content = null;
+  try {
+    content = fs.readFileSync(FILE_NAME);
+  } catch (err) {
+    return null;
+  }
   return JSON.parse(content);
 };
