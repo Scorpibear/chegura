@@ -1,3 +1,5 @@
+'use strict';
+
 describe('depthSelector', function() {
   let depthSelector = require('../../app/analysis/depth-selector');
   describe('getDepthToAnalyze', function() {

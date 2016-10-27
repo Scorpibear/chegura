@@ -1,4 +1,6 @@
-﻿var baseIterator = require('../../app/chessbase/base-iterator.js')
+﻿'use strict';
+
+var baseIterator = require('../../app/chessbase/base-iterator.js')
 
 describe('baseIterator', function () {
   describe('getMovesToInsufficientEvaluationDepth', function () {

@@ -1,4 +1,6 @@
-﻿describe('analyzer', function () {
+﻿"use strict";
+
+describe('analyzer', function () {
     var analyzer = require('../../app/analysis/analyzer');
     describe('analyzeLater', function () {
         it('do not analyze start position if first move is requested', function (done) {

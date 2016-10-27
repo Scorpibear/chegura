@@ -1,3 +1,5 @@
+'use strict';
+
 var serializer = require("../../app/chessbase/base-serializer.js")
 
 describe("baseSerializer", function () {
