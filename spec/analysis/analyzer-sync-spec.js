@@ -1,3 +1,5 @@
+'use strict';
+
 describe('analyzerSync', function() {
   var analyzerSync = require('../../app/analysis/analyzer-sync');
   describe('analyze', function() {
