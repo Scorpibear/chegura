@@ -1,3 +1,5 @@
+'use strict';
+
 describe('drawChecker', function() {
   let drawChecker = require('../../../app/chessbase/optimization/draw-checker');
   describe('findPathToTheLatestNonDrawInMainLine', function() {
