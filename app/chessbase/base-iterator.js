@@ -1,3 +1,5 @@
+'use strict';
+
 var pgnAnalyzer = require('../analysis/pgn-analyzer');
 
 var addMoves = function (result, moves, parentObject, requiredDepth, objectsToLookDeeper, base) {
