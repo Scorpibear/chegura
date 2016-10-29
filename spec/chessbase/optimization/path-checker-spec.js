@@ -1,3 +1,5 @@
+'use strict';
+
 describe('pathChecker', function() {
   let pathChecker = require('../../../app/chessbase/optimization/path-checker');
 

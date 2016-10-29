@@ -1,3 +1,5 @@
+'use strict';
+
 describe('mainLineOptimizer', function() {
   var mainLineOptimizer = require('../../../app/chessbase/optimization/main-line-optimizer');
   var analysisPriority = require('../../../app/analysis/analysis-priority');
