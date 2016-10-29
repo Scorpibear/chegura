@@ -1,3 +1,5 @@
+'use strict';
+
 const baseIterator = require('../base-iterator');
 const MAX_DEPTH = 300;
 

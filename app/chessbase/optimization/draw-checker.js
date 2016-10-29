@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports.findPathToTheLatestNonDrawInMainLine = function(base) {
   let path = [];
   let positionObject = base;

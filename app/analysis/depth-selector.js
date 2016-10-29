@@ -1,3 +1,5 @@
+'use strict';
+
 const DEFAULT_DEPTH = 32;
 const MAX_DEPTH = 300;
 const INCREMENT = 2;

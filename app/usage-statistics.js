@@ -1,3 +1,5 @@
+'use strict';
+
 let logs = [];
 var recentSynchronizer;
 

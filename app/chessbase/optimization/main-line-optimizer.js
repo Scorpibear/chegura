@@ -1,3 +1,5 @@
+'use strict';
+
 const analysisPriority = require('../../../app/analysis/analysis-priority');
 const pathChecker = require('./path-checker');
 const drawChecker = require('./draw-checker');
