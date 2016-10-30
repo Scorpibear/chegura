@@ -1,3 +1,5 @@
+'use strict';
+
 describe('usageStatistics', function() {
   var usageStatistics;
   beforeAll(function() {

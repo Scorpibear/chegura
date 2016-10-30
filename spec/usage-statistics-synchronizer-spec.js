@@ -1,3 +1,5 @@
+'use strict';
+
 describe('usageStatisticsSynchronizer', function() {
   let usageStatisticsSynchronizer =
     require('../app/usage-statistics-synchronizer');
