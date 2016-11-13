@@ -28,3 +28,6 @@ node_modules
 
 # IDEA files
 .idea
+/usage-statistics.json
+*.tmp
+/analysis-queue.json
