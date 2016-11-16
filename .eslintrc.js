@@ -5,6 +5,10 @@ module.exports = {
       'indent': [2, 2, {
          SwitchCase: 1
        }],
+       'max-len': [1, 120, 4, {
+      ignoreComments: true,
+      ignoreUrls: true
+    }]
     },
     "globals": {
       "describe": true,
