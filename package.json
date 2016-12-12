@@ -6,7 +6,7 @@
     "test": "jasmine"
   },
   "dependencies": {
-    "uci": "^0.3.3"
+    "uci": "Scorpibear/uci"
   },
   "description": "chegura is a chess-guru - server providing best chess moves",
   "main": "app.js",
