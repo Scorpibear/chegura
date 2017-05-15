@@ -35,6 +35,13 @@ describe('analyzerSync', function() {
       analyzerSync.analyze();
 
       expect(depthSelector.getDepthToAnalyze).toHaveBeenCalled();
-    })
+    });
+    /*
+    it('load evaluation instantly for already-evaluated transposition', function() {
+      let analysisQueue = require('../../app/analysis/analysis-queue');
+      spyOn(analysisQueue, 'getFirst').and.returnValue(['Nf6', 'e6', 'e4']);
+      analyzerSync.analyze(, {m: '', s: [{m: 'e4', s: [{m: 'e6', s: [{m: 'Nf6', e: {v: 0.18, d: 38}, s:[{m: 'd5'}]}]}]}]});
+      expect()
+    });*/
   });
 });
