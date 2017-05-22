@@ -17,7 +17,7 @@ describe('depthSelector', function() {
       let base = {m: '', s: [{
         m: 'e4', s: [{
           m: 'e6', e: {v: 0.1, d: DEFAULT_DEPTH + 1}, s: [{
-            m: 'Nf3', e: {v: 0.12, d: DEFAULT_DEPTH}
+            m: 'Nf3', e: {v: 0.12, d: DEFAULT_DEPTH + 1}
           }]
         }]
       }]};
@@ -31,6 +31,28 @@ describe('depthSelector', function() {
     it('returns default depth if position has no continuation even if current depth is high', function() {
       let path = ['e4', 'e6'];
       let base = {m: '', s: [{m: 'e4', s: [{m: 'e6', e: {v: 0.1, d: DEFAULT_DEPTH + 10}}]}]};
+      expect(depthSelector.getDepthToAnalyze(path, base)).toEqual(DEFAULT_DEPTH);
+    });
+    it('returns best answer depth + 2 if position depth > best answer depth > default depth', function() {
+      let path = ['e4', 'e6'];
+      let base = {m: '', s: [{
+        m: 'e4', s: [{
+          m: 'e6', e: {v: 0.1, d: DEFAULT_DEPTH + 10}, s: [{
+            m: 'Nf3', e: {v: 0.12, d: DEFAULT_DEPTH + 1}
+          }]
+        }]
+      }]};
+      expect(depthSelector.getDepthToAnalyze(path, base)).toEqual(DEFAULT_DEPTH + 1 + 2);
+    });
+    it('returns default depth if position depth is highest default but answer depth is lower', function() {
+      let path = ['e4', 'e6'];
+      let base = {m: '', s: [{
+        m: 'e4', s: [{
+          m: 'e6', e: {v: 0.1, d: DEFAULT_DEPTH + 10}, s: [{
+            m: 'Nf3', e: {v: 0.12, d: DEFAULT_DEPTH - 3}
+          }]
+        }]
+      }]};
       expect(depthSelector.getDepthToAnalyze(path, base)).toEqual(DEFAULT_DEPTH);
     });
   });
