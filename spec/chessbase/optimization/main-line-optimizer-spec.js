@@ -3,6 +3,7 @@
 describe('mainLineOptimizer', function() {
   var mainLineOptimizer = require('../../../app/chessbase/optimization/main-line-optimizer');
   var analysisPriority = require('../../../app/analysis/analysis-priority');
+  let pathChecker = require('../../../app/chessbase/optimization/path-checker');
   var base = { m: '', s: [
     {m: 'd4', s: [
       {m: 'Nf6' } ] } ] };
@@ -18,9 +19,9 @@ describe('mainLineOptimizer', function() {
       expect(baseIterator.findLatestMainLine).toHaveBeenCalledWith(base)
     })
 
-    it('goes +2 half-moves deeper on the first node with minimal depth in the main line if mate was found', function() {
+    it('goes +1 half-moves deeper on the first node with minimal depth in the main line if mate was found', function() {
         var base = {m: '', e: {d: 37, v: 0.1}, s: [
-            {m: 'g4', e: {d: 30, v: 0.1}, s: [
+            {m: 'g4', e: {d: 37, v: 0.1}, s: [
                 {m: 'e5', e: {d: 30, v: 0.1}, s: [
                     {m: 'f3', e: {d: 30, v: '#1'}, s: [
                         {m: 'Qh4#'}
@@ -28,7 +29,7 @@ describe('mainLineOptimizer', function() {
                 ]}
             ]}
         ]};
-        var baseIterator = {findLatestMainLine: function(){}, findMinDepthMainLinePath: function() {return ['g4'];}};
+        var baseIterator = {findLatestMainLine: function(){}, findMinDepthMainLinePath: function() {return ['g4', 'e5'];}};
         spyOn(baseIterator, 'findLatestMainLine').and.returnValue(['g4', 'e5', 'f3', 'Qh4#']);
         var analyzer = {analyzeLater: function(path, base, priority){}};
         spyOn(analyzer, 'analyzeLater');
@@ -36,7 +37,7 @@ describe('mainLineOptimizer', function() {
         expect(analyzer.analyzeLater).toHaveBeenCalledWith(['g4'], base, analysisPriority.MainLineOptimization)
     });
 
-    it('go +2 half-moves deeper on the first node with lowest depth in the main line if draw', function() {
+    it('go +1 half-moves deeper on the first node with lowest depth in the main line if draw', function() {
       let base = {m: '', e: {d: 37, v: 0.1}, s: [
         {m: 'e4', e: {d: 32, v: 0.1}, s: [
           {m: 'e6', e: {d: 32, v: 0.15}, s: [
@@ -54,7 +55,17 @@ describe('mainLineOptimizer', function() {
 
       mainLineOptimizer.goDeeper(base, baseIterator, analyzer);
 
-      expect(analyzer.analyzeLater).toHaveBeenCalledWith(['e4'], base, analysisPriority.MainLineOptimization);
+      expect(analyzer.analyzeLater).toHaveBeenCalledWith([], base, analysisPriority.MainLineOptimization);
     });
-  })
-})
+
+    /*it('optimize lowest depth if endgame position reached', function() {
+      spyOn(pathChecker, 'isEndGame').and.returnValue(true);
+      let baseIterator = {findMinDepthMainLinePath: ()=>{}, findLatestMainLine: ()=>{}};
+      spyOn(baseIterator, 'findMinDepthMainLinePath');
+      
+      mainLineOptimizer.goDeeper(base, baseIterator, null);
+
+      expect(baseIterator.findMinDepthMainLinePath).toHaveBeenCalled();
+    });*/
+  });
+});

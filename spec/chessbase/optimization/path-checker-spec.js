@@ -11,23 +11,23 @@ describe('pathChecker', function() {
       expect(pathChecker.isCheckmate(['g4', 'e5', 'f3', 'Qh4#'])).toBeTruthy();
     });
   });
-  describe('isDraw', function() {
+  describe('isMaxDepth', function() {
     it('returns false in generic cases', function() {
       let base = {m: '', s: [{m: 'd4', e: {v: 0.1, d: 32}}]};
-      expect(pathChecker.isDraw(['d4'], base)).toBeFalsy();
+      expect(pathChecker.isMaxDepth(['d4'], base)).toBeFalsy();
     });
     it('return true if v: 0, d: 300', function() {
       let base = {m: '', s: [{m: 'd4', e: {v: 0, d: 300}}]};
-      expect(pathChecker.isDraw(['d4'], base)).toBeTruthy();
+      expect(pathChecker.isMaxDepth(['d4'], base)).toBeTruthy();
     });
   });
   describe('isGameOver', function() {
-    it('calls isDraw', function() {
-      spyOn(pathChecker, 'isDraw');
+    it('calls isMaxDepth', function() {
+      spyOn(pathChecker, 'isMaxDepth');
       let path = ['d4', 'd5'];
       let base = {m: '', s:[{m: 'd4', s:[{m: 'd5'}]}]};
       pathChecker.isGameOver(path, base);
-      expect(pathChecker.isDraw).toHaveBeenCalledWith(path, base);
-    })
-  })
+      expect(pathChecker.isMaxDepth).toHaveBeenCalledWith(path, base);
+    });
+  });
 });

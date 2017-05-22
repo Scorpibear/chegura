@@ -13,18 +13,16 @@ module.exports.isCheckmate = function(pathToAnalyze) {
   return false;
 };
 
-module.exports.isDraw = function(pathToCheck, base) {
+module.exports.isMaxDepth = function(pathToCheck, base) {
   let positionObject = baseIterator.findPositionObject(pathToCheck, base);
-  if(positionObject.hasOwnProperty('e')) {
-    if(positionObject.e.hasOwnProperty('v') && positionObject.e.hasOwnProperty('d')) {
-      if((positionObject.e.v === 0) && (positionObject.e.d >= MAX_DEPTH)) {
-        return true;
-      }
-    }
-  }
-  return false;
+  return (positionObject.hasOwnProperty('e') && positionObject.e.hasOwnProperty('d') &&
+    positionObject.e.d >= MAX_DEPTH);
 };
 
 module.exports.isGameOver = function(movesPath, base) {
-  return (this.isCheckmate(movesPath) || this.isDraw(movesPath, base));
+  return (this.isCheckmate(movesPath) || this.isMaxDepth(movesPath, base));
+};
+
+module.exports.isEndGame = function(pathToCheck, base) {
+  return false;
 };
