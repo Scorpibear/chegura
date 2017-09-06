@@ -2,7 +2,7 @@
 
 describe('depthSelector', function() {
   let depthSelector = require('../../app/analysis/depth-selector');
-  const DEFAULT_DEPTH = 36;
+  const DEFAULT_DEPTH = 40;
   describe('getDepthToAnalyze', function() {
     it('returns default depth', function() {
       expect(depthSelector.getDepthToAnalyze()).toEqual(DEFAULT_DEPTH);

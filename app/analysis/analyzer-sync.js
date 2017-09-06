@@ -4,7 +4,7 @@ const Chess = require('./chess').Chess;
 const Engine = require('uci');
 const evaluation = require('../chessbase/evaluation');
 const baseManager = require('../chessbase/base-manager');
-const defaultChessEnginePath = "./stockfish-8-x64.exe";
+const defaultChessEnginePath = "./stockfish_8_x64.exe";
 const pathToChessEngine = (process.argv.length > 2) ?
   process.argv[2] : defaultChessEnginePath;
 const engine = new Engine(pathToChessEngine);
