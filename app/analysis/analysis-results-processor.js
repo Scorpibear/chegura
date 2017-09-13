@@ -3,16 +3,14 @@
 const evaluation = require('../chessbase/evaluation');
 
 class AnalysisResultsProcessor {
-  constructor(engine, chess, initialDepth, depthSelector, moves) {
-    this.engine = engine;
+  constructor(chess, initialDepth, depthSelector, moves) {
     this.chess = chess;
     this.initialDepth = initialDepth;
     this.depthSelector = depthSelector;
     this.moves = moves;
   }
   process(data) {
-    this.engine.quitCommand();
-    let move = this.chess.move(data.bestmove);
+    let bestMove = this.chess.move(data.bestmove);
     let depth = this.initialDepth;
     if (this.chess.game_over()) {
       depth = this.depthSelector.MAX_DEPTH;
@@ -21,7 +19,7 @@ class AnalysisResultsProcessor {
       }
     }
     // console.log('Data, data.bestmove, move: ', data, data.bestmove, move);
-    evaluation.register(this.moves, move, data.score, depth);
+    evaluation.register(this.moves, bestMove, data.score, depth);
   }
 }
 
