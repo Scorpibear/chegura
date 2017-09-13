@@ -17,6 +17,11 @@ const engine = new Engine(pathToChessEngine);
 let isAnalysisInProgress = false;
 let uciOptions = [];
 
+const finalize = function() {
+  isAnalysisInProgress = false;
+  analyzer.analyzeLater();
+};
+
 const analyze = function() {
   if (isAnalysisInProgress)
     return;
@@ -39,7 +44,7 @@ const analyze = function() {
   console.log("start to analyze moves: " + moves);
   let chess = new Chess();
   let initialDepth = depthSelector.getDepthToAnalyze(moves, baseManager.getBase());
-  let analysisResultsProcessor = new AnalysisResultsProcessor(engine, chess, initialDepth, depthSelector, moves);
+  let analysisResultsProcessor = new AnalysisResultsProcessor(chess, initialDepth, depthSelector, moves);
   moves.forEach(function(move) {
     chess.move(move);
   });
@@ -62,13 +67,12 @@ const analyze = function() {
       // console.log(info)
     });
   }).then(function(data) {
+    this.engine.quitCommand();
     analysisResultsProcessor.process(data);
-    isAnalysisInProgress = false;
-    analyzer.analyzeLater();
+    finalize();
   }).fail(function(error) {
     console.log(error);
-    isAnalysisInProgress = false;
-    analyzer.analyzeLater();
+    finalize();
   }).done();
 };
 

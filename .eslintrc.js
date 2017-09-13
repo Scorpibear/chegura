@@ -14,6 +14,8 @@ module.exports = {
       "describe": true,
       "it": true,
       "spyOn": true,
-      "expect": true
+      "expect": true,
+      "beforeAll": true,
+      "beforeEach": true
     }
 };
