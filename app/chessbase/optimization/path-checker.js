@@ -22,7 +22,3 @@ module.exports.isMaxDepth = function(pathToCheck, base) {
 module.exports.isGameOver = function(movesPath, base) {
   return (this.isCheckmate(movesPath) || this.isMaxDepth(movesPath, base));
 };
-
-module.exports.isEndGame = function(pathToCheck, base) {
-  return false;
-};

@@ -1,6 +1,7 @@
 // process results of engine analysis, decide what to do with them
 
 const evaluation = require('../chessbase/evaluation');
+const endgameAnalyzer = require('./endgame-analyzer');
 
 class AnalysisResultsProcessor {
   constructor(chess, initialDepth, depthSelector, moves) {
@@ -12,7 +13,7 @@ class AnalysisResultsProcessor {
   process(data) {
     let bestMove = this.chess.move(data.bestmove);
     let depth = this.initialDepth;
-    if (this.chess.game_over()) {
+    if (this.chess.game_over() || endgameAnalyzer.isEndgame(this.moves)) {
       depth = this.depthSelector.MAX_DEPTH;
       if (this.chess.in_draw) {
         data.score = 0;
