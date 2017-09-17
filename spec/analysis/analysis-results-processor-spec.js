@@ -10,6 +10,7 @@ describe('analysis results processor', function() {
 
   describe('process data', function() {
     let evaluation = require('../../app/chessbase/evaluation');
+    let endgameAnalyzer = require('../../app/analysis/endgame-analyzer');
 
     it('registers evaluation', function() {
       spyOn(evaluation, 'register');
@@ -32,6 +33,14 @@ describe('analysis results processor', function() {
       spyOn(chess, 'in_draw').and.returnValue(true);
 
       analysisResultsProcessor.process({score: 10});
+
+      expect(evaluation.register).toHaveBeenCalledWith([], 'e4', 0, 555);
+    });
+    it('sets max depth if 7 men position reached', function() {
+      spyOn(evaluation, 'register');
+      spyOn(endgameAnalyzer, 'isEndgame').and.returnValue(true);
+
+      analysisResultsProcessor.process({score: 0});
 
       expect(evaluation.register).toHaveBeenCalledWith([], 'e4', 0, 555);
     });
