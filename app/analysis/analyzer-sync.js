@@ -2,18 +2,25 @@
 
 const Chess = require('./chess').Chess;
 const Engine = require('uci');
-const evaluation = require('../chessbase/evaluation');
 const baseManager = require('../chessbase/base-manager');
+const analysisQueue = require('./analysis-queue');
+const analyzer = require('./analyzer');
+const depthSelector = require('./depth-selector');
+const pgnAnalyzer = require('./pgn-analyzer');
+const AnalysisResultsProcessor = require('./analysis-results-processor');
+
 const defaultChessEnginePath = "./stockfish_8_x64.exe";
 const pathToChessEngine = (process.argv.length > 2) ?
   process.argv[2] : defaultChessEnginePath;
 const engine = new Engine(pathToChessEngine);
-const analysisQueue = require('./analysis-queue');
+
 let isAnalysisInProgress = false;
-const analyzer = require('./analyzer');
-const depthSelector = require('./depth-selector');
-const pgnAnalyzer = require('./pgn-analyzer');
 let uciOptions = [];
+
+const finalize = function() {
+  isAnalysisInProgress = false;
+  analyzer.analyzeLater();
+};
 
 const analyze = function() {
   if (isAnalysisInProgress)
@@ -36,7 +43,8 @@ const analyze = function() {
   }
   console.log("start to analyze moves: " + moves);
   let chess = new Chess();
-  let depth = depthSelector.getDepthToAnalyze(moves, baseManager.getBase());
+  let initialDepth = depthSelector.getDepthToAnalyze(moves, baseManager.getBase());
+  let analysisResultsProcessor = new AnalysisResultsProcessor(chess, initialDepth, depthSelector, moves);
   moves.forEach(function(move) {
     chess.move(move);
   });
@@ -55,26 +63,16 @@ const analyze = function() {
   }).then(function() {
     return engine.positionCommand(fen);
   }).then(function() {
-    return engine.goDepthCommand(depth, function infoHandler(info) {
+    return engine.goDepthCommand(initialDepth, function infoHandler(info) {
       // console.log(info)
     });
   }).then(function(data) {
-    engine.quitCommand();
-    let move = chess.move(data.bestmove);
-    if (chess.game_over()) {
-      depth = depthSelector.MAX_DEPTH;
-      if (chess.in_draw) {
-        data.score = 0;
-      }
-    }
-    // console.log('Data, data.bestmove, move: ', data, data.bestmove, move);
-    evaluation.register(moves, move, data.score, depth);
-    isAnalysisInProgress = false;
-    analyzer.analyzeLater();
+    this.engine.quitCommand();
+    analysisResultsProcessor.process(data);
+    finalize();
   }).fail(function(error) {
     console.log(error);
-    isAnalysisInProgress = false;
-    analyzer.analyzeLater();
+    finalize();
   }).done();
 };
 

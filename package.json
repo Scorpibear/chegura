@@ -6,6 +6,7 @@
     "test": "jasmine"
   },
   "dependencies": {
+    "fen-analyzer": "^0.1.0",
     "uci": "Scorpibear/uci"
   },
   "description": "chegura is a chess-guru - server providing best chess moves",
