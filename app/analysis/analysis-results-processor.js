@@ -13,7 +13,7 @@ class AnalysisResultsProcessor {
   process(data) {
     let bestMove = this.chess.move(data.bestmove);
     let depth = this.initialDepth;
-    if (this.chess.game_over() || endgameAnalyzer.isEndgame(this.moves)) {
+    if (this.chess.game_over() || endgameAnalyzer.isEndgame(this.chess.fen())) {
       depth = this.depthSelector.MAX_DEPTH;
       if (this.chess.in_draw) {
         data.score = 0;
