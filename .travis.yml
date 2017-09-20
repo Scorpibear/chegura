@@ -3,7 +3,7 @@ node_js:
   - "6"
   - "8"
 script:
-  - istanbul cover node_modules\jasmine\bin\jasmine.js
+  - istanbul cover node_modules/jasmine/bin/jasmine.js
   - codecov
 install:
   - npm install -g codecov
