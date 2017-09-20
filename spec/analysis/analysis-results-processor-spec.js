@@ -1,7 +1,7 @@
 describe('analysis results processor', function() {
   const AnalysisResultsProcessor = require('../../app/analysis/analysis-results-processor');
   let analysisResultsProcessor = null;
-  let chess = {move: () => 'e4', game_over: () => false, in_draw: false};
+  let chess = {move: () => 'e4', game_over: () => false, in_draw: false, fen: () => 'r 0'};
   let depthSelector = {MAX_DEPTH: 555};
 
   beforeAll(() => {
@@ -14,6 +14,7 @@ describe('analysis results processor', function() {
 
     it('registers evaluation', function() {
       spyOn(evaluation, 'register');
+      spyOn(endgameAnalyzer, 'isEndgame').and.returnValue(false);
 
       analysisResultsProcessor.process({score: 10});
 
@@ -22,6 +23,7 @@ describe('analysis results processor', function() {
     it('registers max depth if game is over', function() {
       spyOn(evaluation, 'register');
       spyOn(chess, 'game_over').and.returnValue(true);
+      spyOn(endgameAnalyzer, 'isEndgame').and.returnValue(false);
 
       analysisResultsProcessor.process({score: 10});
 
@@ -31,6 +33,7 @@ describe('analysis results processor', function() {
       spyOn(evaluation, 'register');
       spyOn(chess, 'game_over').and.returnValue(true);
       spyOn(chess, 'in_draw').and.returnValue(true);
+      spyOn(endgameAnalyzer, 'isEndgame').and.returnValue(false);
 
       analysisResultsProcessor.process({score: 10});
 
