@@ -1,6 +1,6 @@
 'use strict';
 
-var MIN_DEPTH_REQUIRED = 36;
+var MIN_DEPTH_REQUIRED = 40;
 
 var validator = require('./validator');
 var mainLineOptimizer = require('./main-line-optimizer');
