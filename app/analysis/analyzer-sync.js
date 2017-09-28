@@ -67,7 +67,7 @@ const analyze = function() {
       // console.log(info)
     });
   }).then(function(data) {
-    this.engine.quitCommand();
+    engine.quitCommand();
     analysisResultsProcessor.process(data);
     finalize();
   }).fail(function(error) {

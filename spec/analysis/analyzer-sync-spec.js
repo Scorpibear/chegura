@@ -36,6 +36,7 @@ describe('analyzerSync', function() {
 
       expect(depthSelector.getDepthToAnalyze).toHaveBeenCalled();
     });
+    it('asks engine to quit after analysis finished');
     /*
     it('load evaluation instantly for already-evaluated transposition', function() {
       let analysisQueue = require('../../app/analysis/analysis-queue');
