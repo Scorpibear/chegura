@@ -55,6 +55,17 @@ describe('depthSelector', function() {
       }]};
       expect(depthSelector.getDepthToAnalyze(path, base)).toEqual(DEFAULT_DEPTH);
     });
+    it('returns default depth if answer does not have evalution yet', function() {
+      let path = ['e4', 'e6'];
+      let base = {m: '', s: [{
+        m: 'e4', s: [{
+          m: 'e6', e: {v: 0.1, d: DEFAULT_DEPTH}, s: [{
+            m: 'Nf3'
+          }]
+        }]
+      }]};
+      expect(depthSelector.getDepthToAnalyze(path, base)).toEqual(DEFAULT_DEPTH);
+    });
   });
   describe('MAX_DEPTH', function() {
     it('300', function() {
