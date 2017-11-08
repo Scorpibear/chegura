@@ -16,6 +16,7 @@ module.exports = {
       "spyOn": true,
       "expect": true,
       "beforeAll": true,
-      "beforeEach": true
+      "beforeEach": true,
+      "jasmine": true
     }
 };

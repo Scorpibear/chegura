@@ -7,7 +7,9 @@ var base = {m: '', n: 0, c: 'b', t: 'wb'};
 var filename = 'base.json';
 
 var saveBase = function() {
-  fs.writeFile(filename, baseSerializer.stringify(base, true));
+  fs.writeFile(filename, baseSerializer.stringify(base, true), err => {
+    if (err) console.error(err);
+  });
 };
 
 var createChildPositionObject = function(parentObject, childMove, isBest) {

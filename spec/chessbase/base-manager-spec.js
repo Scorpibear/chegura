@@ -53,7 +53,7 @@
 			delete base.e
 			delete base.s
 			baseManager.saveBase()
-			expect(fs.writeFile).toHaveBeenCalledWith('base.json', '{"m": "", "n": 0, "c": "b", "t": "wb", "s": []}')
+			expect(fs.writeFile).toHaveBeenCalledWith('base.json', '{"m": "", "n": 0, "c": "b", "t": "wb", "s": []}', jasmine.anything());
 		})
     })
 })
