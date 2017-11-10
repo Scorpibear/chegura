@@ -3,7 +3,8 @@
   "version": "0.9.0",
   "scripts": {
     "start": "node app.js",
-    "test": "jasmine"
+    "test": "jasmine",
+    "tdd": "nodemon --exec jasmine"
   },
   "dependencies": {
     "fen-analyzer": "^0.1.0",
@@ -14,8 +15,9 @@
   "devDependencies": {
     "eslint": "^3.2.2",
     "eslint-config-google": "^0.6.0",
-    "jasmine": "^2.3.2",
-    "jshint": "^2.9.1"
+    "jasmine": "^2.8.0",
+    "jshint": "^2.9.1",
+    "nodemon": "^1.12.1"
   },
   "repository": {
     "type": "git",
@@ -30,5 +32,8 @@
   "bugs": {
     "url": "https://github.com/Scorpibear/chegura/issues"
   },
-  "homepage": "https://github.com/Scorpibear/chegura#readme"
+  "homepage": "https://github.com/Scorpibear/chegura#readme",
+  "nodemonConfig": {
+    "watch": ["app/**", "spec/**", "app.js"]
+  }
 }
