@@ -2,11 +2,9 @@ language: node_js
 node_js:
   - "6"
   - "8"
-script:
-  - istanbul cover node_modules/jasmine/bin/jasmine.js
-  - codecov
 install:
-  - npm install -g codecov
-  - npm install -g istanbul
-before_script:
   - npm install
+  - npm install -g codecov
+script:
+  - npm run coverage
+  - codecov

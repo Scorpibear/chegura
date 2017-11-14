@@ -4,7 +4,8 @@
   "scripts": {
     "start": "node app.js",
     "test": "jasmine",
-    "tdd": "nodemon --exec jasmine"
+    "tdd": "nodemon --exec jasmine",
+    "coverage": "istanbul cover node_modules/jasmine/bin/jasmine.js"
   },
   "dependencies": {
     "fen-analyzer": "^0.1.0",
@@ -15,6 +16,7 @@
   "devDependencies": {
     "eslint": "^3.2.2",
     "eslint-config-google": "^0.6.0",
+    "istanbul": "^0.4.5",
     "jasmine": "^2.8.0",
     "jshint": "^2.9.1",
     "nodemon": "^1.12.1"
@@ -34,6 +36,10 @@
   },
   "homepage": "https://github.com/Scorpibear/chegura#readme",
   "nodemonConfig": {
-    "watch": ["app/**", "spec/**", "app.js"]
+    "watch": [
+      "app/**",
+      "spec/**",
+      "app.js"
+    ]
   }
 }
