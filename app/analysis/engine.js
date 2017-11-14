@@ -22,9 +22,9 @@ exports.analyzeToDepth = function(fen, depth) {
   }).then(function() {
     return uciEngine.positionCommand(fen);
   }).then(function() {
-    return uciEngine.goDepthCommand(depth, function infoHandler(info) {
-      // console.log(info)
-    });
+    return uciEngine.goDepthCommand(depth /* , function infoHandler(info) {
+      console.log(info)
+    }*/);
   });
 };
 
