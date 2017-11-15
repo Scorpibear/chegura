@@ -40,5 +40,10 @@ describe('usageStatisticsSynchronizer', function() {
 
       expect(usageStatisticsSynchronizer.load()).toBeNull();
     });
+    it('returns null if file content could not be parsed', () => {
+      let fs = require('fs');
+      spyOn(fs, 'readFileSync').and.returnValue("not json");
+      expect(usageStatisticsSynchronizer.load()).toBeNull();
+    });
   });
 });

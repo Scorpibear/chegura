@@ -15,11 +15,12 @@ module.exports.save = function(content) {
 };
 
 module.exports.load = function() {
-  let content = null;
+  let result = null;
   try {
-    content = fs.readFileSync(FILE_NAME);
+    let content = fs.readFileSync(FILE_NAME);
+    result = JSON.parse(content);
   } catch (err) {
-    return null;
+    console.error('Usage statistics could not be loaded');
   }
-  return JSON.parse(content);
+  return result;
 };
