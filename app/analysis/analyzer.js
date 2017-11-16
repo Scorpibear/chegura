@@ -21,14 +21,17 @@ const splitSequentially = function(base, moves) {
 };
 
 const analyzeLater = function(moves, base, priority) {
-  if (moves) {
-    if (!base) throw Error('analyzeLater is called with moves without base');
-    let movesList = splitSequentially(base, moves);
-    movesList.forEach(function(moves) {
-      analysisQueue.push(moves, priority);
-    });
-  }
-  setTimeout(analyzerSync.analyze, 100);
+  return new Promise((resolve, reject) => {
+    if (moves) {
+      if (!base) throw Error('analyzeLater is called with moves without base');
+      let movesList = splitSequentially(base, moves);
+      movesList.forEach(function(moves) {
+        analysisQueue.push(moves, priority);
+      });
+    }
+    setTimeout(analyzerSync.analyze, 100);
+    resolve();
+  });
 };
 
 module.exports.analyzeLater = analyzeLater;

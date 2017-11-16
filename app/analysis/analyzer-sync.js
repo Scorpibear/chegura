@@ -21,7 +21,7 @@ const finalize = function() {
 
 const analyze = function() {
   if (isAnalysisInProgress)
-    return;
+    return Promise.resolve(false);
   isAnalysisInProgress = true;
   let moves = analysisQueue.getFirst();
 
@@ -30,13 +30,13 @@ const analyze = function() {
       baseManager.optimize(analyzer);
     }
     isAnalysisInProgress = false;
-    return;
+    return Promise.resolve(false);
   }
   if (pgnAnalyzer.isError(moves, baseManager.getBase())) {
     console.log('Not optimal position will not be analyzed: ' + moves);
     isAnalysisInProgress = false;
     analyzer.analyzeLater();
-    return;
+    return Promise.resolve(false);
   }
   console.log("start to analyze moves: " + moves);
   let chess = new Chess();
@@ -46,11 +46,15 @@ const analyze = function() {
     chess.move(move);
   });
   let fen = chess.fen();
-  engine.analyzeToDepth(fen, initialDepth).then(data => {
-    analysisResultsProcessor.process(data);
-    finalize();
-  }).fail(() => {
-    finalize();
+  return new Promise((resolve, reject) => {
+    engine.analyzeToDepth(fen, initialDepth).then(data => {
+      analysisResultsProcessor.process(data);
+      finalize();
+      resolve(true);
+    }).catch(err => {
+      finalize();
+      reject(err);
+    });
   });
 };
 
