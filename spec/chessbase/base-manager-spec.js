@@ -1,8 +1,11 @@
 ﻿describe('baseManager', function () {
-    describe('addToBase', function () {
-	    baseManager = require('../../app/chessbase/base-manager')
-		var base = baseManager.getBase()
+	const baseManager = require('../../app/chessbase/base-manager');
+	let base = baseManager.getBase();
 
+	describe('addToBase', function () {
+		beforeAll(function() {
+			spyOn(baseManager, 'saveBase').and.stub();
+		})
         it('add number to base', function () {
             base.s = []
             baseManager.addToBase(['d4'], 'Nf6', 0.12, 30)
@@ -47,9 +50,11 @@
 			baseManager.addToBase([], 'd4', 0.1, 39)
 			expect(base.s[0].e).toEqual({v: 0.11, d: 40})
 		})
+	});
+	describe('saveBase', () => {
 		it('save to base.json', function() {
 			fs = require('fs')
-			spyOn(fs, 'writeFile')
+			spyOn(fs, 'writeFile').and.stub();
 			delete base.e
 			delete base.s
 			baseManager.saveBase()

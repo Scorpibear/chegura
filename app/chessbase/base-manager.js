@@ -6,7 +6,7 @@ var baseIterator = require('./base-iterator');
 var base = {m: '', n: 0, c: 'b', t: 'wb'};
 var filename = 'base.json';
 
-var saveBase = function() {
+module.exports.saveBase = function() {
   fs.writeFile(filename, baseSerializer.stringify(base, true), err => {
     if (err) console.error(err);
   });
@@ -73,7 +73,7 @@ module.exports.addToBase = function(moves, bestAnswer, scoreValue, depth) {
       subPositionObject = createChildPositionObject(parent, bestAnswer, true);
     }
     improveEvaluation(subPositionObject, evaluationObject);
-    saveBase();
+    this.saveBase();
   }
 };
 
@@ -90,8 +90,6 @@ module.exports.readBase = function() {
   }
   base = baseSerializer.parse(baseFileContent);
 };
-
-module.exports.saveBase = saveBase;
 
 module.exports.getBaseAsString = function() {
   return baseSerializer.stringify(base);
