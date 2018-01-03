@@ -3,14 +3,19 @@
 // classes
 const Chess = require('./chess').Chess;
 const AnalysisResultsProcessor = require('./analysis-results-processor');
+const Engine = require('./engine');
 
 // singletons
-const engine = require('./engine');
 const baseManager = require('../chessbase/base-manager');
 const analysisQueue = require('./analysis-queue');
 const analyzer = require('./analyzer');
 const depthSelector = require('./depth-selector');
 const pgnAnalyzer = require('./pgn-analyzer');
+
+const defaultChessEnginePath = "./stockfish_8_x64.exe";
+const pathToChessEngine = (process.argv.length > 2) ?
+  process.argv[2] : defaultChessEnginePath;
+const engine = new Engine(pathToChessEngine);
 
 let isAnalysisInProgress = false;
 
