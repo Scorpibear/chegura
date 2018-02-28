@@ -59,6 +59,43 @@
 			delete base.s
 			baseManager.saveBase()
 			expect(fs.writeFile).toHaveBeenCalledWith('base.json', '{"m": "", "n": 0, "c": "b", "t": "wb", "s": []}', jasmine.anything());
+		});
+		it('console.error is called in case of error during writeFile', () => {
+			fs = require('fs');
+			spyOn(fs, 'writeFile').and.callFake((file, data, callback) => {callback('error')});
+			spyOn(console, 'error').and.callThrough();
+
+			baseManager.saveBase();
+
+			expect(console.error).toHaveBeenCalledWith('error');
+		});
+		it('console.error is not called in case of no error during writeFile', () => {
+			fs = require('fs');
+			spyOn(fs, 'writeFile').and.callFake((file, data, callback) => {callback()});
+			spyOn(console, 'error').and.callThrough();
+
+			baseManager.saveBase();
+
+			expect(console.error).not.toHaveBeenCalled();
+		});
+	});
+	describe('readBase', () => {
+		it('reads base from base.json', () => {
+			fs = require('fs');
+			spyOn(fs, 'readFileSync').and.stub();
+
+			baseManager.readBase();
+
+			expect(fs.readFileSync).toHaveBeenCalledWith('base.json');
+		});
+		it('logs error when file cound not be read', () => {
+			fs = require('fs');
+			spyOn(fs, 'readFileSync').and.throwError('could not read');
+			spyOn(console, 'error').and.callThrough();
+
+			baseManager.readBase();
+
+			expect(console.error).toHaveBeenCalled();
 		})
-    })
+	});
 })
