@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "fen-analyzer": "^0.1.0",
-    "uci": "Scorpibear/uci"
+    "uci-adapter": "github:Scorpibear/uci-adapter"
   },
   "description": "chegura is a chess-guru - server providing best chess moves",
   "main": "app.js",

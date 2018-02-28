@@ -72,4 +72,10 @@ describe('depthSelector', function() {
       expect(depthSelector.MAX_DEPTH).toEqual(300);
     });
   });
+  describe('setDefaultDepth', () => {
+    it('could change min depth required', () => {
+      depthSelector.setDefaultDepth(42);
+      expect(depthSelector.getMinDepthRequired()).toBe(42);
+    });
+  });
 });

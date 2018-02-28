@@ -1,14 +1,18 @@
 "use strict";
 
-var http = require('http');
-var analyzer = require('./app/analysis/analyzer');
-var baseManager = require('./app/chessbase/base-manager');
-var requestProcessor = require('./app/request-processor');
-let config = require('./app/config');
-let port = config.port;
+const http = require('http');
+const analyzer = require('./app/analysis/analyzer');
+const baseManager = require('./app/chessbase/base-manager');
+const requestProcessor = require('./app/request-processor');
+const config = require('./app/config');
+const depthSelector = require('./app/analysis/depth-selector');
+const pathToChessEngine = (process.argv.length > 2) ?
+  process.argv[2] : config.pathToChessEngine;
+const port = config.port;
 
 try {
-  analyzer.setUciOptions(config.uciOptions);
+  analyzer.setChessEngineOptions(pathToChessEngine, config.uciOptions);
+  depthSelector.setDefaultDepth(config.defaultDepth);
   baseManager.readBase();
   baseManager.saveBase();
   http.createServer(function(req, res) {
@@ -33,5 +37,5 @@ try {
 
   console.log("Chegura is ready to process requests on " + port + " port");
 } catch (err) {
-  console.error('Unexpected error: ' + err);
+  console.error('Unexpected error: ', err);
 }

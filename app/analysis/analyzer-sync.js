@@ -3,7 +3,7 @@
 // classes
 const Chess = require('./chess').Chess;
 const AnalysisResultsProcessor = require('./analysis-results-processor');
-const Engine = require('./engine');
+const Engine = require('uci-adapter');
 
 // singletons
 const baseManager = require('../chessbase/base-manager');
@@ -12,10 +12,7 @@ const analyzer = require('./analyzer');
 const depthSelector = require('./depth-selector');
 const pgnAnalyzer = require('./pgn-analyzer');
 
-const defaultChessEnginePath = "./stockfish_8_x64.exe";
-const pathToChessEngine = (process.argv.length > 2) ?
-  process.argv[2] : defaultChessEnginePath;
-const engine = new Engine(pathToChessEngine);
+let engine = undefined;
 
 let isAnalysisInProgress = false;
 
@@ -52,23 +49,26 @@ const analyze = function() {
   });
   let fen = chess.fen();
   return new Promise((resolve, reject) => {
-    engine.analyzeToDepth(fen, initialDepth).then(data => {
-      analysisResultsProcessor.process(data);
-      finalize();
-      resolve(true);
-    }).catch(err => {
-      finalize();
-      reject(err);
-    });
+    if(engine) {
+      engine.analyzeToDepth(fen, initialDepth).then(data => {
+        analysisResultsProcessor.process(data);
+        finalize();
+        resolve(true);
+      }).catch(err => {
+        finalize();
+        reject(err);
+      });
+    }
   });
 };
 
 exports.analyze = analyze;
 
-exports.isAnalysisInProgress = function() {
+exports.isAnalysisInProgress = () => {
   return isAnalysisInProgress;
 };
 
-exports.setUciOptions = options => {
+exports.setChessEngineOptions = (path, options) => {
+  engine = new Engine(path);
   engine.setUciOptions(options);
-};
+}

@@ -34,18 +34,18 @@ const analyzeLater = function(moves, base, priority) {
   });
 };
 
-module.exports.analyzeLater = analyzeLater;
+exports.analyzeLater = analyzeLater;
 
-module.exports.getQueue = function() {
+exports.getQueue = () => {
   return analysisQueue.getQueue();
 };
 
-module.exports.resetQueue = function() {
+exports.resetQueue = () => {
   analysisQueue.empty();
 };
 
-module.exports.isAnalysisInProgress = analyzerSync.isAnalysisInProgress;
+exports.isAnalysisInProgress = analyzerSync.isAnalysisInProgress;
 
-module.exports.setUciOptions = function(uciOptions) {
-  analyzerSync.setUciOptions(uciOptions);
-};
+exports.setChessEngineOptions = (path, uciOptions) => {
+  analyzerSync.setChessEngineOptions(path, uciOptions);
+}

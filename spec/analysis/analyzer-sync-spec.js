@@ -2,6 +2,7 @@
 
 describe('analyzerSync', function() {
   var analyzerSync = require('../../app/analysis/analyzer-sync');
+  analyzerSync.setChessEngineOptions("", []);
   describe('analyze', function() {
     it('ignore double error positions, even if they were in queue', done => {
       const analyzer = require('../../app/analysis/analyzer');
@@ -39,7 +40,7 @@ describe('analyzerSync', function() {
       spyOn(depthSelector, 'getDepthToAnalyze');
       let analysisQueue = require('../../app/analysis/analysis-queue');
       spyOn(analysisQueue, 'getFirst').and.returnValue(['h3']);
-      const Engine = require('../../app/analysis/engine');
+      const Engine = require('uci-adapter');
       spyOn(Engine.prototype, 'analyzeToDepth').and.returnValue(Promise.resolve(0));
 
 
@@ -59,7 +60,7 @@ describe('analyzerSync', function() {
       console.log('the test');
       const analyzer = require('../../app/analysis/analyzer');
       spyOn(analyzer, 'analyzeLater').and.stub();
-      const Engine = require('../../app/analysis/engine');
+      const Engine = require('uci-adapter');
       spyOn(Engine.prototype, 'analyzeToDepth').and.returnValue(Promise.resolve(0));
       const analysisQueue = require('../../app/analysis/analysis-queue');
       const pgnAnalyzer = require('../../app/analysis/pgn-analyzer');
@@ -76,12 +77,12 @@ describe('analyzerSync', function() {
       });
     });
   });
-  describe('setUciOptions', () => {
+  describe('setChessEngineOptions', () => {
     it('calls engine setUciOptions', () => {
-      const Engine = require('../../app/analysis/engine');
+      const Engine = require('uci-adapter');
       spyOn(Engine.prototype, 'setUciOptions').and.stub();
 
-      analyzerSync.setUciOptions([{name: "a", value: "b"}, {name: "c", value: "d"}]);
+      analyzerSync.setChessEngineOptions("/path/to/engine", [{name: "a", value: "b"}, {name: "c", value: "d"}]);
 
       expect(Engine.prototype.setUciOptions).toHaveBeenCalledWith([{name: "a", value: "b"}, {name: "c", value: "d"}]);
     });

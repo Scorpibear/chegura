@@ -82,13 +82,12 @@ module.exports.getBase = function() {
 };
 
 module.exports.readBase = function() {
-  var baseFileContent = "{}";
   try {
-    baseFileContent = fs.readFileSync(filename);
+    let baseFileContent = fs.readFileSync(filename);
+    base = baseSerializer.parse(baseFileContent);
   } catch (err) {
     console.error("Could not read " + filename + ": " + err);
   }
-  base = baseSerializer.parse(baseFileContent);
 };
 
 module.exports.getBaseAsString = function() {
