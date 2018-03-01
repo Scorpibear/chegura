@@ -29,7 +29,10 @@ const analyzeLater = function(moves, base, priority) {
         analysisQueue.push(moves, priority);
       });
     }
-    setTimeout(analyzerSync.analyze, 100);
+    setTimeout(() => {
+      analyzerSync.analyze().catch(err => {
+        console.error(err);
+      })}, 100);
     resolve();
   });
 };

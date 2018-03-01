@@ -40,9 +40,9 @@ const analyze = function() {
     analyzer.analyzeLater();
     return Promise.resolve(false);
   }
-  console.log("start to analyze moves: " + moves);
   let chess = new Chess();
   let initialDepth = depthSelector.getDepthToAnalyze(moves, baseManager.getBase());
+  console.log(`start to analyze moves '${moves}' to ${initialDepth} depth`);
   let analysisResultsProcessor = new AnalysisResultsProcessor(chess, initialDepth, depthSelector, moves);
   moves.forEach(function(move) {
     chess.move(move);
