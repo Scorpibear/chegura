@@ -30,7 +30,7 @@ const analyzeLater = function(moves, base, priority) {
       });
     }
     setTimeout(() => {
-      analyzerSync.analyze().catch(err => {
+      analyzerSync.analyze().then(null, err => console.error(err)).catch(err => {
         console.error(err);
       })}, 100);
     resolve();

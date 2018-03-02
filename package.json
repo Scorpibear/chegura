@@ -1,6 +1,6 @@
 {
   "name": "chegura",
-  "version": "1.0.0rc1",
+  "version": "1.0.0rc2",
   "scripts": {
     "start": "node app.js",
     "test": "jasmine",
