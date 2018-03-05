@@ -6,8 +6,10 @@ var baseIterator = require('./base-iterator');
 var base = {m: '', n: 0, c: 'b', t: 'wb'};
 var filename = 'base.json';
 
-var saveBase = function() {
-  fs.writeFile(filename, baseSerializer.stringify(base, true));
+module.exports.saveBase = function() {
+  fs.writeFile(filename, baseSerializer.stringify(base, true), err => {
+    if (err) console.error(err);
+  });
 };
 
 var createChildPositionObject = function(parentObject, childMove, isBest) {
@@ -71,7 +73,7 @@ module.exports.addToBase = function(moves, bestAnswer, scoreValue, depth) {
       subPositionObject = createChildPositionObject(parent, bestAnswer, true);
     }
     improveEvaluation(subPositionObject, evaluationObject);
-    saveBase();
+    this.saveBase();
   }
 };
 
@@ -80,16 +82,13 @@ module.exports.getBase = function() {
 };
 
 module.exports.readBase = function() {
-  var baseFileContent = "{}";
   try {
-    baseFileContent = fs.readFileSync(filename);
+    let baseFileContent = fs.readFileSync(filename);
+    base = baseSerializer.parse(baseFileContent);
   } catch (err) {
     console.error("Could not read " + filename + ": " + err);
   }
-  base = baseSerializer.parse(baseFileContent);
 };
-
-module.exports.saveBase = saveBase;
 
 module.exports.getBaseAsString = function() {
   return baseSerializer.stringify(base);

@@ -1,21 +1,20 @@
 "use strict";
 
+// classes
 const Chess = require('./chess').Chess;
-const Engine = require('uci');
+const AnalysisResultsProcessor = require('./analysis-results-processor');
+const Engine = require('uci-adapter');
+
+// singletons
 const baseManager = require('../chessbase/base-manager');
 const analysisQueue = require('./analysis-queue');
 const analyzer = require('./analyzer');
 const depthSelector = require('./depth-selector');
 const pgnAnalyzer = require('./pgn-analyzer');
-const AnalysisResultsProcessor = require('./analysis-results-processor');
 
-const defaultChessEnginePath = "./stockfish_8_x64.exe";
-const pathToChessEngine = (process.argv.length > 2) ?
-  process.argv[2] : defaultChessEnginePath;
-const engine = new Engine(pathToChessEngine);
+let engine = undefined;
 
 let isAnalysisInProgress = false;
-let uciOptions = [];
 
 const finalize = function() {
   isAnalysisInProgress = false;
@@ -24,7 +23,7 @@ const finalize = function() {
 
 const analyze = function() {
   if (isAnalysisInProgress)
-    return;
+    return Promise.resolve(false);
   isAnalysisInProgress = true;
   let moves = analysisQueue.getFirst();
 
@@ -33,55 +32,43 @@ const analyze = function() {
       baseManager.optimize(analyzer);
     }
     isAnalysisInProgress = false;
-    return;
+    return Promise.resolve(false);
   }
   if (pgnAnalyzer.isError(moves, baseManager.getBase())) {
     console.log('Not optimal position will not be analyzed: ' + moves);
     isAnalysisInProgress = false;
     analyzer.analyzeLater();
-    return;
+    return Promise.resolve(false);
   }
-  console.log("start to analyze moves: " + moves);
   let chess = new Chess();
   let initialDepth = depthSelector.getDepthToAnalyze(moves, baseManager.getBase());
+  console.log(`start to analyze moves '${moves}' to ${initialDepth} depth`);
   let analysisResultsProcessor = new AnalysisResultsProcessor(chess, initialDepth, depthSelector, moves);
   moves.forEach(function(move) {
     chess.move(move);
   });
   let fen = chess.fen();
-  engine.runProcess().then(function() {
-    return engine.uciCommand();
-  }).then(function() {
-    return engine.isReadyCommand();
-  }).then(function() {
-    uciOptions.forEach(function(option) {
-      engine.setOptionCommand(option.name, option.value);
-    });
-    return engine.isReadyCommand();
-  }).then(function() {
-    return engine.uciNewGameCommand();
-  }).then(function() {
-    return engine.positionCommand(fen);
-  }).then(function() {
-    return engine.goDepthCommand(initialDepth, function infoHandler(info) {
-      // console.log(info)
-    });
-  }).then(function(data) {
-    engine.quitCommand();
-    analysisResultsProcessor.process(data);
-    finalize();
-  }).fail(function(error) {
-    console.log(error);
-    finalize();
-  }).done();
+  return new Promise((resolve, reject) => {
+    if(engine) {
+      engine.analyzeToDepth(fen, initialDepth).then(data => {
+        analysisResultsProcessor.process(data);
+        finalize();
+        resolve(true);
+      }).catch(err => {
+        finalize();
+        reject(err);
+      });
+    }
+  });
 };
 
-module.exports.analyze = analyze;
+exports.analyze = analyze;
 
-module.exports.isAnalysisInProgress = function() {
+exports.isAnalysisInProgress = () => {
   return isAnalysisInProgress;
 };
 
-module.exports.setUciOptions = function(options) {
-  uciOptions = options;
-};
+exports.setChessEngineOptions = (path, options) => {
+  engine = new Engine(path);
+  engine.setUciOptions(options);
+}

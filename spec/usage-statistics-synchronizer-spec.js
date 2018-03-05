@@ -8,15 +8,15 @@ describe('usageStatisticsSynchronizer', function() {
     it('saves it to file', function() {
       let jsonContent = {foo: "bar"};
       let fs = require('fs');
-      spyOn(fs, 'writeFileSync');
+      spyOn(fs, 'writeFile');
       spyOn(JSON, 'stringify').and.returnValue('json as string');
 
       usageStatisticsSynchronizer.save(jsonContent);
 
       expect(JSON.stringify).toHaveBeenCalledWith(jsonContent);
-      expect(fs.writeFileSync)
+      expect(fs.writeFile)
         .toHaveBeenCalledWith(usageStatisticsSynchronizer.FILE_NAME,
-          'json as string');
+          'json as string', jasmine.anything());
     });
   });
   describe('load', function() {
@@ -38,6 +38,11 @@ describe('usageStatisticsSynchronizer', function() {
       spyOn(fs, 'readFileSync').and
         .throwError("ENOENT: no such file or directory, open 'usage-statistics.json'");
 
+      expect(usageStatisticsSynchronizer.load()).toBeNull();
+    });
+    it('returns null if file content could not be parsed', () => {
+      let fs = require('fs');
+      spyOn(fs, 'readFileSync').and.returnValue("not json");
       expect(usageStatisticsSynchronizer.load()).toBeNull();
     });
   });

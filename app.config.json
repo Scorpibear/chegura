@@ -3,5 +3,7 @@
     "optimize": true
   },
   "port": 9966,
-  "uciOptions": [{"name":"Threads", "value":3}, {"name": "Hash", "value": 4096}]
+  "uciOptions": [{"name":"Threads", "value":3}, {"name": "Hash", "value": 4096}],
+  "pathToChessEngine": "./stockfish_9_x64.exe",
+  "defaultDepth": 40
 }

@@ -15,7 +15,7 @@ module.exports.isCheckmate = function(pathToAnalyze) {
 
 module.exports.isMaxDepth = function(pathToCheck, base) {
   let positionObject = baseIterator.findPositionObject(pathToCheck, base);
-  return (positionObject.hasOwnProperty('e') && positionObject.e.hasOwnProperty('d') &&
+  return (positionObject && positionObject.hasOwnProperty('e') && positionObject.e.hasOwnProperty('d') &&
     positionObject.e.d >= MAX_DEPTH);
 };
 

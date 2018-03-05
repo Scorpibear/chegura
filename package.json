@@ -1,21 +1,30 @@
 {
   "name": "chegura",
-  "version": "0.9.0",
+  "version": "1.0.0rc2",
   "scripts": {
     "start": "node app.js",
-    "test": "jasmine"
+    "test": "jasmine",
+    "tdd": "nodemon --exec jasmine",
+    "lint": "standard",
+    "coverage": "istanbul cover node_modules/jasmine/bin/jasmine.js",
+    "validate": "npm-run-all --parallel test lint"
   },
   "dependencies": {
     "fen-analyzer": "^0.1.0",
-    "uci": "Scorpibear/uci"
+    "uci-adapter": "github:Scorpibear/uci-adapter"
   },
   "description": "chegura is a chess-guru - server providing best chess moves",
   "main": "app.js",
   "devDependencies": {
     "eslint": "^3.2.2",
     "eslint-config-google": "^0.6.0",
-    "jasmine": "^2.3.2",
-    "jshint": "^2.9.1"
+    "husky": "^0.14.3",
+    "istanbul": "^0.4.5",
+    "jasmine": "^2.8.0",
+    "jshint": "^2.9.1",
+    "nodemon": "^1.12.1",
+    "npm-run-all": "^4.1.2",
+    "standard": "^10.0.3"
   },
   "repository": {
     "type": "git",
@@ -30,5 +39,12 @@
   "bugs": {
     "url": "https://github.com/Scorpibear/chegura/issues"
   },
-  "homepage": "https://github.com/Scorpibear/chegura#readme"
+  "homepage": "https://github.com/Scorpibear/chegura#readme",
+  "nodemonConfig": {
+    "watch": [
+      "app/**",
+      "spec/**",
+      "app.js"
+    ]
+  }
 }

@@ -8,7 +8,7 @@ describe('analysis results processor', function() {
     analysisResultsProcessor = new AnalysisResultsProcessor(chess, 50, depthSelector, []);
   });
 
-  describe('process data', function() {
+  describe('process', function() {
     let evaluation = require('../../app/chessbase/evaluation');
     let endgameAnalyzer = require('../../app/analysis/endgame-analyzer');
 
@@ -16,7 +16,7 @@ describe('analysis results processor', function() {
       spyOn(evaluation, 'register');
       spyOn(endgameAnalyzer, 'isEndgame').and.returnValue(false);
 
-      analysisResultsProcessor.process({score: 10});
+      analysisResultsProcessor.process({bestmove: 'e2e4', info: [{score: {value: 10}}]});
 
       expect(evaluation.register).toHaveBeenCalledWith([], 'e4', 10, 50);
     });
@@ -25,7 +25,7 @@ describe('analysis results processor', function() {
       spyOn(chess, 'game_over').and.returnValue(true);
       spyOn(endgameAnalyzer, 'isEndgame').and.returnValue(false);
 
-      analysisResultsProcessor.process({score: 10});
+      analysisResultsProcessor.process({bestmove: 'e2e4', info: [{score: {value: 10}}]});
 
       expect(evaluation.register).toHaveBeenCalledWith([], 'e4', 10, 555);
     });
@@ -35,7 +35,7 @@ describe('analysis results processor', function() {
       spyOn(chess, 'in_draw').and.returnValue(true);
       spyOn(endgameAnalyzer, 'isEndgame').and.returnValue(false);
 
-      analysisResultsProcessor.process({score: 10});
+      analysisResultsProcessor.process({bestmove: 'e2e4', info: [{score: {value: 10}}]});
 
       expect(evaluation.register).toHaveBeenCalledWith([], 'e4', 0, 555);
     });
@@ -43,9 +43,20 @@ describe('analysis results processor', function() {
       spyOn(evaluation, 'register');
       spyOn(endgameAnalyzer, 'isEndgame').and.returnValue(true);
 
-      analysisResultsProcessor.process({score: 0});
+      analysisResultsProcessor.process({bestmove: 'e2e4', info: [{score: {value: 0}}]});
 
       expect(evaluation.register).toHaveBeenCalledWith([], 'e4', 0, 555);
+    });
+    it('validates data', () => {
+      spyOn(analysisResultsProcessor, 'validate');
+      analysisResultsProcessor.process({bestmove: 'e2e4'});
+      expect(analysisResultsProcessor.validate).toHaveBeenCalled();
+    });
+  });
+  describe('validate', () => {
+    it('returns true when bestmove and array of info presents', () => {
+      let data = {bestmove: 'e2e4', info: [{score: {value: 0}}]};
+      expect(analysisResultsProcessor.validate(data)).toBeTruthy();
     });
   });
 });

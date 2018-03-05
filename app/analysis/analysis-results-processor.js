@@ -11,16 +11,26 @@ class AnalysisResultsProcessor {
     this.moves = moves;
   }
   process(data) {
-    let bestMove = this.chess.move(data.bestmove);
-    let depth = this.initialDepth;
-    if (this.chess.game_over() || endgameAnalyzer.isEndgame(this.chess.fen())) {
-      depth = this.depthSelector.MAX_DEPTH;
-      if (this.chess.in_draw) {
-        data.score = 0;
+    if(this.validate(data)) {
+      let bestMove = this.chess.move(data.bestmove, {sloppy: true});
+      let score = data.info[data.info.length-1].score.value;
+      let depth = this.initialDepth;
+      if (this.chess.game_over() || endgameAnalyzer.isEndgame(this.chess.fen())) {
+        depth = this.depthSelector.MAX_DEPTH;
+        if (this.chess.in_draw) {
+          score = 0;
+        }
       }
+      evaluation.register(this.moves, bestMove, score, depth);
     }
-    // console.log('Data, data.bestmove, move: ', data, data.bestmove, move);
-    evaluation.register(this.moves, bestMove, data.score, depth);
+  }
+  validate(data) {
+    let isValid = data && data.bestmove && data.info && data.info.length &&
+      data.info[data.info.length-1].score && data.info[data.info.length-1].score.hasOwnProperty('value');
+    if(!isValid) {
+      console.error('Validation error of chess engine output data. Data: ', data);
+    }
+    return isValid;
   }
 }
 

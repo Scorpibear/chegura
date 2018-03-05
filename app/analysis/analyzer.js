@@ -21,28 +21,34 @@ const splitSequentially = function(base, moves) {
 };
 
 const analyzeLater = function(moves, base, priority) {
-  if (moves) {
-    if (!base) throw Error('analyzeLater is called with moves without base');
-    let movesList = splitSequentially(base, moves);
-    movesList.forEach(function(moves) {
-      analysisQueue.push(moves, priority);
-    });
-  }
-  setTimeout(analyzerSync.analyze, 100);
+  return new Promise((resolve, reject) => {
+    if (moves) {
+      if (!base) throw Error('analyzeLater is called with moves without base');
+      let movesList = splitSequentially(base, moves);
+      movesList.forEach(function(moves) {
+        analysisQueue.push(moves, priority);
+      });
+    }
+    setTimeout(() => {
+      analyzerSync.analyze().then(null, err => console.error(err)).catch(err => {
+        console.error(err);
+      })}, 100);
+    resolve();
+  });
 };
 
-module.exports.analyzeLater = analyzeLater;
+exports.analyzeLater = analyzeLater;
 
-module.exports.getQueue = function() {
+exports.getQueue = () => {
   return analysisQueue.getQueue();
 };
 
-module.exports.resetQueue = function() {
+exports.resetQueue = () => {
   analysisQueue.empty();
 };
 
-module.exports.isAnalysisInProgress = analyzerSync.isAnalysisInProgress;
+exports.isAnalysisInProgress = analyzerSync.isAnalysisInProgress;
 
-module.exports.setUciOptions = function(uciOptions) {
-  analyzerSync.setUciOptions(uciOptions);
-};
+exports.setChessEngineOptions = (path, uciOptions) => {
+  analyzerSync.setChessEngineOptions(path, uciOptions);
+}

@@ -1,20 +1,19 @@
 'use strict';
 
-var MIN_DEPTH_REQUIRED = 40;
-
-var validator = require('./validator');
-var mainLineOptimizer = require('./main-line-optimizer');
-var analysisPriority = require('../../analysis/analysis-priority');
-var timeoutInMilliseconds = 100;
-var optimizeInProgress = false;
-var settings = {};
+const validator = require('./validator');
+const mainLineOptimizer = require('./main-line-optimizer');
+const analysisPriority = require('../../analysis/analysis-priority');
+const depthSelector = require('../../analysis/depth-selector');
+const timeoutInMilliseconds = 100;
+let optimizeInProgress = false;
+let settings = {};
 
 var optimizeSync = function(base, analyzer, baseIterator) {
   if (optimizeInProgress) return;
   optimizeInProgress = true;
   validator.validate(base);
   if (baseIterator) {
-    let movesList = baseIterator.getMovesToInsufficientEvaluationDepth(base, MIN_DEPTH_REQUIRED);
+    let movesList = baseIterator.getMovesToInsufficientEvaluationDepth(base, depthSelector.getMinDepthRequired());
     if (movesList) {
       movesList.forEach(function(moves) {
         analyzer.analyzeLater(moves, base, analysisPriority.OptimizationOfNotAnalyzedEnough);

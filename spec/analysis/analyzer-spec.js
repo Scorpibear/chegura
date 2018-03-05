@@ -39,13 +39,12 @@ describe('analyzer', function() {
       done();
     });
   });
-  describe('setUciOptions', function() {
-    it('calls setUciOptions of analyzer-sync', function() {
-      let options = {};
+  describe('setChessEngineOptions', function() {
+    it('calls setChessEngineOptions of analyzer-sync', function() {
       let analyzerSync = require('../../app/analysis/analyzer-sync');
-      spyOn(analyzerSync, 'setUciOptions');
-      analyzer.setUciOptions(options);
-      expect(analyzerSync.setUciOptions).toHaveBeenCalledWith(options);
+      spyOn(analyzerSync, 'setChessEngineOptions');
+      analyzer.setChessEngineOptions("path/to/engine", [{name: "a", value: "b"}]);
+      expect(analyzerSync.setChessEngineOptions).toHaveBeenCalledWith("path/to/engine", [{name: "a", value: "b"}]);
     });
   });
 });

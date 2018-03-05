@@ -16,6 +16,9 @@ describe('pathChecker', function() {
       let base = {m: '', s: [{m: 'd4', e: {v: 0.1, d: 32}}]};
       expect(pathChecker.isMaxDepth(['d4'], base)).toBeFalsy();
     });
+    it('returns false if base is empty', () => {
+      expect(pathChecker.isMaxDepth(['d4', 'd5'],{})).toBeFalsy();
+    })
     it('return true if v: 0, d: 300', function() {
       let base = {m: '', s: [{m: 'd4', e: {v: 0, d: 300}}]};
       expect(pathChecker.isMaxDepth(['d4'], base)).toBeTruthy();
