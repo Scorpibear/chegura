@@ -7,6 +7,8 @@ Chegura is a chess-guru - server providing best chess moves
 
 ## Install
 
+Need to use node.js v8 or higher
+
 npm install chegura
 
 ## Demo
