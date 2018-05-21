@@ -39,6 +39,10 @@ describe('analyzer', function() {
       done();
     });
   });
+  describe('checkEvaluation', () => {
+    it('check that evaluation was requested from that url');
+    it('register correct evaluation');
+  });
   describe('setChessEngineOptions', function() {
     it('calls setChessEngineOptions of analyzer-sync', function() {
       let analyzerSync = require('../../app/analysis/analyzer-sync');

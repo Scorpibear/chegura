@@ -3,7 +3,8 @@
 // classes
 const Chess = require('./chess').Chess;
 const AnalysisResultsProcessor = require('./analysis-results-processor');
-const Engine = require('uci-adapter');
+// const Engine = require('uci-adapter');
+const Engine = require('./remote-engine');
 
 // singletons
 const baseManager = require('../chessbase/base-manager');
@@ -49,7 +50,7 @@ const analyze = function() {
   });
   let fen = chess.fen();
   return new Promise((resolve, reject) => {
-    if(engine) {
+    if (engine) {
       engine.analyzeToDepth(fen, initialDepth).then(data => {
         analysisResultsProcessor.process(data);
         finalize();

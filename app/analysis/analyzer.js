@@ -32,7 +32,8 @@ const analyzeLater = function(moves, base, priority) {
     setTimeout(() => {
       analyzerSync.analyze().then(null, err => console.error(err)).catch(err => {
         console.error(err);
-      })}, 100);
+      });
+    }, 100);
     resolve();
   });
 };
@@ -51,4 +52,8 @@ exports.isAnalysisInProgress = analyzerSync.isAnalysisInProgress;
 
 exports.setChessEngineOptions = (path, uciOptions) => {
   analyzerSync.setChessEngineOptions(path, uciOptions);
-}
+};
+
+exports.checkEvaluation = () => {
+};
+

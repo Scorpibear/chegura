@@ -11,9 +11,9 @@ class AnalysisResultsProcessor {
     this.moves = moves;
   }
   process(data) {
-    if(this.validate(data)) {
+    if (this.validate(data)) {
       let bestMove = this.chess.move(data.bestmove, {sloppy: true});
-      let score = data.info[data.info.length-1].score.value;
+      let score = data.info[data.info.length - 1].score.value;
       let depth = this.initialDepth;
       if (this.chess.game_over() || endgameAnalyzer.isEndgame(this.chess.fen())) {
         depth = this.depthSelector.MAX_DEPTH;
@@ -26,8 +26,8 @@ class AnalysisResultsProcessor {
   }
   validate(data) {
     let isValid = data && data.bestmove && data.info && data.info.length &&
-      data.info[data.info.length-1].score && data.info[data.info.length-1].score.hasOwnProperty('value');
-    if(!isValid) {
+      data.info[data.info.length - 1].score && data.info[data.info.length - 1].score.hasOwnProperty('value');
+    if (!isValid) {
       console.error('Validation error of chess engine output data. Data: ', data);
     }
     return isValid;

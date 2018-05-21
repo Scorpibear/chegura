@@ -22,15 +22,15 @@ module.exports.getFavicon = function(res) {
 };
 
 module.exports.analyze = function(req, res) {
-  if (req.method == "OPTIONS") {
+  if (req.method === "OPTIONS") {
     res.writeHead(200, {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Headers': 'Origin, Content-Type'
     });
     res.end("");
   }
-  if (req.method == "POST") {
-    req.on('data', function (chunk) {
+  if (req.method === "POST") {
+    req.on('data', chunk => {
       var data = JSON.parse(chunk);
       if (data.moves) {
         analyzer.analyzeLater(data.moves, baseManager.getBase(), analysisPriority.ExternalRequestsForNewPositions);
@@ -49,5 +49,20 @@ module.exports.getUsersCount = function(req, res) {
     'Access-Control-Allow-Origin': '*'
   });
   var usersCount = usageStatistics.getUsersCount();
-  res.end("" + usersCount);
+  res.end(String(usersCount));
+};
+
+module.exports.saveResults = (req, res) => {
+  if (req.method === "POST") {
+    req.on('data', chunk => {
+      var data = JSON.parse(chunk);
+      if (data.fen && data.bestMove && data.score) {
+        analyzer.checkEvaluation({fen: data.fen, bestMove: data.bestMove, score: data.score});
+      } else {
+        console.error("Incorrect data received:", data);
+      }
+    });
+    res.writeHead(200, {'Access-Control-Allow-Origin': '*'});
+    res.end("");
+  }
 };

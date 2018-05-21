@@ -26,6 +26,9 @@ try {
       case "/api/getuserscount":
         requestProcessor.getUsersCount(req, res);
         break;
+      case "api/results":
+        requestProcessor.saveResults(req, res);
+        break;
       case "/api/getbase":
       case "/":
       default:
