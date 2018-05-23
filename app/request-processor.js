@@ -52,17 +52,8 @@ module.exports.getUsersCount = function(req, res) {
   res.end(String(usersCount));
 };
 
-module.exports.saveResults = (req, res) => {
-  if (req.method === "POST") {
-    req.on('data', chunk => {
-      var data = JSON.parse(chunk);
-      if (data.fen && data.bestMove && data.score) {
-        analyzer.checkEvaluation({fen: data.fen, bestMove: data.bestMove, score: data.score});
-      } else {
-        console.error("Incorrect data received:", data);
-      }
-    });
-    res.writeHead(200, {'Access-Control-Allow-Origin': '*'});
-    res.end("");
-  }
+module.exports.ping = (req, res) => {
+  
+  res.writeHead(200, {'Access-Control-Allow-Origin': '*'});
+  res.end("");
 };

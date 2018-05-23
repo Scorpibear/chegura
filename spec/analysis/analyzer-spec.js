@@ -40,8 +40,8 @@ describe('analyzer', function() {
     });
   });
   describe('checkEvaluation', () => {
-    it('check that evaluation was requested from that url');
-    it('register correct evaluation');
+    it('checks that evaluation was requested from that url');
+    it('registers correct evaluation');
   });
   describe('setChessEngineOptions', function() {
     it('calls setChessEngineOptions of analyzer-sync', function() {

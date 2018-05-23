@@ -6,7 +6,7 @@ const http = require('http');
 class RemoteEngine {
   constructor(ricpaData) {
     this.ricpaData = ricpaData;
-    this.callbackUrl = "http://localhost:9966/results";
+    this.callbackUrl = "http://localhost:9966/api/ping";
   }
   analyzeToDepth(fen, depth) {
     return new Promise((resolve, reject) => {
