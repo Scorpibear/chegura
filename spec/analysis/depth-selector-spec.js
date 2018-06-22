@@ -73,9 +73,16 @@ describe('depthSelector', function() {
     });
   });
   describe('setDefaultDepth', () => {
+    let defaultDepth;
+    beforeEach(() => {
+      defaultDepth = depthSelector.getMinDepthRequired();
+    });
     it('could change min depth required', () => {
       depthSelector.setDefaultDepth(42);
       expect(depthSelector.getMinDepthRequired()).toBe(42);
+    });
+    afterEach(() => {
+      depthSelector.setDefaultDepth(defaultDepth);
     });
   });
 });

@@ -1,5 +1,12 @@
 'use strict';
 
+const Engine = require('uci-adapter');
+
+const analyzer = require('../../app/analysis/analyzer');
+const analysisQueue = require('../../app/analysis/analysis-queue');
+const baseManager = require('../../app/chessbase/base-manager');
+const pgnAnalyzer = require('../../app/analysis/pgn-analyzer');
+
 describe('analyzerSync', function() {
   var analyzerSync = require('../../app/analysis/analyzer-sync');
   analyzerSync.setChessEngineOptions("", []);
@@ -8,10 +15,8 @@ describe('analyzerSync', function() {
       const analyzer = require('../../app/analysis/analyzer');
       spyOn(analyzer, 'analyzeLater').and.stub();
       var moves = ['h3', 'a6'];
-      var analysisQueue = require('../../app/analysis/analysis-queue');
       analysisQueue.empty();
       analysisQueue.push(moves, 1);
-      var pgnAnalyzer = require('../../app/analysis/pgn-analyzer');
       spyOn(pgnAnalyzer, 'isError').and.returnValue('true');
 
       analyzerSync.analyze().then(() => {
@@ -22,9 +27,7 @@ describe('analyzerSync', function() {
     it('run baseManager optimize, if analysis queue is empty', done => {
       const analyzer = require('../../app/analysis/analyzer');
       spyOn(analyzer, 'analyzeLater').and.stub();
-      var analysisQueue = require('../../app/analysis/analysis-queue');
       spyOn(analysisQueue, 'getFirst').and.returnValue(null);
-      var baseManager = require('../../app/chessbase/base-manager');
       spyOn(baseManager, 'optimize');
       // pass baseManager to analyze in some way
 
@@ -38,7 +41,6 @@ describe('analyzerSync', function() {
       spyOn(analyzer, 'analyzeLater').and.stub();
       let depthSelector = require('../../app/analysis/depth-selector');
       spyOn(depthSelector, 'getDepthToAnalyze');
-      let analysisQueue = require('../../app/analysis/analysis-queue');
       spyOn(analysisQueue, 'getFirst').and.returnValue(['h3']);
       const Engine = require('uci-adapter');
       spyOn(Engine.prototype, 'analyzeToDepth').and.returnValue(Promise.resolve(0));
@@ -57,13 +59,9 @@ describe('analyzerSync', function() {
       expect()
     });*/
     it('calls finalize after engine finished analysis', done => {
-      console.log('the test');
-      const analyzer = require('../../app/analysis/analyzer');
       spyOn(analyzer, 'analyzeLater').and.stub();
       const Engine = require('uci-adapter');
       spyOn(Engine.prototype, 'analyzeToDepth').and.returnValue(Promise.resolve(0));
-      const analysisQueue = require('../../app/analysis/analysis-queue');
-      const pgnAnalyzer = require('../../app/analysis/pgn-analyzer');
       const depthSelector = require('../../app/analysis/depth-selector');
       spyOn(analysisQueue, 'getFirst').and.returnValue([]);
       spyOn(pgnAnalyzer, 'isError').and.returnValue(false);
@@ -76,10 +74,18 @@ describe('analyzerSync', function() {
         done();
       });
     });
+    it('deletes moves from queue if pgn.IsError', async () => {
+      spyOn(analysisQueue, 'getFirst').and.returnValue(['d4', 'h5']);
+      spyOn(analysisQueue, 'delete').and.stub();
+      spyOn(pgnAnalyzer, 'isError').and.returnValue('true');
+      spyOn(analyzer, 'analyzeLater').and.stub();
+      spyOn(baseManager, 'getBase').and.stub();
+      await analyzerSync.analyze();
+      expect(analysisQueue.delete).toHaveBeenCalledWith(['d4', 'h5']);
+    });
   });
   describe('setChessEngineOptions', () => {
     it('calls engine setUciOptions', () => {
-      const Engine = require('uci-adapter');
       spyOn(Engine.prototype, 'setUciOptions').and.stub();
 
       analyzerSync.setChessEngineOptions("/path/to/engine", [{name: "a", value: "b"}, {name: "c", value: "d"}]);

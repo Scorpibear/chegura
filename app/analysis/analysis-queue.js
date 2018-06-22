@@ -32,10 +32,23 @@ Array.prototype.equals = function(array) {
   return true;
 };
 
-var queue = synchronizer.loadQueue(filename, emptyQueue)
+var queue = synchronizer.loadQueue(filename, emptyQueue);
 
-var save = function() {
+module.exports.save = function() {
   synchronizer.saveQueue(filename, queue);
+};
+
+module.exports.delete = itemToDelete => {
+  let priority = 0;
+  while (priority < priorities) {
+    let index = queue[priority].findIndex(item => item.equals(itemToDelete));
+    if (index !== -1) {
+      queue[priority].splice(index, 1);
+      this.save();
+      break;
+    }
+    priority++;
+  }
 };
 
 module.exports.getFirst = () => {
@@ -59,14 +72,15 @@ module.exports.push = function(item, priority) {
   }
   queue[priority].push(item);
   console.log(item + ' is added to p' + priority + ' queue');
-  save();
+  this.save();
+  return this;
 };
 
 module.exports.empty = function() {
   for (let i = 0; i < priorities; i++) {
     queue[i] = [];
   }
-  save();
+  this.save();
 };
 
 module.exports.getQueue = function() {
