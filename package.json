@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "start": "node app.js",
-    "test": "jasmine --random=false",
-    "tdd": "nodemon --exec jasmine --random=false",
+    "test": "jasmine",
+    "tdd": "nodemon --exec jasmine",
     "lint": "standard",
     "coverage": "istanbul cover node_modules/jasmine/bin/jasmine.js",
     "validate": "npm-run-all --parallel test lint"
