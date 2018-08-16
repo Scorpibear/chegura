@@ -57,3 +57,6 @@ module.exports.ping = (req, res) => {
   res.writeHead(200, {'Access-Control-Allow-Origin': '*'});
   res.end("");
 };
+
+module.exports.saveResults = (req, res) => {
+};
