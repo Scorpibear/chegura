@@ -13,7 +13,7 @@ const analyzer = require('./analyzer');
 const depthSelector = require('./depth-selector');
 const pgnAnalyzer = require('./pgn-analyzer');
 
-let engine = undefined;
+let engine;
 
 let isAnalysisInProgress = false;
 
@@ -37,6 +37,7 @@ const analyze = function() {
   }
   if (pgnAnalyzer.isError(moves, baseManager.getBase())) {
     console.log('Not optimal position will not be analyzed: ' + moves);
+    analysisQueue.delete(moves);
     isAnalysisInProgress = false;
     analyzer.analyzeLater();
     return Promise.resolve(false);
@@ -53,6 +54,7 @@ const analyze = function() {
     if (engine) {
       engine.analyzeToDepth(fen, initialDepth).then(data => {
         analysisResultsProcessor.process(data);
+        analysisQueue.delete(moves);
         finalize();
         resolve(true);
       }).catch(err => {
@@ -72,4 +74,4 @@ exports.isAnalysisInProgress = () => {
 exports.setChessEngineOptions = (path, options) => {
   engine = new Engine(path);
   engine.setUciOptions(options);
-}
+};
