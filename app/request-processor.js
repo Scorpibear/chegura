@@ -1,4 +1,5 @@
 var url = require('url');
+var queueProcessor = require('./analysis/queue-processor');
 var baseManager = require('./chessbase/base-manager');
 var usageStatistics = require('./usage-statistics');
 var usageStatisticsSynchronizer = require('./usage-statistics-synchronizer');
@@ -59,4 +60,18 @@ module.exports.ping = (req, res) => {
 };
 
 module.exports.saveResults = (req, res) => {
-};
+  if (req.method === "POST") {
+    req.on('data', chunk => {
+      try {
+        console.log('DATA RECEIVED: ', chunk);
+        const data = JSON.parse(chunk);
+        const {fen, bestMove, depth, score} = data;
+        queueProcessor.registerEvaluation({fen, bestMove, depth, score});
+      } catch (err) {
+        console.error("saveResults: incorrect data received: ", err);
+      }
+   });
+   res.writeHead(200, {'Access-Control-Allow-Origin': '*'});
+   res.end("");
+  }
+}

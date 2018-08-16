@@ -10,6 +10,7 @@
     "validate": "npm-run-all --parallel test lint"
   },
   "dependencies": {
+    "chess-positions-queue-processor": "github:Scorpibear/chess-positions-queue-processor",
     "fen-analyzer": "^0.1.0",
     "uci-adapter": "github:Scorpibear/uci-adapter"
   },
