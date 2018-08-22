@@ -7,9 +7,18 @@ Chegura is a chess-guru - server providing best chess moves
 
 ## Install
 
-Need to use node.js v8 or higher
-
+- Install LTS version of Node.js
+- Download any chess engine, e.g. https://stockfishchess.org/
+- From command line:
+```
 npm install chegura
+cd node_modules/chegura
+```
+- Edit app.config.json and specify path to executable file of chess engine
+- From command line:
+```
+npm start
+```
 
 ## Demo
 
