@@ -11,6 +11,7 @@ const pathToChessEngine = (process.argv.length > 2) ?
 const port = config.port;
 
 try {
+  // TODO: comment that
   analyzer.setChessEngineOptions(pathToChessEngine, config.uciOptions);
   depthSelector.setDefaultDepth(config.defaultDepth);
   baseManager.readBase();
