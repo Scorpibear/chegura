@@ -5,28 +5,26 @@
     "start": "node app.js",
     "test": "jasmine",
     "tdd": "nodemon --exec jasmine",
-    "lint": "standard",
     "coverage": "istanbul cover node_modules/jasmine/bin/jasmine.js",
     "validate": "npm-run-all --parallel test lint"
   },
   "dependencies": {
-    "chess-positions-queue-processor": "github:Scorpibear/chess-positions-queue-processor",
+    "bestmovedb": "^0.2.0",
+    "chess-positions-queue-processor": "^0.2.1",
     "fen-analyzer": "^0.1.0",
+    "fen-queue": "^0.1.0",
     "ricpa-client": "^0.1.0",
     "uci-adapter": "github:Scorpibear/uci-adapter"
   },
   "description": "chegura is a chess-guru - server providing best chess moves",
   "main": "app.js",
   "devDependencies": {
-    "eslint": "^4.19.0",
-    "eslint-config-google": "^0.9.1",
+    "eslint": "^4.19.1",
     "husky": "^0.14.3",
     "istanbul": "^0.4.5",
-    "jasmine": "^3.1.0",
-    "jshint": "^2.9.5",
+    "jasmine": "^3.2.0",
     "nodemon": "^1.17.5",
-    "npm-run-all": "^4.1.2",
-    "standard": "^10.0.3"
+    "npm-run-all": "^4.1.2"
   },
   "repository": {
     "type": "git",

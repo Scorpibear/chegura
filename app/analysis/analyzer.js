@@ -1,32 +1,16 @@
 "use strict";
 
-const baseIterator = require('../chessbase/base-iterator');
 const analysisQueue = require('./analysis-queue');
 const analyzerSync = require('./analyzer-sync');
-
-const splitSequentially = function(base, moves) {
-  let list = [];
-  let positionObject = base;
-  moves.forEach(function(move, index) {
-    let subObject = baseIterator.findSubPositionObject(positionObject, move);
-    if (subObject === null) {
-      let movesToAdd = moves.slice(0, index + 1);
-      list.push(movesToAdd);
-    }
-    positionObject = subObject;
-  });
-  if (list.length === 0)
-    list.push(moves);
-  return list;
-};
+const pgnAnalyzer = require('./pgn-analyzer');
 
 const analyzeLater = function(moves, base, priority) {
   return new Promise((resolve, reject) => {
     if (moves) {
       if (!base) throw Error('analyzeLater is called with moves without base');
-      let movesList = splitSequentially(base, moves);
+      let movesList = pgnAnalyzer.splitSequentially(base, moves);
       movesList.forEach(function(moves) {
-        analysisQueue.push(moves, priority);
+        analysisQueue.add(moves, priority);
       });
     }
     setTimeout(() => {
@@ -41,7 +25,7 @@ const analyzeLater = function(moves, base, priority) {
 exports.analyzeLater = analyzeLater;
 
 exports.getQueue = () => {
-  return analysisQueue.getQueue();
+  return analysisQueue.getAllItems();
 };
 
 exports.resetQueue = () => {
@@ -52,8 +36,5 @@ exports.isAnalysisInProgress = analyzerSync.isAnalysisInProgress;
 
 exports.setChessEngineOptions = (path, uciOptions) => {
   analyzerSync.setChessEngineOptions(path, uciOptions);
-};
-
-exports.checkEvaluation = () => {
 };
 

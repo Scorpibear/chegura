@@ -1,3 +1,9 @@
+const FenQueue = require('fen-queue');
+
+const fenQueue = new FenQueue();
+
+//module.exports = fenQueue;
+
 // P0 - reserved for emergency requests
 // P1 - external requests for new positions
 // P2 - optimizations of not analyzed deep enough
@@ -32,7 +38,11 @@ Array.prototype.equals = function(array) {
   return true;
 };
 
-var queue = synchronizer.loadQueue(filename, emptyQueue);
+var queue = emptyQueue;
+
+module.exports.load = (content) => {
+  queue = content;
+};
 
 module.exports.save = function() {
   synchronizer.saveQueue(filename, queue);
@@ -60,7 +70,7 @@ module.exports.getFirst = () => {
   return item;
 };
 
-module.exports.push = function(item, priority) {
+module.exports.add = function(item, priority) {
   if (!item) throw Error('Could not push to queue null item');
   if (priority > priorities) throw Error('Priority ' + priority + ' exceeds max ' + priorities);
   for (let q = 0; q < priorities; q++) {
@@ -83,7 +93,7 @@ module.exports.empty = function() {
   this.save();
 };
 
-module.exports.getQueue = function() {
+module.exports.getAllItems = function() {
   var result = [];
   for (let q = 0; q < priorities; q++) {
     for (let i = 0; i < queue[q].length; i++) {

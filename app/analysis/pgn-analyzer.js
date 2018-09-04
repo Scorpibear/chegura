@@ -1,7 +1,7 @@
 var baseIterator = require('../chessbase/base-iterator');
 
 // checks and returns if the set of moves considered as error (not optimal)
-module.exports.isError = function(moves, base) {
+module.exports.isOptimal = function(moves, base) {
   if (moves && moves.length) {
     var position = base;
     var possibilities = {white: true, black: true};
@@ -11,7 +11,7 @@ module.exports.isError = function(moves, base) {
       if (position.s && position.s.length > 0) {
         bestMove = position.s[0].m;
       } else {
-        return false;
+        return true;
       }
       if (move !== bestMove) {
         if (i % 2 === 0) {
@@ -21,10 +21,26 @@ module.exports.isError = function(moves, base) {
         }
       }
       if (!possibilities.white && !possibilities.black) {
-        return true;
+        return false;
       }
       position = baseIterator.findSubPositionObject(position, move);
     }
   }
-  return false;
+  return true;
+};
+
+module.exports.splitSequentially = function(base, moves) {
+  let list = [];
+  let positionObject = base;
+  moves.forEach(function(move, index) {
+    let subObject = baseIterator.findSubPositionObject(positionObject, move);
+    if (subObject === null) {
+      let movesToAdd = moves.slice(0, index + 1);
+      list.push(movesToAdd);
+    }
+    positionObject = subObject;
+  });
+  if (list.length === 0)
+    list.push(moves);
+  return list;
 };

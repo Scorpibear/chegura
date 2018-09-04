@@ -3,8 +3,8 @@
 // classes
 const Chess = require('./chess').Chess;
 const AnalysisResultsProcessor = require('./analysis-results-processor');
-// const Engine = require('uci-adapter');
-const Engine = require('./remote-engine');
+const Engine = require('uci-adapter');
+//const Engine = require('./remote-engine');
 
 // singletons
 const baseManager = require('../chessbase/base-manager');
@@ -35,7 +35,7 @@ const analyze = function() {
     isAnalysisInProgress = false;
     return Promise.resolve(false);
   }
-  if (pgnAnalyzer.isError(moves, baseManager.getBase())) {
+  if (!pgnAnalyzer.isOptimal(moves, baseManager.getBase())) {
     console.log('Not optimal position will not be analyzed: ' + moves);
     analysisQueue.delete(moves);
     isAnalysisInProgress = false;

@@ -1,6 +1,7 @@
 'use strict';
 
-const Engine = require('../../app/analysis/remote-engine');
+//const Engine = require('../../app/analysis/remote-engine');
+const Engine = require('uci-adapter');
 const analyzer = require('../../app/analysis/analyzer');
 const analysisQueue = require('../../app/analysis/analysis-queue');
 const baseManager = require('../../app/chessbase/base-manager');
@@ -9,14 +10,15 @@ const pgnAnalyzer = require('../../app/analysis/pgn-analyzer');
 describe('analyzerSync', function() {
   var analyzerSync = require('../../app/analysis/analyzer-sync');
   analyzerSync.setChessEngineOptions("", []);
+  Engine.prototype.analyzeToDepth = () => Promise.resolve(0);
   describe('analyze', function() {
     it('ignore double error positions, even if they were in queue', done => {
       const analyzer = require('../../app/analysis/analyzer');
       spyOn(analyzer, 'analyzeLater').and.stub();
       var moves = ['h3', 'a6'];
       analysisQueue.empty();
-      analysisQueue.push(moves, 1);
-      spyOn(pgnAnalyzer, 'isError').and.returnValue('true');
+      analysisQueue.add(moves, 1);
+      spyOn(pgnAnalyzer, 'isOptimal').and.returnValue('false');
 
       analyzerSync.analyze().then(() => {
         expect(analyzerSync.isAnalysisInProgress()).toEqual(false);
@@ -60,7 +62,7 @@ describe('analyzerSync', function() {
       spyOn(Engine.prototype, 'analyzeToDepth').and.returnValue(Promise.resolve(0));
       const depthSelector = require('../../app/analysis/depth-selector');
       spyOn(analysisQueue, 'getFirst').and.returnValue([]);
-      spyOn(pgnAnalyzer, 'isError').and.returnValue(false);
+      spyOn(pgnAnalyzer, 'isOptimal').and.returnValue(true);
       spyOn(depthSelector, 'getDepthToAnalyze').and.returnValue(1);
 
       analyzerSync.analyze().then(sentForAnalysis => {
@@ -70,10 +72,10 @@ describe('analyzerSync', function() {
         done();
       });
     });
-    it('deletes moves from queue if pgn.IsError', async () => {
+    it('deletes moves from queue if pgn is not optimal', async () => {
       spyOn(analysisQueue, 'getFirst').and.returnValue(['d4', 'h5']);
       spyOn(analysisQueue, 'delete').and.stub();
-      spyOn(pgnAnalyzer, 'isError').and.returnValue('true');
+      spyOn(pgnAnalyzer, 'isOptimal').and.returnValue('false');
       spyOn(analyzer, 'analyzeLater').and.stub();
       spyOn(baseManager, 'getBase').and.stub();
       await analyzerSync.analyze();
