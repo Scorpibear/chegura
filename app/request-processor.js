@@ -1,10 +1,10 @@
 const url = require('url');
 
-var analyzer = require('./analysis/analyzer');
 var analysisPriority = require('./analysis/analysis-priority');
 
 class RequestProcessor{
-  constructor({baseManager, queueProcessor, usageStatistics}){
+  constructor({baseManager, queueProcessor, usageStatistics, analyzer}){
+    this.analyzer = analyzer;
     this.baseManager = baseManager;
     this.queueProcessor = queueProcessor;
     this.usageStatistics = usageStatistics;
@@ -33,7 +33,10 @@ class RequestProcessor{
       req.on('data', chunk => {
         var data = JSON.parse(chunk);
         if (data.moves) {
-          analyzer.analyzeLater(data.moves, this.baseManager.getBase(), analysisPriority.ExternalRequestsForNewPositions);
+          this.analyzer.analyzeLater(data.moves, this.baseManager.getBase(),
+            analysisPriority.ExternalRequestsForNewPositions).then(() => {
+            return this.queueProcessor.process();
+          }).catch(err => console.error(err));
         } else {
           console.error('Incorrect data received:', data);
         }
@@ -56,14 +59,5 @@ class RequestProcessor{
     this.queueProcessor.process();
   }
 }
-
-
-
-
-
-
-
-
-
 
 module.exports = RequestProcessor;

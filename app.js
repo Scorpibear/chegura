@@ -24,13 +24,9 @@ const queue = require('./app/analysis/analysis-queue');
 const synchronizer = require('./app/analysis/synchronizer');
 const usageStatistics = require('./app/usage-statistics');
 const usageStatisticsSynchronizer = require('./app/usage-statistics-synchronizer');
-const pathToChessEngine = (process.argv.length > 2) ?
-  process.argv[2] : config.pathToChessEngine;
 const port = config.port;
 
 try {
-  // TODO: comment that
-  analyzer.setChessEngineOptions(pathToChessEngine, config.uciOptions);
   depthSelector.setDefaultDepth(config.defaultDepth);
   baseManager.readBase();
   baseManager.saveBase();
@@ -41,11 +37,11 @@ try {
       externalEvaluations, bestmovedb, ricpaClient
     ],
     analyzer: ricpaClient, 
-    strategy: new QueueProcessingStrategy(pgnAnalyzer, baseManager)});
+    strategy: new QueueProcessingStrategy({pgnAnalyzer, baseProvider: baseManager})});
   usageStatistics.load(usageStatisticsSynchronizer);
-  const requestProcessor = new RequestProcessor({baseManager, queueProcessor, usageStatistics});
+  const requestProcessor = new RequestProcessor({baseManager, queueProcessor, usageStatistics, analyzer});
   queue.load(synchronizer.loadQueue(config.analysisQueueFile, [[],[],[],[]]));
-  //queue.on('change', (content) => synchronizer.saveQueue(config.analysisQueueFile, content));
+  queue.on('change', (content) => synchronizer.saveQueue(config.analysisQueueFile, content));
 
   http.createServer(function(req, res) {
     switch (req.url) {
@@ -68,11 +64,10 @@ try {
     }
   }).listen(port);
 
-  const onEmpty = () => baseManager.optimize(analyzer, config.optimizeSettings);
-  //queue.on('empty', onEmpty);
-  onEmpty();
+  const onEmpty = () => baseManager.optimize({settings: config.optimizeSettings});
+  queue.on('empty', onEmpty);
 
-  //queueProcessor.process().catch(err => console.error(err));
+  queueProcessor.process().catch(err => console.error(err));
 
   console.log('Chegura is ready to process requests on ' + port + ' port');
 } catch (err) {

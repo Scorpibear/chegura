@@ -1,39 +1,46 @@
 'use strict';
 
-const validator = require('./validator');
 const mainLineOptimizer = require('./main-line-optimizer');
 const analysisPriority = require('../../analysis/analysis-priority');
+const converter = require('../../converter');
 const depthSelector = require('../../analysis/depth-selector');
-//const analysisQueue = require('../../analysis/analysis-queue');
-const timeoutInMilliseconds = 100;
+const analysisQueue = require('../../analysis/analysis-queue');
 let optimizeInProgress = false;
 
-var optimizeSync = function(base, analyzer, baseIterator) {
+var optimizeSync = function({base, baseIterator}) {
   if (optimizeInProgress) return;
   optimizeInProgress = true;
-  validator.validate(base);
-  if (baseIterator) {
+  if(baseIterator) {
     let movesList = baseIterator.getMovesToInsufficientEvaluationDepth(base, depthSelector.getMinDepthRequired());
     if (movesList) {
       movesList.forEach(function(moves) {
-        analyzer.analyzeLater(moves, base, analysisPriority.OptimizationOfNotAnalyzedEnough);
-        //analysisQueue.add({moves, depth: depthSelector.getMinDepthRequired()}, analysisPriority.OptimizationOfNotAnalyzedEnough);
-      });
-      movesList = baseIterator.getMovesWithSameFenButDifferentEvaluation(base);
-      movesList.forEach(function(moves) {
-        analyzer.analyzeLater(moves, base, analysisPriority.OptimizationOfNotAnalyzedEnough);
-        //analysisQueue.add({moves, depth: depthSelector.getMinDepthRequired()}, analysisPriority.OptimizationOfNotAnalyzedEnough);
+        analysisQueue.add(
+          { fen: converter.moves2fen(moves),
+            depth: depthSelector.getMinDepthRequired()
+          }, analysisPriority.OptimizationOfNotAnalyzedEnough
+        );
       });
     }
-    mainLineOptimizer.goDeeper(base, baseIterator, analyzer);
+    const moves = mainLineOptimizer.getMoves({base, baseIterator});
+    if(moves) {
+      analysisQueue.add(
+        {
+          fen: converter.moves2fen(moves),
+          depth: depthSelector.getDepthToAnalyze(moves, base)
+        }, analysisPriority.MainLineOptimization
+      );
+    }
   }
   optimizeInProgress = false;
 };
 
 module.exports.optimizeSync = optimizeSync;
 
-module.exports.optimize = function(base, analyzer, baseIterator, settings = {}) {
-  if (settings.optimize) {
-    setTimeout(optimizeSync, timeoutInMilliseconds, base, analyzer, baseIterator);
-  }
+module.exports.optimize = function({base, baseIterator, settings = {}}) {
+  return new Promise((resolve) => {
+    if(settings.optimize) {
+      optimizeSync({base, baseIterator});
+    }
+    resolve();
+  }).catch(err => console.error(err));
 };
