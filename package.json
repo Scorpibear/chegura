@@ -12,7 +12,7 @@
     "bestmovedb": "^0.2.0",
     "chess-positions-queue-processor": "^0.2.2",
     "fen-analyzer": "^0.1.0",
-    "fen-queue": "^0.1.0",
+    "fen-queue": "^0.2.0",
     "ricpa-client": "^0.1.0",
     "uci-adapter": "github:Scorpibear/uci-adapter"
   },
