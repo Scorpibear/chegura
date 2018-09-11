@@ -95,5 +95,5 @@ module.exports.getBaseAsString = function() {
 };
 
 module.exports.optimize = function({settings}) {
-  baseOptimizer.optimize({base, baseIterator, settings});
+  return baseOptimizer.optimize({base, baseIterator, settings});
 };

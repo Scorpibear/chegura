@@ -9,29 +9,39 @@ let optimizeInProgress = false;
 
 var optimizeSync = function({base, baseIterator}) {
   if (optimizeInProgress) return;
+  console.log('optimization started');
   optimizeInProgress = true;
   if(baseIterator) {
     let movesList = baseIterator.getMovesToInsufficientEvaluationDepth(base, depthSelector.getMinDepthRequired());
-    if (movesList) {
+    if (movesList && movesList.length) {
       movesList.forEach(function(moves) {
         analysisQueue.add(
           { fen: converter.moves2fen(moves),
-            depth: depthSelector.getMinDepthRequired()
+            depth: depthSelector.getMinDepthRequired(),
+            moves
           }, analysisPriority.OptimizationOfNotAnalyzedEnough
         );
       });
+    } else {
+      console.log('no positions with insufficient depth are identified');
     }
     const moves = mainLineOptimizer.getMoves({base, baseIterator});
-    if(moves) {
+    if(moves !== undefined && 'length' in moves) {
       analysisQueue.add(
         {
           fen: converter.moves2fen(moves),
-          depth: depthSelector.getDepthToAnalyze(moves, base)
+          depth: depthSelector.getDepthToAnalyze(moves, base),
+          moves
         }, analysisPriority.MainLineOptimization
       );
+    } else {
+      console.log('nothing to optimize in main line');
     }
+  } else {
+    console.error('baseIterator is not defined');
   }
   optimizeInProgress = false;
+  console.log('optimization finished');
 };
 
 module.exports.optimizeSync = optimizeSync;

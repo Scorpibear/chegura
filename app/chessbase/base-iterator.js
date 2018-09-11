@@ -70,7 +70,7 @@ module.exports.findLatestMainLine = function(base) {
 
 module.exports.findMinDepthMainLinePath = function(base) {
   let currentPath = [];
-  let candidatePath = currentPath;
+  let candidatePath = currentPath.slice();
   let positionObject = base;
   let minDepth = positionObject.e.d;
   while(positionObject && positionObject.s && positionObject.s.length) {

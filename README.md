@@ -20,6 +20,16 @@ cd node_modules/chegura
 npm start
 ```
 
+## API
+
+POST /api/analyze {moves: ['e4','e5']}
+
+GET /api/getuserscount
+
+GET,POST /api/ping
+
+GET /api/getbase
+
 ## Demo
 
 See how it works with Melissa trainer at http://shahmaster.ru/melissa

@@ -36,7 +36,10 @@ try {
     evaluationSources: [
       externalEvaluations, bestmovedb, ricpaClient
     ],
-    analyzer: ricpaClient, 
+    analyzer: {analyze: (item) => {
+      item.pingUrl = config.pingUrl;
+      ricpaClient.postFen(item);
+    }}, 
     strategy: new QueueProcessingStrategy({pgnAnalyzer, baseProvider: baseManager})});
   usageStatistics.load(usageStatisticsSynchronizer);
   const requestProcessor = new RequestProcessor({baseManager, queueProcessor, usageStatistics, analyzer});
@@ -64,8 +67,14 @@ try {
     }
   }).listen(port);
 
-  const onEmpty = () => baseManager.optimize({settings: config.optimizeSettings});
+  const onEmpty = () => {
+    console.log('queue is empty');
+    baseManager.optimize({settings: config.optimizeSettings}).then(() => {
+      queueProcessor.process();
+    });
+  };
   queue.on('empty', onEmpty);
+  onEmpty();
 
   queueProcessor.process().catch(err => console.error(err));
 
