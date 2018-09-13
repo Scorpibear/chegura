@@ -1,6 +1,6 @@
 {
   "name": "chegura",
-  "version": "1.1.0-alpha.1",
+  "version": "2.0.0-alpha.1",
   "scripts": {
     "start": "node app.js",
     "test": "jasmine",
@@ -12,12 +12,13 @@
     "bestmovedb": "^0.2.0",
     "chess-positions-queue-processor": "^0.3.0",
     "fen-analyzer": "^0.2.0",
-    "fen-queue": "^0.2.0",
-    "ricpa-client": "^0.2.0",
+    "fen-queue": "^0.3.0",
+    "ricpa-client": "^0.2.1",
     "uci-adapter": "github:Scorpibear/uci-adapter"
   },
   "description": "chegura is a chess-guru - server providing best chess moves",
   "main": "app.js",
+  "bin": "app.js",
   "devDependencies": {
     "eslint": "^4.19.1",
     "husky": "^0.14.3",

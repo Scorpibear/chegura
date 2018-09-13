@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 'use strict';
 
 // external classes
@@ -38,6 +40,7 @@ try {
     ],
     analyzer: {analyze: (item) => {
       item.pingUrl = config.pingUrl;
+      console.log(`posting '${item.fen}' with depth ${item.depth} to ${ricpaClient.config.fullpath} for analysis`);
       ricpaClient.postFen(item);
     }}, 
     strategy: new QueueProcessingStrategy({pgnAnalyzer, baseProvider: baseManager})});
