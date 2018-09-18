@@ -1,4 +1,4 @@
-const Chess = require('./analysis/chess').Chess;
+const Chess = require('chess.js').Chess;
 
 class Converter {
   moves2fen(moves) {

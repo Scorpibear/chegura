@@ -7,7 +7,7 @@ const depthSelector = require('../../analysis/depth-selector');
 const analysisQueue = require('../../analysis/analysis-queue');
 let optimizeInProgress = false;
 
-var optimizeSync = function({base, baseIterator}) {
+module.exports.optimizeSync = function({base, baseIterator}) {
   if (optimizeInProgress) return;
   console.log('optimization started');
   optimizeInProgress = true;
@@ -41,15 +41,12 @@ var optimizeSync = function({base, baseIterator}) {
     console.error('baseIterator is not defined');
   }
   optimizeInProgress = false;
-  console.log('optimization finished');
 };
-
-module.exports.optimizeSync = optimizeSync;
 
 module.exports.optimize = function({base, baseIterator, settings = {}}) {
   return new Promise((resolve) => {
     if(settings.optimize) {
-      optimizeSync({base, baseIterator});
+      this.optimizeSync({base, baseIterator});
     }
     resolve();
   }).catch(err => console.error(err));

@@ -18,7 +18,7 @@ class RequestProcessor{
     res.end(this.baseManager.getBaseAsString());
     this.usageStatistics.registerBaseRequest(query.userid);
   }
-  getFavicon(res) {
+  default(res) {
     res.end();
   }
   analyze(req, res) {

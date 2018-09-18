@@ -1,22 +1,22 @@
+const fs = require('fs');
 
-var fs = require('fs');
-
-var Chess = require('../analysis/chess').Chess;
-
-var baseManager = require('./base-manager');
+const baseManager = require('./base-manager');
 const config = require('../config');
-var endgameAnalyzer = require('../analysis/endgame-analyzer');
+const depthSelector = require('../analysis/depth-selector');
+const endgameAnalyzer = require('../analysis/endgame-analyzer');
 
 var evaluationLogFileName = config.evaluationsLogFile;
 
+module.exports.Chess = require('chess.js').Chess;
+
 module.exports.save = ({moves, bestMove, score, depth}) => {
   if(bestMove) {
-    const chess = new Chess();
+    const chess = new this.Chess();
     moves.forEach(move => chess.move(move, {sloppy: true}));
     chess.move(bestMove, {sloppy: true});
     if (chess.game_over() || endgameAnalyzer.isEndgame(chess.fen())) {
-      depth = this.depthSelector.MAX_DEPTH;
-      if (this.chess.in_draw) {
+      depth = depthSelector.MAX_DEPTH;
+      if (chess.in_draw) {
         score = 0;
       }
     }

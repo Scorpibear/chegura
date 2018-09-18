@@ -1,16 +1,18 @@
 {
   "name": "chegura",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "scripts": {
     "start": "node app.js",
     "test": "jasmine",
     "tdd": "nodemon --exec jasmine",
     "coverage": "istanbul cover node_modules/jasmine/bin/jasmine.js",
+    "tdd-coverage": "nodemon --exec istanbul cover node_modules/jasmine/bin/jasmine.js",
     "validate": "npm-run-all --parallel test lint"
   },
   "dependencies": {
     "bestmovedb": "^0.2.0",
     "chess-positions-queue-processor": "^0.3.0",
+    "chess.js": "^0.10.2",
     "fen-analyzer": "^0.2.0",
     "fen-queue": "^0.3.0",
     "ricpa-client": "^0.2.1",

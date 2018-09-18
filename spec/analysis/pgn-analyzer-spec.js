@@ -1,9 +1,7 @@
 describe('pgnAnalyzer', function() {
   const pgnAnalyzer = require('../../app/analysis/pgn-analyzer');
+  const base = {m: '', s: [{m: 'e4'}, {m: 'h4', s: [{m: 'e5'}, {m: 'e6'}]}]};
   describe('isOptimal', function() {
-    
-    var base = {m: '', s: [{m: 'e4'}, {m: 'h4', s: [{m: 'e5'}, {m: 'e6'}]}]};
-
     it('is true for start position', function() {
       expect(pgnAnalyzer.isOptimal([], base)).toBeTruthy();
     });
@@ -18,6 +16,11 @@ describe('pgnAnalyzer', function() {
     });
     it('is false for error move then second after the best', function() {
       expect(pgnAnalyzer.isOptimal(['h4', 'e6'], base)).toBeFalsy();
+    });
+  });
+  describe('splitSequentially', () => {
+    it('returns list of moves as is if nothing to split', () => {
+      expect(pgnAnalyzer.splitSequentially(base, ['h4', 'e5'])).toEqual([['h4', 'e5']]);
     });
   });
 });

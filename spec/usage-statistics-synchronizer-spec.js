@@ -1,4 +1,4 @@
-'use strict';
+const fs = require('fs');
 
 describe('usageStatisticsSynchronizer', function() {
   let usageStatisticsSynchronizer =
@@ -6,8 +6,8 @@ describe('usageStatisticsSynchronizer', function() {
 
   describe('save', function() {
     it('saves it to file', function() {
-      let jsonContent = {foo: "bar"};
-      let fs = require('fs');
+      let jsonContent = {foo: 'bar'};
+
       spyOn(fs, 'writeFile');
       spyOn(JSON, 'stringify').and.returnValue('json as string');
 
@@ -18,11 +18,32 @@ describe('usageStatisticsSynchronizer', function() {
         .toHaveBeenCalledWith(usageStatisticsSynchronizer.FILE_NAME,
           'json as string', jasmine.anything());
     });
+    it('logs error if callback is called with error', () => {
+      spyOn(console, 'error').and.stub();
+      spyOn(fs, 'writeFile').and.callFake(
+        (filename, content, handler) => handler('something wrong')
+      );
+      usageStatisticsSynchronizer.save({some: 'content'});
+      expect(console.error).toHaveBeenCalledWith('something wrong');
+    });
+    it('does not log error if handler is called without it', () => {
+      spyOn(console, 'error').and.stub();
+      spyOn(fs, 'writeFile').and.callFake(
+        (filename, content, handler) => handler()
+      );
+      usageStatisticsSynchronizer.save({some: 'content'});
+      expect(console.error).not.toHaveBeenCalled();
+    });
+    it('writes string as is', () => {
+      spyOn(fs, 'writeFile').and.stub();
+      usageStatisticsSynchronizer.save('the string');
+      expect(fs.writeFile).toHaveBeenCalledWith(usageStatisticsSynchronizer.FILE_NAME,
+        'the string', jasmine.anything());
+    });
   });
   describe('load', function() {
     it('loads json from file', function() {
       let expectedObject = {parsed: 'JSON'};
-      let fs = require('fs');
       spyOn(fs, 'readFileSync').and.returnValue('value from file');
       spyOn(JSON, 'parse').and.returnValue(expectedObject);
 
@@ -34,15 +55,13 @@ describe('usageStatisticsSynchronizer', function() {
         .toHaveBeenCalledWith(usageStatisticsSynchronizer.FILE_NAME);
     });
     it('returns null if file does not exist', function() {
-      let fs = require('fs');
       spyOn(fs, 'readFileSync').and
-        .throwError("ENOENT: no such file or directory, open 'usage-statistics.json'");
+        .throwError('ENOENT: no such file or directory, open \'usage-statistics.json\'');
 
       expect(usageStatisticsSynchronizer.load()).toBeNull();
     });
     it('returns null if file content could not be parsed', () => {
-      let fs = require('fs');
-      spyOn(fs, 'readFileSync').and.returnValue("not json");
+      spyOn(fs, 'readFileSync').and.returnValue('not json');
       expect(usageStatisticsSynchronizer.load()).toBeNull();
     });
   });

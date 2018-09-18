@@ -54,9 +54,6 @@ try {
     case '/api/analyze':
       requestProcessor.analyze(req, res);
       break;
-    case '/favicon.ico':
-      requestProcessor.getFavicon(res);
-      break;
     case '/api/getuserscount':
       requestProcessor.getUsersCount(req, res);
       break;
@@ -64,9 +61,10 @@ try {
       requestProcessor.ping(req, res);
       break;
     case '/api/getbase':
-    case '/':
-    default:
       requestProcessor.getBase(req, res);
+      break;
+    default:
+      requestProcessor.default(res);
     }
   }).listen(port);
 
