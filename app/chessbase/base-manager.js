@@ -86,7 +86,7 @@ module.exports.readBase = function() {
     let baseFileContent = fs.readFileSync(filename);
     base = baseSerializer.parse(baseFileContent);
   } catch (err) {
-    console.error("Could not read " + filename + ": " + err);
+    console.error('Could not read ' + filename + ': ' + err);
   }
 };
 
@@ -94,6 +94,6 @@ module.exports.getBaseAsString = function() {
   return baseSerializer.stringify(base);
 };
 
-module.exports.optimize = function(analyzer, optimizeSettings) {
-  baseOptimizer.optimize(base, analyzer, baseIterator, optimizeSettings);
+module.exports.optimize = function({settings}) {
+  return baseOptimizer.optimize({base, baseIterator, settings});
 };

@@ -3,7 +3,13 @@
     "optimize": true
   },
   "port": 9966,
-  "uciOptions": [{"name":"Threads", "value":3}, {"name": "Hash", "value": 4096}],
-  "pathToChessEngine": "./stockfish_9_x64.exe",
-  "defaultDepth": 40
+  "uciOptions": [{"name":"Threads", "value":3},
+    {"name": "Hash", "value": 4096}],
+  "pathToChessEngine": "D:\\Programs\\stockfish\\stockfish_18090111_x64_modern.exe",
+  "defaultDepth": 40,
+  "ricpaClient": {"hostname": "localhost", "port": "9977", "path": ""},
+  "analysisQueueFile": "analysis-queue.json",
+  "externalEvaluationsFile": "external-evaluations.json",
+  "pingUrl": "http://localhost:9966/api/ping",
+  "evaluationsLogFile": "evaluations.log"
 }

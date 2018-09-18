@@ -7,7 +7,7 @@ var addMoves = function (result, moves, parentObject, requiredDepth, objectsToLo
     parentObject.s.forEach(function (childObject) {
       var movesWithChild = moves.slice();
       movesWithChild.push(childObject.m);
-      if ((!childObject.e || childObject.e.d < requiredDepth) && (!pgnAnalyzer.isError(movesWithChild, base))) {
+      if ((!childObject.e || childObject.e.d < requiredDepth) && (pgnAnalyzer.isOptimal(movesWithChild, base))) {
         result.push(movesWithChild);
       } else {
         objectsToLookDeeper.push({ positionObject: childObject, moves: movesWithChild });
@@ -22,14 +22,14 @@ module.exports.getMovesToInsufficientEvaluationDepth = function (base, requiredD
   if(!base.e || base.e.d < requiredDepth) {
     result.push(moves);
   }
-  var objectsToLookDeeper = []
-  addMoves(result, moves, base, requiredDepth, objectsToLookDeeper, base)
+  var objectsToLookDeeper = [];
+  addMoves(result, moves, base, requiredDepth, objectsToLookDeeper, base);
   while (objectsToLookDeeper.length > 0) {
     var nextLevelOfObjects = [];
     objectsToLookDeeper.forEach(function (objectData) {
-      addMoves(result, objectData.moves, objectData.positionObject, requiredDepth, nextLevelOfObjects, base)
-    })
-    objectsToLookDeeper = nextLevelOfObjects
+      addMoves(result, objectData.moves, objectData.positionObject, requiredDepth, nextLevelOfObjects, base);
+    });
+    objectsToLookDeeper = nextLevelOfObjects;
   }
   return result;
 };
@@ -57,7 +57,7 @@ module.exports.findLatestMainLine = function(base) {
   if(positionObject.s && positionObject.s.length>0) {
     positionObject = positionObject.s[0];
   }
-  while(positionObject && positionObject.hasOwnProperty("m")) {
+  while(positionObject && positionObject.hasOwnProperty('m')) {
     result.push(positionObject.m);
     if(positionObject.s && positionObject.s.length>0) {
       positionObject = positionObject.s[0];
@@ -70,7 +70,7 @@ module.exports.findLatestMainLine = function(base) {
 
 module.exports.findMinDepthMainLinePath = function(base) {
   let currentPath = [];
-  let candidatePath = currentPath;
+  let candidatePath = currentPath.slice();
   let positionObject = base;
   let minDepth = positionObject.e.d;
   while(positionObject && positionObject.s && positionObject.s.length) {

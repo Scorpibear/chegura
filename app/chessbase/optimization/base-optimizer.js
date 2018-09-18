@@ -1,40 +1,53 @@
 'use strict';
 
-const validator = require('./validator');
 const mainLineOptimizer = require('./main-line-optimizer');
 const analysisPriority = require('../../analysis/analysis-priority');
+const converter = require('../../converter');
 const depthSelector = require('../../analysis/depth-selector');
-const timeoutInMilliseconds = 100;
+const analysisQueue = require('../../analysis/analysis-queue');
 let optimizeInProgress = false;
-let settings = {};
 
-var optimizeSync = function(base, analyzer, baseIterator) {
+module.exports.optimizeSync = function({base, baseIterator}) {
   if (optimizeInProgress) return;
+  console.log('optimization started');
   optimizeInProgress = true;
-  validator.validate(base);
-  if (baseIterator) {
+  if(baseIterator) {
     let movesList = baseIterator.getMovesToInsufficientEvaluationDepth(base, depthSelector.getMinDepthRequired());
-    if (movesList) {
+    if (movesList && movesList.length) {
       movesList.forEach(function(moves) {
-        analyzer.analyzeLater(moves, base, analysisPriority.OptimizationOfNotAnalyzedEnough);
+        analysisQueue.add(
+          { fen: converter.moves2fen(moves),
+            depth: depthSelector.getMinDepthRequired(),
+            moves
+          }, analysisPriority.OptimizationOfNotAnalyzedEnough
+        );
       });
-      movesList = baseIterator.getMovesWithSameFenButDifferentEvaluation(base);
-      movesList.forEach(function(moves) {
-        analyzer.analyzeLater(moves, base, analysisPriority.OptimizationOfNotAnalyzedEnough);
-      });
+    } else {
+      console.log('no positions with insufficient depth are identified');
     }
-    mainLineOptimizer.goDeeper(base, baseIterator, analyzer);
+    const moves = mainLineOptimizer.getMoves({base, baseIterator});
+    if(moves !== undefined && 'length' in moves) {
+      analysisQueue.add(
+        {
+          fen: converter.moves2fen(moves),
+          depth: depthSelector.getDepthToAnalyze(moves, base),
+          moves
+        }, analysisPriority.MainLineOptimization
+      );
+    } else {
+      console.log('nothing to optimize in main line');
+    }
+  } else {
+    console.error('baseIterator is not defined');
   }
   optimizeInProgress = false;
 };
 
-module.exports.optimizeSync = optimizeSync;
-
-module.exports.optimize = function(base, analyzer, baseIterator, optimizeSettings) {
-  if (optimizeSettings) {
-    settings = optimizeSettings;
-  }
-  if (settings.optimize) {
-    setTimeout(optimizeSync, timeoutInMilliseconds, base, analyzer, baseIterator);
-  }
+module.exports.optimize = function({base, baseIterator, settings = {}}) {
+  return new Promise((resolve) => {
+    if(settings.optimize) {
+      this.optimizeSync({base, baseIterator});
+    }
+    resolve();
+  }).catch(err => console.error(err));
 };
