@@ -1,7 +1,7 @@
 const RequestProcessor = require('../app/request-processor');
 
 describe('requestProcessor', () => {
-  const analyzer = {analyzeLater: () => {}};
+  const analyzer = {analyzeLater: () => Promise.resolve()};
   const baseManager = {getBaseAsString: () => {}, getBase: () => {}};
   const res = {writeHead: ()=>{}, end: ()=>{}};
   const moves = ['d4', 'Nf6'];
@@ -27,6 +27,14 @@ describe('requestProcessor', () => {
       spyOn(console, 'error').and.stub();
       requestProcessor.analyze(req, res);
       expect(console.error).toHaveBeenCalled();
+    });
+    it('queue is not processed if analyzeLater fails', () => {
+      const req = {method: 'POST', on: (event, handler) => handler(JSON.stringify({moves}))};
+      spyOn(analyzer, 'analyzeLater').and.returnValue(Promise.reject());
+      spyOn(queueProcessor, 'process').and.stub();
+      requestProcessor.analyze(req, res);
+      expect(queueProcessor.process).not.toHaveBeenCalled();
+
     });
   });
   describe('default', () => {
