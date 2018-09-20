@@ -19,6 +19,10 @@ class RequestProcessor{
     this.usageStatistics.registerBaseRequest(query.userid);
   }
   default(res) {
+    res.writeHead(200, {
+      'Content-Type': 'text/plain',
+      'Access-Control-Allow-Origin': '*'
+    });
     res.end();
   }
   analyze(req, res) {
