@@ -9,6 +9,7 @@ const QueueProcessor = require('chess-positions-queue-processor');
 // external modules
 const http = require('http');
 const bestmovedb = require('bestmovedb');
+const url = require('url');
 
 // internal classes
 const ExternalEvaluation = require('./app/analysis/external-evaluation');
@@ -50,7 +51,8 @@ try {
   queue.on('change', (content) => synchronizer.saveQueue(config.analysisQueueFile, content));
 
   http.createServer(function(req, res) {
-    switch (req.url) {
+    console.log(`${req.method} ${req.url}`);
+    switch (url.parse(req.url).pathname) {
     case '/api/analyze':
       requestProcessor.analyze(req, res);
       break;
