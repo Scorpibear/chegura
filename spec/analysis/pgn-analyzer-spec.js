@@ -17,6 +17,9 @@ describe('pgnAnalyzer', function() {
     it('is false for error move then second after the best', function() {
       expect(pgnAnalyzer.isOptimal(['h4', 'e6'], base)).toBeFalsy();
     });
+    it('is undefined if was optimal but the path is too far', () => {
+      expect(pgnAnalyzer.isOptimal(['e4', 'd5', 'd4'], base)).toBeUndefined();
+    });
   });
   describe('splitSequentially', () => {
     it('returns list of moves as is if nothing to split', () => {
