@@ -1,18 +1,13 @@
-var baseIterator = require('../chessbase/base-iterator');
+const baseIterator = require('../chessbase/base-iterator');
 
-// checks and returns if the set of moves considered as error (not optimal)
+// checks if the moves list is optimal and returns true/false/undefined
 module.exports.isOptimal = function(moves, base) {
   if (moves && moves.length) {
-    var position = base;
-    var possibilities = {white: true, black: true};
-    for (var i = 0; position !== null && i < moves.length; i++) {
-      var move = moves[i];
-      var bestMove;
-      if (position.s && position.s.length > 0) {
-        bestMove = position.s[0].m;
-      } else {
-        return true;
-      }
+    let position = base;
+    const possibilities = {white: true, black: true};
+    for (let i = 0; i < moves.length; i++) {
+      let move = moves[i];
+      let bestMove = position && position.s && position.s.length && position.s[0].m;
       if (move !== bestMove) {
         if (i % 2 === 0) {
           possibilities.white = false;
@@ -21,7 +16,7 @@ module.exports.isOptimal = function(moves, base) {
         }
       }
       if (!possibilities.white && !possibilities.black) {
-        return false;
+        return bestMove ? false : undefined;
       }
       position = baseIterator.findSubPositionObject(position, move);
     }
