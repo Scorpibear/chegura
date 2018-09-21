@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "bestmovedb": "^0.2.0",
-    "chess-positions-queue-processor": "^0.3.0",
+    "fen-queue-processor": "^0.4.0",
     "chess.js": "^0.10.2",
     "fen-analyzer": "^0.2.0",
     "fen-queue": "^0.3.0",

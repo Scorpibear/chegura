@@ -4,7 +4,7 @@
 
 // external classes
 const RicpaClient = require('ricpa-client');
-const QueueProcessor = require('chess-positions-queue-processor');
+const QueueProcessor = require('fen-queue-processor');
 
 // external modules
 const http = require('http');
