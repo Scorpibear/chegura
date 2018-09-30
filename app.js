@@ -33,16 +33,19 @@ try {
   depthSelector.setDefaultDepth(config.defaultDepth);
   baseManager.readBase();
   baseManager.saveBase();
-  const ricpaClient = new RicpaClient(config.ricpaClient);
+  const ricpaClient = config.ricpaClient ? new RicpaClient(config.ricpaClient) : null;
   const externalEvaluations = new ExternalEvaluation(config.externalEvaluationsFile);
-  const queueProcessor = new QueueProcessor({queue, evaluation,
-    evaluationSources: [
-      externalEvaluations, bestmovedb, ricpaClient
-    ],
+  const evaluationSources = [externalEvaluations, bestmovedb];
+  if (ricpaClient) evaluationSources.push(ricpaClient);
+  const queueProcessor = new QueueProcessor({queue, evaluation, evaluationSources,
     analyzer: {analyze: (item) => {
-      item.pingUrl = config.pingUrl;
-      console.log(`posting '${item.fen}' with depth ${item.depth} to ${ricpaClient.config.fullpath} for analysis`);
-      ricpaClient.postFen(item);
+      if(ricpaClient) {
+        item.pingUrl = config.pingUrl;
+        console.log(`posting '${item.fen}' with depth ${item.depth} to ${ricpaClient.config.fullpath} for analysis`);
+        ricpaClient.postFen(item);
+      } else {
+        console.log('set ricpaClient settings in config to analyze positions');
+      }
     }}, 
     strategy: new QueueProcessingStrategy({pgnAnalyzer, baseProvider: baseManager})});
   usageStatistics.load(usageStatisticsSynchronizer);
