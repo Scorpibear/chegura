@@ -34,12 +34,6 @@ module.exports.getMovesToInsufficientEvaluationDepth = function (base, requiredD
   return result;
 };
 
-module.exports.getMovesWithSameFenButDifferentEvaluation = function (base) {
-  var result = [];
-  //TODO: implement logic
-  return result;
-};
-
 module.exports.findSubPositionObject = function (positionObject, move) {
   if (positionObject && positionObject.s) {
     for (var i = 0, l = positionObject.s.length; i < l; i++) {
