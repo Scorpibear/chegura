@@ -1,8 +1,8 @@
 {
   "name": "chegura",
-  "version": "2.0.0-rc.1",
+  "version": "2.0.0",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "test": "jasmine",
     "tdd": "nodemon --exec jasmine",
     "coverage": "istanbul cover node_modules/jasmine/bin/jasmine.js",
@@ -47,7 +47,8 @@
     "watch": [
       "app/**",
       "spec/**",
-      "app.js"
+      "app.js",
+      "app.config.json"
     ]
   }
 }
