@@ -2,6 +2,8 @@
 const baseManager = require('../../app/chessbase/base-manager');
 const baseOptimizer = require('../../app/chessbase/optimization/base-optimizer');
 const baseSerializer = require('../../app/chessbase/base-serializer');
+const bestmovedb = require('bestmovedb');
+const converter = require('../../app/converter');
 
 describe('baseManager', () => {
   let base = baseManager.getBase();
@@ -59,6 +61,26 @@ describe('baseManager', () => {
     it('stringifies', () => {
       spyOn(baseSerializer, 'stringify').and.returnValue('some string');
       expect(baseManager.getBaseAsString()).toEqual('some string');
+    });
+  });
+  describe('getFen', () => {
+    it('wraps bestmovedb.getFen', () => {
+      spyOn(bestmovedb, 'getFen');
+      baseManager.getFen({fen: 'abc', depth: 100});
+      expect(bestmovedb.getFen).toHaveBeenCalledWith({fen: 'abc', depth: 100});
+    });
+  });
+  describe('index', () => {
+    it('calls converter.json2fenbase', async () => {
+      spyOn(converter, 'json2fenbase');
+      await baseManager.index();
+      expect(converter.json2fenbase).toHaveBeenCalledWith(baseManager.getBase(), bestmovedb);
+    });
+    it('logs error if covertation failed', async () => {
+      spyOn(console, 'error').and.stub();
+      spyOn(converter, 'json2fenbase').and.throwError('something went wrong');
+      await baseManager.index();
+      expect(console.error).toHaveBeenCalled();
     });
   });
   describe('optimize', () => {
