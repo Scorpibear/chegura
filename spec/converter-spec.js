@@ -86,18 +86,11 @@ describe('converter', () => {
       expect(console.error).toHaveBeenCalled();
     });
     it('logs stats after 1000 positions analysis and in the end', () => {
-      const jsonbase = {m: '', e: {v: 0.1, d: 20}, s:[
-        {m: 'e4', e: {v: 0.1, d: 20}}
-      ]};
-      let i = 0;
-      Object.defineProperty(jsonbase.s[0], 's', {get: () => {
-        if(i <= 1000*6) {//6 times getter will be called for each object
-          i++;
-          return [jsonbase.s[0]];
-        } else {
-          return [];
-        }
-      }});
+      const samplePosition = {m: 'e4', e: {v: 0.1, d: 20}};
+      const jsonbase = {m: '', e: {v: 0.1, d: 20}};
+      for(let i = 0, position = jsonbase; i < 1000; i++, position = position.s[0]) {
+        position.s = [Object.assign({}, samplePosition)];
+      }
       spyOn(console, 'log').and.stub();
       converter.json2fenbase(jsonbase, fenbase);
       expect(console.log).toHaveBeenCalledTimes(2);

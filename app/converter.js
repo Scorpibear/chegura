@@ -35,7 +35,8 @@ class Converter {
       }
     }
     if(jsonbase) {
-      positionsQueue.push(jsonbase);
+      const baseCopy = JSON.parse(JSON.stringify(jsonbase));
+      positionsQueue.push(baseCopy);
       while(positionsQueue.length) {
         let position = positionsQueue.shift();
         addFens(position);
