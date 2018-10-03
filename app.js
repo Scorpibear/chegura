@@ -8,7 +8,6 @@ const QueueProcessor = require('fen-queue-processor');
 
 // external modules
 const http = require('http');
-const bestmovedb = require('bestmovedb');
 const url = require('url');
 
 // internal classes
@@ -32,19 +31,19 @@ const port = config.port;
 try {
   depthSelector.setDefaultDepth(config.defaultDepth);
   baseManager.readBase();
-  baseManager.saveBase();
+  baseManager.index();
   const ricpaClient = config.ricpaClient ? new RicpaClient(config.ricpaClient) : null;
   const externalEvaluations = new ExternalEvaluation(config.externalEvaluationsFile);
-  const evaluationSources = [externalEvaluations, bestmovedb];
+  const evaluationSources = [externalEvaluations, baseManager];
   if (ricpaClient) evaluationSources.push(ricpaClient);
   const queueProcessor = new QueueProcessor({queue, evaluation, evaluationSources,
     analyzer: {analyze: (item) => {
       if(ricpaClient) {
         item.pingUrl = config.pingUrl;
-        console.log(`posting '${item.fen}' with depth ${item.depth} to ${ricpaClient.config.fullpath} for analysis`);
+        console.log(`POST '${item.fen}' w/ depth ${item.depth} to ${ricpaClient.config.fullpath}`);
         ricpaClient.postFen(item);
       } else {
-        console.log('set ricpaClient settings in config to analyze positions');
+        console.log('set ricpaClient settings in app.config.json to analyze positions');
       }
     }}, 
     strategy: new QueueProcessingStrategy({pgnAnalyzer, baseProvider: baseManager})});
@@ -52,7 +51,6 @@ try {
   const requestProcessor = new RequestProcessor({baseManager, queueProcessor, usageStatistics, analyzer});
   queue.load(synchronizer.loadQueue(config.analysisQueueFile, [[],[],[],[]]));
   queue.on('change', (content) => synchronizer.saveQueue(config.analysisQueueFile, content));
-
   http.createServer(function(req, res) {
     console.log(`${req.method} ${req.url}`);
     switch (url.parse(req.url).pathname) {

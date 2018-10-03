@@ -1,10 +1,16 @@
-var fs = require('fs');
-var baseSerializer = require('./base-serializer');
-var baseOptimizer = require('./optimization/base-optimizer');
-var baseIterator = require('./base-iterator');
+const bestmovedb = require('bestmovedb');
+const fs = require('fs');
+const baseSerializer = require('./base-serializer');
+const baseOptimizer = require('./optimization/base-optimizer');
+const baseIterator = require('./base-iterator');
+const converter = require('../converter');
 
 var base = {m: '', n: 0, c: 'b', t: 'wb'};
 var filename = 'base.json';
+
+module.exports.getFen = ({ fen, depth }) => {
+  return bestmovedb.getFen({ fen, depth });
+};
 
 module.exports.saveBase = function() {
   fs.writeFile(filename, baseSerializer.stringify(base, true), err => {
@@ -79,6 +85,21 @@ module.exports.addToBase = function(moves, bestAnswer, scoreValue, depth) {
 
 module.exports.getBase = function() {
   return base;
+};
+
+module.exports.index = () => {
+  console.log('base index start');
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        converter.json2fenbase(base, bestmovedb);
+      } catch (err) {
+        reject(err);
+      }
+      console.log('base index finished');
+      resolve();
+    }, 0);
+  }).catch(err => console.error(err));
 };
 
 module.exports.readBase = function() {
