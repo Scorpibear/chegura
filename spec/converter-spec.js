@@ -80,6 +80,28 @@ describe('converter', () => {
       converter.json2fenbase({}, fenbase);
       expect(fenbase.add).not.toHaveBeenCalled();
     });
+    it('logs error if jsonbase was not specified', () => {
+      spyOn(console, 'error').and.stub();
+      converter.json2fenbase();
+      expect(console.error).toHaveBeenCalled();
+    });
+    it('logs stats after 1000 positions analysis and in the end', () => {
+      const jsonbase = {m: '', e: {v: 0.1, d: 20}, s:[
+        {m: 'e4', e: {v: 0.1, d: 20}}
+      ]};
+      let i = 0;
+      Object.defineProperty(jsonbase.s[0], 's', {get: () => {
+        if(i <= 1000*6) {//6 times getter will be called for each object
+          i++;
+          return [jsonbase.s[0]];
+        } else {
+          return [];
+        }
+      }});
+      spyOn(console, 'log').and.stub();
+      converter.json2fenbase(jsonbase, fenbase);
+      expect(console.log).toHaveBeenCalledTimes(2);
+    });
   });
   describe('movesToFen', () => {
     it('works for start', () => {

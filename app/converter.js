@@ -41,6 +41,8 @@ class Converter {
         addFens(position);
       }
       console.log(`${positionCount} position objects corresponds to ${fenbase.size} unique positions`);
+    } else {
+      console.error('could not convert null jsonbase');
     }
   }
 }
