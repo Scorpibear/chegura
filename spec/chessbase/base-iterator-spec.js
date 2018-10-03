@@ -107,4 +107,18 @@ describe('baseIterator', function () {
       expect(movesPath).toEqual([]);
     });
   });
+  describe('getBest', () => {
+    it('returns undefined if no elements in s property', () => {
+      expect(baseIterator.getBest({s:[]})).toBeUndefined();
+    });
+    it('returns undefined if no s property', () => {
+      expect(baseIterator.getBest({})).toBeUndefined();
+    });
+    it('throws error if s property is not an array', () => {
+      expect(baseIterator.getBest({s: 123})).toBeUndefined();
+    });
+    it('return undefined is positionObject is undefined', () => {
+      expect(baseIterator.getBest(undefined)).toBeUndefined();
+    });
+  });
 });

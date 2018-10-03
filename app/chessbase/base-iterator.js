@@ -92,3 +92,5 @@ module.exports.findPositionObject = function(movesPath, base) {
     return null;
   }
 };
+
+module.exports.getBest = positionObject => positionObject && positionObject.s && positionObject.s[0];
