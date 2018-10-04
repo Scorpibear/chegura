@@ -56,6 +56,11 @@ describe('baseManager', () => {
       baseManager.addToBase([], 'd4', 0.1, 39);
       expect(base.s[0].e).toEqual({v: 0.11, d: 40});
     });
+    it('adds position to bestmovedb', () => {
+      spyOn(bestmovedb, 'add').and.stub();
+      baseManager.addToBase([], 'd4', 0.1, 100);
+      expect(bestmovedb.add).toHaveBeenCalled();
+    });
   });
   describe('getBaseAsString', () => {
     it('stringifies', () => {
