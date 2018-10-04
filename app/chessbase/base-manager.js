@@ -46,7 +46,13 @@ var improveEvaluation = function(positionObject, evaluationObject) {
   }
 };
 
-module.exports.addToBase = function(moves, bestAnswer, scoreValue, depth) {
+module.exports.addToBase = (moves, bestMove, score, depth) => {
+  this.addToJsonBase(moves, bestMove, score, depth);
+  const fen = converter.moves2fen(moves);
+  bestmovedb.add({ fen, bestMove, score, depth });
+};
+
+module.exports.addToJsonBase = function(moves, bestAnswer, scoreValue, depth) {
   var evaluationObject = {v: scoreValue, d: depth};
   var positionObject = base;
   var parent;
