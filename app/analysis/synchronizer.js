@@ -12,10 +12,10 @@ exports.loadQueue = function(filename, defaultQueue) {
     var fileContent = fs.readFileSync(filename);
     return queueSerializer.parse(fileContent);
   } catch (err) {
-    console.error("Could not load analysis queue: " + err);
+    console.error('Could not load analysis queue: ' + err);
     return defaultQueue;
   }
-}
+};
 
 /**
  * Saves a queue into file asynchronously
@@ -23,9 +23,9 @@ exports.loadQueue = function(filename, defaultQueue) {
  * @param {object} queue - queue to save
  */
 exports.saveQueue = function(filename, queue) {
-  fs.writeFile(filename, queueSerializer.stringify(queue), err => {
-    if (err) {
-      console.error("Could not save analysis queue: " + err);
-    }
-  });
-}
+  try {
+    fs.writeFileSync(filename, queueSerializer.stringify(queue));
+  } catch (err) {
+    console.error('Could not save analysis queue: ' + err);
+  }
+};
