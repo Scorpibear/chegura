@@ -1,5 +1,7 @@
+const smartStringifier = require('smart-stringifier');
+
 module.exports.stringify = function(queue) {
-  return JSON.stringify({q: [queue[0],queue[1],[],[]]});
+  return smartStringifier.stringify({q: queue});
 };
 
 module.exports.parse = function(str) {
