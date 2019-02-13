@@ -29,6 +29,8 @@ module.exports = {
     "globals": {
         "describe": true,
         "it": true,
+        "afterAll": true,
+        "afterEach": true,
         "beforeAll": true,
         "beforeEach": true,
         "require": true,
