@@ -6,7 +6,6 @@ module.exports.getMoves = function({base, baseIterator}) {
   let moves = baseIterator.findLatestMainLine(base);
   if (pathChecker.isGameOver(moves, base)) {
     moves = baseIterator.findMinDepthMainLinePath(base);
-    moves.pop();
   }
   return moves;
 };

@@ -82,9 +82,8 @@ module.exports.addToJsonBase = function(moves, bestAnswer, scoreValue, depth) {
       positionObject.s.splice(index, 1);
       positionObject.s.unshift(subPositionObject);
     } else {
-      subPositionObject = createChildPositionObject(parent, bestAnswer, true);
+      createChildPositionObject(parent, bestAnswer, true);
     }
-    improveEvaluation(subPositionObject, evaluationObject);
     this.saveBase();
   }
 };

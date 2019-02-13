@@ -10,15 +10,21 @@ describe('baseIterator', function () {
     it('first best answer sends to evaluation', function () {
       expect(baseIterator.getMovesToInsufficientEvaluationDepth({
         m: '', e: { v: 0.12, d: 30 }, s: [
-          {m: 'd4', e: {v: 0.1, d: 29}, s: []}
+          {m: 'd4', e: {v: 0.1, d: 29}, s: [
+            {m: 'd5'}
+          ]}
         ]
       }, 30)).toEqual([['d4']]);
     });
     it('both answers are sent to evaluation', function () {
       expect(baseIterator.getMovesToInsufficientEvaluationDepth({
         m: '', e: { v: 0.12, d: 30 }, s: [
-          { m: 'd4', e: { v: 0.1, d: 29 }, s: [] },
-          { m: 'e4', e: { v: 0.1, d: 29 }, s: [] },
+          { m: 'd4', e: { v: 0.1, d: 29 }, s: [
+            {m: 'Nf6'}
+          ] },
+          { m: 'e4', e: { v: 0.1, d: 29 }, s: [
+            {m: 'e6'}
+          ] },
         ]
       }, 30)).toEqual([['d4'], ['e4']]);
     });
@@ -27,7 +33,9 @@ describe('baseIterator', function () {
         m: '', e: { v: 0.12, d: 35 }, s: [
           {
             m: 'd4', e: { v: 0.1, d: 35 }, s: [
-              { m: 'Nf6', e: { v: 0.1, d: 34 }, s: [] }]
+              { m: 'Nf6', e: { v: 0.1, d: 34 }, s: [
+                {m: 'Nf3'}
+              ] }]
           },
           { m: 'e4', e: { v: 0.1, d: 35 }, s: [] },
         ]
@@ -39,10 +47,14 @@ describe('baseIterator', function () {
           {
             m: 'd4', e: { v: 0.1, d: 30 }, s: [
               {m: 'Nf6', e: {v: 0.1, d: 30}, s: [
-                {m: 'Nf3', e: {v: 0.1, d: 29}, s: []}]}]
+                {m: 'Nf3', e: {v: 0.1, d: 29}, s: [
+                  {m: 'e6'}
+                ]}]}]
           },
           { m: 'e4', e: { v: 0.1, d: 30 }, s: [
-            {m: 'e6', e: {v: 0.1, d:29}, s: []}] }
+            {m: 'e6', e: {v: 0.1, d:29}, s: [
+              {m: 'd4'}
+            ]}] }
         ]
       }, 30)).toEqual([['e4', 'e6'], ['d4', 'Nf6', 'Nf3']]);
     });
@@ -53,6 +65,15 @@ describe('baseIterator', function () {
           { m: 'd4', e: { v: 0.1, d: 30 }, s: [
             {m: 'Nf6', e: {v: 0.1, d: 30}, s: []},
             {m: 'd5', e: {v:0.1, d: 29}, s: []}
+          ]}
+        ]
+      }, 30)).toEqual([]);
+    });
+    it('ignores empty evaluations', () => {
+      expect(baseIterator.getMovesToInsufficientEvaluationDepth({
+        m: '', e: { v: 0.12, d: 30 }, s: [
+          {m: 'd4', e: {v: 0.1, d: 30}, s: [
+            {m: 'd5'}
           ]}
         ]
       }, 30)).toEqual([]);
@@ -76,12 +97,19 @@ describe('baseIterator', function () {
   });
   describe('findMinDepthMainLinePath', function() {
     it('works', function() {
-      let base = {m: '', e: {v: 0.1, d: 47}, s:[{m: 'e4', e: {v: 0.15, d: 38}}]};
+      let base = {m: '', e: {v: 0.1, d: 47}, s:[
+        {m: 'e4', e: {v: 0.15, d: 38}, s: [
+          {m: 'e6'}
+        ]}]};
       let movesPath = baseIterator.findMinDepthMainLinePath(base);
       expect(movesPath).toEqual(['e4']);
     });
     it('iterates to 2 levels deep', function() {
-      let base = {m: '', e: {v: 0.1, d: 47}, s:[{m: 'e4', e: {v: 0.15, d: 38}, s:[{m: 'e6', e: {v: 0.12, d: 32}}]}]};
+      let base = {m: '', e: {v: 0.1, d: 47}, s:[
+        {m: 'e4', e: {v: 0.15, d: 38}, s:[
+          {m: 'e6', e: {v: 0.12, d: 32}, s:[
+            {m: 'd4'}
+          ]}]}]};
       let movesPath = baseIterator.findMinDepthMainLinePath(base);
       expect(movesPath).toEqual(['e4', 'e6']);
     });

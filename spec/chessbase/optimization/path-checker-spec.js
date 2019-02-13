@@ -18,10 +18,22 @@ describe('pathChecker', function() {
     });
     it('returns false if base is empty', () => {
       expect(pathChecker.isMaxDepth(['d4', 'd5'],{})).toBeFalsy();
-    })
+    });
     it('return true if v: 0, d: 300', function() {
       let base = {m: '', s: [{m: 'd4', e: {v: 0, d: 300}}]};
       expect(pathChecker.isMaxDepth(['d4'], base)).toBeTruthy();
+    });
+    it('return true if v: 0, d: 300 where on the path', () => {
+      let base = {m: '', e: {d: 37, v: 0.1}, s: [
+        {m: 'e4', e: {d: 32, v: 0.1}, s: [
+          {m: 'e6', e: {d: 32, v: 0.15}, s: [
+            {m: 'Nf3', e: {d: 300, v: 0}, s: [
+              {m: 'Nf6'}
+            ]}
+          ]}
+        ]}
+      ]};
+      expect(pathChecker.isMaxDepth(['e4', 'e6', 'Nf3', 'Nf6'], base)).toBeTruthy();
     });
   });
   describe('isGameOver', function() {

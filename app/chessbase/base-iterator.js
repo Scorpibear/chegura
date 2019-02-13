@@ -7,7 +7,7 @@ var addMoves = function (result, moves, parentObject, requiredDepth, objectsToLo
     parentObject.s.forEach(function (childObject) {
       var movesWithChild = moves.slice();
       movesWithChild.push(childObject.m);
-      if ((!childObject.e || childObject.e.d < requiredDepth) && (pgnAnalyzer.isOptimal(movesWithChild, base))) {
+      if ((childObject.e && childObject.e.d < requiredDepth) && (pgnAnalyzer.isOptimal(movesWithChild, base))) {
         result.push(movesWithChild);
       } else {
         objectsToLookDeeper.push({ positionObject: childObject, moves: movesWithChild });
@@ -19,7 +19,7 @@ var addMoves = function (result, moves, parentObject, requiredDepth, objectsToLo
 module.exports.getMovesToInsufficientEvaluationDepth = function (base, requiredDepth) {
   var result = [];
   var moves = [];
-  if(!base.e || base.e.d < requiredDepth) {
+  if(base.e && base.e.d < requiredDepth) {
     result.push(moves);
   }
   var objectsToLookDeeper = [];
