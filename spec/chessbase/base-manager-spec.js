@@ -16,13 +16,13 @@ describe('baseManager', () => {
       base.s = [];
       baseManager.addToBase(['d4'], 'Nf6', 0.12, 30);
       expect(base.s[0]).toEqual({m: 'd4', n: 1, c: 'w', e: { v: 0.12, d: 30 }, s: [
-        { m: 'Nf6', n: 1, c: 'b', e: { v: 0.12, d: 30 } }
+        { m: 'Nf6', n: 1, c: 'b' }
       ]});
     });
-    it('updates best answer evaluation data', function () {
+    it('does not update best answer evaluation data (issue #54)', function () {
       base.s = [];
       baseManager.addToBase([], 'd4', 0.12, 30);
-      expect(base.s[0].e).toEqual({v: 0.12, d: 30});
+      expect(base.s[0].e).toBeUndefined();
     });
     it('change best answer when it is considered previously as not best', function() {
       base.s = [{m: 'd4', s: [{m: 'c5', s: []}]}];
