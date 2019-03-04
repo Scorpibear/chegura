@@ -1,6 +1,6 @@
 {
   "name": "chegura",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "scripts": {
     "start": "node app.js",
     "debug": "nodemon app.js",
@@ -15,7 +15,7 @@
     "chess.js": "^0.10.2",
     "fen-analyzer": "^0.2.0",
     "fen-queue": "^0.3.1",
-    "fen-queue-processor": "^0.5.0",
+    "fen-queue-processor": "^0.5.1",
     "ricpa-client": "^0.2.1",
     "smart-stringifier": "^0.1.0"
   },
@@ -23,12 +23,12 @@
   "main": "app.js",
   "bin": "app.js",
   "devDependencies": {
-    "eslint": "^4.19.1",
+    "eslint": "^5.15.0",
     "husky": "^0.14.3",
     "jasmine": "^3.2.0",
     "nodemon": "^1.18.4",
     "npm-run-all": "^4.1.2",
-    "nyc": "^13.0.1"
+    "nyc": "^13.3.0"
   },
   "repository": {
     "type": "git",
