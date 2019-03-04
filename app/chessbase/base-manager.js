@@ -11,11 +11,14 @@ var filename = 'base.json';
 module.exports.getFen = ({ fen, depth }) => {
   return bestmovedb.getFen({ fen, depth });
 };
-
+let savePromise = Promise.resolve();
 module.exports.saveBase = function() {
-  fs.writeFile(filename, baseSerializer.stringify(base, true), err => {
-    if (err) console.error(err);
+  savePromise = savePromise.finally(() => {
+    fs.writeFile(filename, baseSerializer.stringify(base, true), err => {
+      if (err) console.error(err);
+    });
   });
+  return savePromise;
 };
 
 var createChildPositionObject = function(parentObject, childMove, isBest) {
@@ -63,8 +66,8 @@ module.exports.addToJsonBase = function(moves, bestAnswer, scoreValue, depth) {
       positionObject = createChildPositionObject(parent, moves[i]);
     }
   }
-  improveEvaluation(positionObject, evaluationObject);
-  if (positionObject !== null) {
+  if(!positionObject.e || positionObject.e.d <= evaluationObject.d) {
+    improveEvaluation(positionObject, evaluationObject);
     parent = positionObject;
     var index;
     var subPositionObject = (function() {
