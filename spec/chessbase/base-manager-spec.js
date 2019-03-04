@@ -56,6 +56,12 @@ describe('baseManager', () => {
       baseManager.addToBase([], 'd4', 0.1, 39);
       expect(base.s[0].e).toEqual({v: 0.11, d: 40});
     });
+    it('does not change the best answer if evalution has lower depth', () => {
+      base.e = {v:0.11, d:45};
+      base.s = [{m: 'e4', e: {}}];
+      baseManager.addToBase([], 'd4', 0.1, 44);
+      expect(base.s[0].m).toEqual('e4');
+    });
     it('adds position to bestmovedb', () => {
       spyOn(bestmovedb, 'add').and.stub();
       baseManager.addToBase([], 'd4', 0.1, 100);
@@ -96,18 +102,18 @@ describe('baseManager', () => {
     });
   });
   describe('saveBase', () => {
-    it('save to base.json', function() {      
+    it('save to base.json', async function() {
       spyOn(fs, 'writeFile').and.stub();
       delete base.e;
       delete base.s;
-      baseManager.saveBase();
+      await baseManager.saveBase();
       expect(fs.writeFile).toHaveBeenCalledWith('base.json', '{"m": "", "n": 0, "c": "b", "t": "wb", "s": []}', jasmine.anything());
     });
-    it('console.error is called in case of error during writeFile', () => {
+    it('console.error is called in case of error during writeFile', async () => {
       spyOn(fs, 'writeFile').and.callFake((file, data, callback) => {callback('error');});
       spyOn(console, 'error').and.callThrough();
 
-      baseManager.saveBase();
+      await baseManager.saveBase();
 
       expect(console.error).toHaveBeenCalledWith('error');
     });
