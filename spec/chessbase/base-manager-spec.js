@@ -101,29 +101,36 @@ describe('baseManager', () => {
       expect(baseOptimizer.optimize).toHaveBeenCalled();
     });
   });
-  describe('saveBase', () => {
-    it('save to base.json', async function() {
-      spyOn(fs, 'writeFile').and.stub();
+  describe('saveBaseSync', () => {
+    it('console.error is called in case of error during writeFile', () => {
+      spyOn(fs, 'writeFileSync').and.throwError('error');
+      spyOn(console, 'error').and.stub();
+
+      baseManager.saveBaseSync();
+
+      expect(console.error).toHaveBeenCalledWith(new Error('error'));
+    });
+    it('save to base.json', function() {
+      spyOn(fs, 'writeFileSync').and.stub();
       delete base.e;
       delete base.s;
-      await baseManager.saveBase();
-      expect(fs.writeFile).toHaveBeenCalledWith('base.json', '{"m": "", "n": 0, "c": "b", "t": "wb", "s": []}', jasmine.anything());
-    });
-    it('console.error is called in case of error during writeFile', async () => {
-      spyOn(fs, 'writeFile').and.callFake((file, data, callback) => {callback('error');});
-      spyOn(console, 'error').and.callThrough();
-
-      await baseManager.saveBase();
-
-      expect(console.error).toHaveBeenCalledWith('error');
+      baseManager.saveBaseSync();
+      expect(fs.writeFileSync).toHaveBeenCalledWith('base.json', '{"m": "", "n": 0, "c": "b", "t": "wb", "s": []}');
     });
     it('console.error is not called in case of no error during writeFile', () => {
-      spyOn(fs, 'writeFile').and.callFake((file, data, callback) => {callback();});
+      spyOn(fs, 'writeFileSync').and.stub();
       spyOn(console, 'error').and.callThrough();
 
-      baseManager.saveBase();
+      baseManager.saveBaseSync();
 
       expect(console.error).not.toHaveBeenCalled();
+    });
+  });
+  describe('saveBase', () => {
+    it('calls saveBaseSync in promise', async () => {
+      spyOn(baseManager, 'saveBaseSync').and.stub();
+      await baseManager.saveBase();
+      expect(baseManager.saveBaseSync).toHaveBeenCalled();
     });
   });
   describe('readBase', () => {

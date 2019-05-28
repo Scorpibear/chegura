@@ -11,14 +11,28 @@ var filename = 'base.json';
 module.exports.getFen = ({ fen, depth }) => {
   return bestmovedb.getFen({ fen, depth });
 };
-let savePromise = Promise.resolve();
-module.exports.saveBase = function() {
-  savePromise = savePromise.finally(() => {
-    fs.writeFile(filename, baseSerializer.stringify(base, true), err => {
-      if (err) console.error(err);
-    });
-  });
-  return savePromise;
+
+let isSaving = false;
+
+module.exports.saveBaseSync = () => {
+  if(isSaving) return;
+  isSaving = true;
+  try {
+    const content = baseSerializer.stringify(base, true);
+    fs.writeFileSync(filename, content);
+  } catch(err) {
+    console.error(err);
+  } finally {
+    isSaving = false;
+  }
+};
+
+module.exports.saveBase = () => {
+  if(isSaving) return Promise.resolve();
+  return new Promise(resolve => {
+    this.saveBaseSync();
+    resolve();
+  }).catch(console.error);
 };
 
 var createChildPositionObject = function(parentObject, childMove, isBest) {
