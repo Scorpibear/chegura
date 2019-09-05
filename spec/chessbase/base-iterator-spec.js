@@ -69,7 +69,7 @@ describe('baseIterator', function () {
         ]
       }, 30)).toEqual([]);
     });
-    it('ignores empty evaluations', () => {
+    it('ignores empty evaluations at the end of tree', () => {
       expect(baseIterator.getMovesToInsufficientEvaluationDepth({
         m: '', e: { v: 0.12, d: 30 }, s: [
           {m: 'd4', e: {v: 0.1, d: 30}, s: [
@@ -77,6 +77,17 @@ describe('baseIterator', function () {
           ]}
         ]
       }, 30)).toEqual([]);
+    });
+    it('sends for evaluation empty evaluations inside a tree', () => {
+      expect(baseIterator.getMovesToInsufficientEvaluationDepth(
+        {m: '', e: { v: 0.12, d: 35 }, s: [
+          {m: 'd4', s: [
+            { m: 'Nf6', e: { v: 0.1, d: 35 }, s: [
+              {m: 'Nf3'}
+            ] }]
+          },
+          {m: 'e4', e: { v: 0.1, d: 35 }, s: [] },
+        ]}, 35)).toEqual([['d4']]);
     });
   });
   describe('findLatestMainLine', function() {
