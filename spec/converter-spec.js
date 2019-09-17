@@ -113,6 +113,6 @@ describe('converter', () => {
     it('normalizes fen', () => {
       spyOn(fenAnalyzer, 'normalize').and.returnValue('normalized fen');
       expect(converter.moves2fen(['e4'])).toBe('normalized fen');
-    })
+    });
   });
 });
