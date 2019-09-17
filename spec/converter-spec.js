@@ -1,5 +1,6 @@
 describe('converter', () => {
   const converter = require('../app/converter');
+  const fenAnalyzer = require('fen-analyzer');
 
   describe('json2fenbase', () => {
     const fenbase = {add: () => {}, size: 42};
@@ -108,6 +109,10 @@ describe('converter', () => {
       spyOn(console, 'error').and.stub();
       converter.moves2fen({bad: 'data'});
       expect(console.error).toHaveBeenCalled();
+    });
+    it('normalizes fen', () => {
+      spyOn(fenAnalyzer, 'normalize').and.returnValue('normalized fen');
+      expect(converter.moves2fen(['e4'])).toBe('normalized fen');
     });
   });
 });
