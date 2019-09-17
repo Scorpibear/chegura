@@ -1,11 +1,13 @@
 const Chess = require('chess.js').Chess;
+const fenAnalyzer = require('fen-analyzer');
 
 class Converter {
   moves2fen(moves) {
     if(moves && 'length' in moves) {
       const chess = new Chess();
       moves.forEach(move => chess.move(move));
-      return chess.fen();
+      const fen = fenAnalyzer.normalize(chess.fen());
+      return fen;
     } else {
       console.error(`Incorrect moves are supplied to moves2fen: ${moves}`);
       return null;

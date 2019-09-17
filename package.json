@@ -11,9 +11,9 @@
     "report-coverage": "nyc npm test && nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
   "dependencies": {
-    "bestmovedb": "^0.3.0",
+    "bestmovedb": "^0.4.0",
     "chess.js": "^0.10.2",
-    "fen-analyzer": "^0.3.0",
+    "fen-analyzer": "^0.3.1",
     "fen-queue": "^0.3.1",
     "fen-queue-processor": "^0.5.1",
     "ricpa-client": "^0.3.0",
