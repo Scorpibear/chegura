@@ -78,6 +78,19 @@ describe('baseIterator', function () {
         ]
       }, 30)).toEqual([]);
     });
+    it('ignores empty evaluations at the end when there is sibling continuation', () => {
+      expect(baseIterator.getMovesToInsufficientEvaluationDepth({
+        m: '', e: { v: 0.12, d: 46 }, s: [
+          {m: 'd4', e: {v: 0.1, d: 46}, s: [
+            {m: 'd5'}]},
+          {m: 'f3', n: 1, c: 'w', e: {v: -0.88, d: 46}, s: [
+            {m: 'e5', n: 1, c: 'b', e: {v: -0.6, d: 46}, s: [
+              {m: 'Nc3', n: 2, c: 'w', s: []},
+              {m: 'e3', n: 2, c: 'w', e: {v: -0.95, d: 46}, s: [
+                {m: 'd5', n: 2, c: 'b', e: {v: -0.67, d: 46}, s: [
+                  {m: 'd4', n: 3, c: 'w', s: []}]}]}]}]}]
+      }, 46)).toEqual([]);
+    });
     it('sends for evaluation empty evaluations inside a tree', () => {
       expect(baseIterator.getMovesToInsufficientEvaluationDepth(
         {m: '', e: { v: 0.12, d: 35 }, s: [
