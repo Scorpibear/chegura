@@ -50,4 +50,4 @@ GET /api/getbase
 
 ## Demo
 
-See how it works with Melissa trainer at http://shahmaster.ru/melissa
+See how it works with Melissa trainer at http://3kgm.online/
