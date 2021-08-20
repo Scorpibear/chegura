@@ -23,7 +23,7 @@ class RequestProcessor{
       'Content-Type': 'text/json',
       'Access-Control-Allow-Origin': '*'
     });
-    res.end(this.baseManager.getFenBase());
+    res.end(JSON.stringify(this.baseManager.getFenBase()));
   }
   default(res) {
     res.writeHead(200, {

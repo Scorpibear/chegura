@@ -140,3 +140,5 @@ module.exports.getBaseAsString = function() {
 module.exports.optimize = function({settings}) {
   return baseOptimizer.optimize({base, baseIterator, settings});
 };
+
+module.exports.getFenBase = () => bestmovedb.toJSON();
