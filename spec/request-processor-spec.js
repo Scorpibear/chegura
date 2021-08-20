@@ -2,7 +2,7 @@ const RequestProcessor = require('../app/request-processor');
 
 describe('requestProcessor', () => {
   const analyzer = {analyzeLater: () => Promise.resolve()};
-  const baseManager = {getBaseAsString: () => {}, getBase: () => {}};
+  const baseManager = {getBaseAsString: () => {}, getBase: () => {}, getFenBase: () => {}};
   const res = {writeHead: ()=>{}, end: ()=>{}};
   const moves = ['d4', 'Nf6'];
   const queueProcessor = {process: ()=>{}};
@@ -50,6 +50,14 @@ describe('requestProcessor', () => {
       spyOn(usageStatistics, 'registerBaseRequest');
       requestProcessor.getBase(req, res);
       expect(usageStatistics.registerBaseRequest).toHaveBeenCalled();
+    });
+  });
+  describe('getFenBase', () => {
+    it('provide fenbase as is', () => {
+      const req = {};
+      spyOn(baseManager, 'getFenBase').and.stub();
+      requestProcessor.getFenBase(req, res);
+      expect(baseManager.getFenBase).toHaveBeenCalled();
     });
   });
   describe('getUsersCount', () => {

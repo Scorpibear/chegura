@@ -150,4 +150,10 @@ describe('baseManager', () => {
       expect(console.error).toHaveBeenCalled();
     });
   });
+  describe('getFenBase', () => {
+    it('returns non-empty list of objects', () => {
+      const fenbase = baseManager.getFenBase();
+      expect(fenbase.length).toBeGreaterThan(0);
+    });
+  });
 });

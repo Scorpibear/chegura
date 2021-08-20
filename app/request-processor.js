@@ -18,6 +18,13 @@ class RequestProcessor{
     res.end(this.baseManager.getBaseAsString());
     this.usageStatistics.registerBaseRequest(query.userid);
   }
+  getFenBase(req, res) {
+    res.writeHead(200, {
+      'Content-Type': 'text/json',
+      'Access-Control-Allow-Origin': '*'
+    });
+    res.end(this.baseManager.getFenBase());
+  }
   default(res) {
     res.writeHead(200, {
       'Content-Type': 'text/plain',
