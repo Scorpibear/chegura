@@ -6,10 +6,6 @@
 const RicpaClient = require('ricpa-client');
 const QueueProcessor = require('fen-queue-processor');
 
-// external modules
-const http = require('http');
-const url = require('url');
-
 // internal classes
 const ExternalEvaluation = require('./app/analysis/external-evaluation');
 const QueueProcessingStrategy = require('./app/analysis/queue-processing-strategy');
@@ -26,7 +22,7 @@ const queue = require('./app/analysis/analysis-queue');
 const synchronizer = require('./app/analysis/synchronizer');
 const usageStatistics = require('./app/usage-statistics');
 const usageStatisticsSynchronizer = require('./app/usage-statistics-synchronizer');
-const port = config.port;
+const api = require('./app/api');
 
 try {
   depthSelector.setDefaultDepth(config.defaultDepth);
@@ -51,25 +47,7 @@ try {
   const requestProcessor = new RequestProcessor({baseManager, queueProcessor, usageStatistics, analyzer});
   queue.load(synchronizer.loadQueue(config.analysisQueueFile, [[],[],[],[]]));
   queue.on('change', (content) => synchronizer.saveQueue(config.analysisQueueFile, content));
-  http.createServer(function(req, res) {
-    console.log(`${req.method} ${req.url}`);
-    switch (url.parse(req.url).pathname) {
-    case '/api/analyze':
-      requestProcessor.analyze(req, res);
-      break;
-    case '/api/getuserscount':
-      requestProcessor.getUsersCount(req, res);
-      break;
-    case '/api/ping':
-      requestProcessor.ping(req, res);
-      break;
-    case '/api/getbase':
-      requestProcessor.getBase(req, res);
-      break;
-    default:
-      requestProcessor.default(res);
-    }
-  }).listen(port);
+  api.register(requestProcessor, config.port);
 
   const onEmpty = () => {
     console.log('queue is empty');
@@ -82,7 +60,7 @@ try {
 
   queueProcessor.process().catch(err => console.error(err));
 
-  console.log('Chegura is ready to process requests on ' + port + ' port');
+  console.log(`Chegura is ready to process requests on ${config.port} port`);
 } catch (err) {
   console.error('Unexpected error: ', err);
 }
