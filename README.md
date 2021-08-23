@@ -42,11 +42,13 @@ chegura &>chegura.log &
 
 POST /api/analyze {moves: ['e4','e5']}
 
-GET /api/getuserscount
+GET /api/userscount
 
 GET,POST /api/ping
 
-GET /api/getbase
+GET /api/base
+
+GET /api/fenbase
 
 ## Demo
 
