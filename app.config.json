@@ -1,9 +1,9 @@
 {
   "optimizeSettings": {
-    "optimize": true
+    "optimize": false
   },
   "port": 9966,
-  "defaultDepth": 46,
+  "defaultDepth": 50,
   "ricpaClient": {"hostname": "localhost", "port": "9977", "path": ""},
   "analysisQueueFile": "analysis-queue.json",
   "externalEvaluationsFile": "external-evaluations.json",
