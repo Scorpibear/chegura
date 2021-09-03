@@ -4,7 +4,7 @@ const http = require('http');
 describe('api', () => {
   let stub = () => { /* just an empty stub function */ };
   let processor = {getFenBase: stub, ping: stub, getUsersCount: stub, analyze: stub, getBase: stub,
-    default: stub
+    getFenData: stub, default: stub
   };
   let port = 112233;
 
@@ -17,6 +17,7 @@ describe('api', () => {
       spyOn(processor, 'getUsersCount');
       spyOn(processor, 'getBase');
       spyOn(processor, 'analyze');
+      spyOn(processor, 'getFenData');
       spyOn(processor, 'default');
       map = api.createMap(processor);
     });
@@ -39,6 +40,10 @@ describe('api', () => {
     it('maps /api/base', () => {
       map({url: '/api/base'}, res);
       expect(processor.getBase).toHaveBeenCalled();
+    });
+    it('maps /api/fendata', () => {
+      map({url: '/api/fendata'}, res);
+      expect(processor.getFenData).toHaveBeenCalled();
     });
     it('maps to default in case of unsupported api call', () => {
       map({url: '/api/unsupported'}, res);

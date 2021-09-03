@@ -142,3 +142,10 @@ module.exports.optimize = function({settings}) {
 };
 
 module.exports.getFenBase = () => bestmovedb.toJSON();
+
+module.exports.getFenData = (fen) => {
+  const fenData = bestmovedb.getFen({fen});
+  if(fenData && !fenData.sp) {
+    fenData.sp = fenData.score * 100;
+  }
+};

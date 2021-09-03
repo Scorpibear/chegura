@@ -1,12 +1,13 @@
 const RequestProcessor = require('../app/request-processor');
 
 describe('requestProcessor', () => {
+  const stub = () => { /* just an empty stub for tests to later spyOn and mock */ };
   const analyzer = {analyzeLater: () => Promise.resolve()};
-  const baseManager = {getBaseAsString: () => {}, getBase: () => {}, getFenBase: () => {}};
-  const res = {writeHead: ()=>{}, end: ()=>{}};
+  const baseManager = {getBaseAsString: stub, getBase: stub, getFenBase: stub, getFenData: stub};
+  const res = {writeHead: stub, end: stub, json: stub};
   const moves = ['d4', 'Nf6'];
-  const queueProcessor = {process: ()=>{}};
-  const usageStatistics = {getUsersCount: () => {}, registerBaseRequest: () => {}};
+  const queueProcessor = {process: stub};
+  const usageStatistics = {getUsersCount: stub, registerBaseRequest: stub};
   const requestProcessor = new RequestProcessor({baseManager, queueProcessor, usageStatistics, analyzer});
 
   describe('analyze', () => {
@@ -58,6 +59,15 @@ describe('requestProcessor', () => {
       spyOn(baseManager, 'getFenBase').and.stub();
       requestProcessor.getFenBase(req, res);
       expect(baseManager.getFenBase).toHaveBeenCalled();
+    });
+  });
+  describe('getFenData', () => {
+    it('use info from baseManager', () => {
+      const fenData = {bestMove: 'Nf6', sp: 30, depth: 50};
+      spyOn(baseManager, 'getFenData').and.returnValue(fenData);
+      spyOn(res, 'end');
+      requestProcessor.getFenData({url: '/api/fenData?fen=some valid FEN'}, res);
+      expect(res.end).toHaveBeenCalledWith(JSON.stringify(fenData));
     });
   });
   describe('getUsersCount', () => {
