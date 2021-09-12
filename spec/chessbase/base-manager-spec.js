@@ -75,10 +75,15 @@ describe('baseManager', () => {
     });
   });
   describe('getFen', () => {
-    it('wraps bestmovedb.getFen', () => {
+    it('calls bestmovedb.getFen', () => {
       spyOn(bestmovedb, 'getFen');
       baseManager.getFen({fen: 'abc', depth: 100});
       expect(bestmovedb.getFen).toHaveBeenCalledWith({fen: 'abc', depth: 100});
+    });
+    it('adds sp property if not provided by bestmovedb', () => {
+      spyOn(bestmovedb, 'getFen').and.returnValue({fen: 'abc', score: 0.42, depth: 50});
+      const fenData = baseManager.getFen({fen: 'abc'});
+      expect(fenData.sp).toBe(42);
     });
   });
   describe('index', () => {

@@ -1,10 +1,10 @@
 const http = require('http');
-const url = require('url');
 
 function createMap(processor) {
   return function(req, res) {
     console.log(`${req.method} ${req.url}`);
-    switch (url.parse(req.url).pathname) {
+    const url = new URL(req.url, 'https://hostname');
+    switch (url.pathname) {
     case '/api/analyze':
       processor.analyze(req, res);
       break;
@@ -21,6 +21,9 @@ function createMap(processor) {
       break;
     case '/api/fenbase':
       processor.getFenBase(req, res);
+      break;
+    case '/api/fendata':
+      processor.getFenData(req, res);
       break;
     default:
       processor.default(res);
