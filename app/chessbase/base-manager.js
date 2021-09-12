@@ -8,9 +8,15 @@ const converter = require('../converter');
 var base = {m: '', n: 0, c: 'b', t: 'wb'};
 var filename = 'base.json';
 
-module.exports.getFen = ({ fen, depth }) => {
-  return bestmovedb.getFen({ fen, depth });
+module.exports.getFen = ({fen, depth}) => {
+  const fenData = bestmovedb.getFen({fen, depth});
+  if(fenData && !fenData.sp) {
+    fenData.sp = fenData.score * 100;
+  }
+  return fenData;
 };
+
+module.exports.getFenBase = () => bestmovedb.toJSON();
 
 let isSaving = false;
 
@@ -139,13 +145,4 @@ module.exports.getBaseAsString = function() {
 
 module.exports.optimize = function({settings}) {
   return baseOptimizer.optimize({base, baseIterator, settings});
-};
-
-module.exports.getFenBase = () => bestmovedb.toJSON();
-
-module.exports.getFenData = (fen) => {
-  const fenData = bestmovedb.getFen({fen});
-  if(fenData && !fenData.sp) {
-    fenData.sp = fenData.score * 100;
-  }
 };

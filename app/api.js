@@ -4,7 +4,6 @@ function createMap(processor) {
   return function(req, res) {
     console.log(`${req.method} ${req.url}`);
     const url = new URL(req.url, 'https://hostname');
-    console.log('pathname: ' + url.pathname);
     switch (url.pathname) {
     case '/api/analyze':
       processor.analyze(req, res);

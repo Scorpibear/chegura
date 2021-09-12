@@ -33,7 +33,7 @@ class RequestProcessor{
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       });
-      res.end(JSON.stringify(this.baseManager.getFenData(fen)));
+      res.end(JSON.stringify(this.baseManager.getFen({fen})));
     } else {
       res.writeHead(422);
       res.end();
