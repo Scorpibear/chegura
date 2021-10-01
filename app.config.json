@@ -4,6 +4,7 @@
   },
   "port": 9966,
   "defaultDepth": 50,
+  "movesToStore": 40,
   "ricpaClient": {"hostname": "localhost", "port": "9977", "path": ""},
   "analysisQueueFile": "analysis-queue.json",
   "externalEvaluationsFile": "external-evaluations.json",
