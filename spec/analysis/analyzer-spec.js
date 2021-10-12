@@ -3,6 +3,30 @@
   const queue = require('../../app/analysis/analysis-queue');
   const pgnAnalyzer = require('../../app/analysis/pgn-analyzer');
   const base = {};
+  const item = {moves: ['e4', 'd5'], fen: 'some valid fen', depth: 50};
+  const ricpaClient = {postFen: () => {}, config: {}};
+  describe('analyze', () => {
+    beforeEach(() => {
+      analyzer.setSettings({ricpaClient});
+    });
+    it('post fen via ricpa client', () => {
+      spyOn(ricpaClient, 'postFen');
+      analyzer.analyze(item);
+      expect(ricpaClient.postFen).toHaveBeenCalled();
+    });
+    it('deletes the item from queue if moves are out of limit', () => {
+      spyOn(queue, 'delete').and.stub();
+      spyOn(pgnAnalyzer, 'areMovesWithinLimit').and.returnValue(false);
+      analyzer.analyze(item);
+      expect(queue.delete).toHaveBeenCalledWith(item.fen);
+    });
+    it('logs error if ricpaClient is not specified', () => {
+      spyOn(console, 'error').and.stub();
+      analyzer.setSettings({ricpaClient: undefined});
+      analyzer.analyze(item);
+      expect(console.error).toHaveBeenCalled();
+    });
+  });
   describe('analyzeLater', () => {
     it('calls queue.add', () => {
       spyOn(queue, 'add');
