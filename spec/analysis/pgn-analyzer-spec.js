@@ -26,4 +26,23 @@ describe('pgnAnalyzer', function() {
       expect(pgnAnalyzer.splitSequentially(base, ['h4', 'e5'])).toEqual([['h4', 'e5']]);
     });
   });
+  describe('areMovesWithinLimit', () => {
+    it('returns false when matched exactly', () => {
+      pgnAnalyzer.setMovesLimit(3);
+      expect(pgnAnalyzer.areMovesWithinLimit(['d4', 'd5', 'Nf3', 'Nf6', 'c4', 'e6'])).toBeFalsy();
+    });
+    it('limit moves does not work for previous ply', () => {
+      pgnAnalyzer.setMovesLimit(3);
+      expect(pgnAnalyzer.areMovesWithinLimit(['d4', 'd5', 'Nf3', 'Nf6', 'c4'])).toBeTruthy();
+    });
+    it('throws error when not array of moves is provided', () => {
+      const errorInput = 'fen was provided by mistake';
+      expect(() => pgnAnalyzer.areMovesWithinLimit(errorInput))
+        .toThrowError(`List of moves has to be provided, but '${errorInput}' was provided instead`);
+    });
+    it('throws error when parameter is missed', () => {
+      expect(() => pgnAnalyzer.areMovesWithinLimit())
+        .toThrowError(`List of moves has to be provided, but '${undefined}' was provided instead`);
+    });
+  });
 });

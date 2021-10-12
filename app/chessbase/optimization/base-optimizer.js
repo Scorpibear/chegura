@@ -27,6 +27,7 @@ module.exports.optimizeSync = function({base, baseIterator}) {
     }
     const moves = mainLineOptimizer.getMoves({base, baseIterator});
     if(moves !== undefined && 'length' in moves) {
+      console.log(`Optimizing main line: ${moves.join(',')}`);
       analysisQueue.add(
         {
           fen: converter.moves2fen(moves),
