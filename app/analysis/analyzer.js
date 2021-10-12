@@ -17,7 +17,7 @@ function analyze(item) {
       analysisQueue.delete(item.fen);
     }
   } else {
-    console.log('set ricpaClient settings in app.config.json to analyze positions');
+    console.error('set ricpaClient settings in app.config.json to analyze positions');
   }
 }
 
