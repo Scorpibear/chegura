@@ -71,6 +71,7 @@ module.exports.findMinDepthMainLinePath = function(base) {
     positionObject = positionObject.s[0];
     if(positionObject && positionObject.m) {
       currentPath.push(positionObject.m);
+      if(!pgnAnalyzer.areMovesWithinLimit(currentPath)) break;
       if(positionObject.hasOwnProperty('e') && positionObject.e.hasOwnProperty('d') && positionObject.e.d < minDepth) {
         minDepth = positionObject.e.d;
         // copy array via slice(), ordinary '=' will assign the same array by reference

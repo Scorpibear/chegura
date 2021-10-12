@@ -1,7 +1,7 @@
 'use strict';
 
 const MAX_DEPTH = 300;
-const INCREMENT = 2;
+const INCREMENT = 4;
 const baseIterator = require('../../app/chessbase/base-iterator');
 
 let defaultDepth = 40;

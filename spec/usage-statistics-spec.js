@@ -4,6 +4,7 @@ describe('usageStatistics', function() {
   var usageStatistics;
   beforeAll(function() {
     usageStatistics = require('../app/usage-statistics');
+    console.log = () => { /* a stub to mute console noise in tests */ };
   });
   beforeEach(function() {
     usageStatistics.reset();

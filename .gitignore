@@ -34,3 +34,6 @@ node_modules
 /analysis-queue.json
 /stockfish*
 /*.lock
+
+# chegura base cuts and backups
+base-*.json

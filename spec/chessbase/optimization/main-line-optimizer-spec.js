@@ -1,6 +1,7 @@
 describe('mainLineOptimizer', function() {
   const mainLineOptimizer = require('../../../app/chessbase/optimization/main-line-optimizer');
   const baseIterator = {findLatestMainLine: () => {}, findMinDepthMainLinePath: () => {}};
+  const pgnAnalyzer = require('../../../app/analysis/pgn-analyzer');
   describe('getMoves', function() {
     it('sends for evaluation last move in main line', function () {
       const base = { m: '', s: [
@@ -41,6 +42,15 @@ describe('mainLineOptimizer', function() {
       spyOn(baseIterator, 'findMinDepthMainLinePath').and.returnValue(['e4']);
       expect(mainLineOptimizer.getMoves({base, baseIterator})).toEqual(['e4']);
     });
-
+    it('find min depth in the main line if main line is longer than moves limit', () => {
+      const base = { m: '', s: [
+        {m: 'd4', s: [
+          {m: 'Nf6' } ] } ] };
+      spyOn(baseIterator, 'findLatestMainLine').and.returnValue(['d4', 'Nf6']);
+      spyOn(baseIterator, 'findMinDepthMainLinePath').and.returnValue(['d4']);
+      spyOn(pgnAnalyzer, 'areMovesWithinLimit').and.returnValue(false);
+      mainLineOptimizer.getMoves({base, baseIterator});
+      expect(baseIterator.findMinDepthMainLinePath).toHaveBeenCalled();
+    });
   });
 });

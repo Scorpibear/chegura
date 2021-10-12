@@ -158,6 +158,19 @@ describe('baseIterator', function () {
       const movesPath = baseIterator.findMinDepthMainLinePath(base);
       expect(movesPath).toEqual([]);
     });
+    it('do not return the pgn when limit reached', () => {
+      let pgnAnalyzer = require('../../app/analysis/pgn-analyzer');
+      pgnAnalyzer.setMovesLimit(3);
+      const base = {'m': '', 'n': 0, 'c': 'b', 't': 'wb', 'e': {'v': 0.43, 'd': 22}, 's': [
+        {'m': 'd4', 'n': 1, 'c': 'w', 'e': {'v': 0.31, 'd': 22}, 's': [
+          {'m': 'Nf6', 'n': 1, 'c': 'b', 'e': {'v': 0.34, 'd': 22}, 's': [
+            {'m': 'c4', 'n': 2, 'c': 'w', 'e': {'v': 0.27, 'd': 22}, 's': [
+              {'m': 'e6', 'n': 2, 'c': 'b', 'e': {'v': 0.3, 'd': 22}, 's': [
+                {'m': 'Nf3', 'n': 3, 'c': 'w', 'e': {'v': 0.31, 'd': 26}, 's': [
+                  {'m': 'd5', 'n': 3, 'c': 'b', 'e': {'v': 0.39, 'd': 18}, 's': []}]}]}]}]}]}]};
+      const movesPath = baseIterator.findMinDepthMainLinePath(base);
+      expect(movesPath).toEqual([]);
+    });
   });
   describe('getBest', () => {
     it('returns undefined if no elements in s property', () => {
