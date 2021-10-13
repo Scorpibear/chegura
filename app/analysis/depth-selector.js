@@ -8,7 +8,8 @@ let defaultDepth = 40;
 
 module.exports.getDepthToAnalyze = function(pathOfMoves, base) {
   let positionObject = baseIterator.findPositionObject(pathOfMoves, base);
-  if (positionObject && positionObject.hasOwnProperty('e') && positionObject.e.hasOwnProperty('d') &&
+  if (positionObject && Object.prototype.hasOwnProperty.call(positionObject, 'e') && 
+    Object.prototype.hasOwnProperty.call(positionObject.e, 'd') &&
     (positionObject.e.d >= defaultDepth)) {
     return positionObject.e.d + INCREMENT;
   }

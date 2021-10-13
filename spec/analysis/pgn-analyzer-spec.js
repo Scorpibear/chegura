@@ -45,4 +45,10 @@ describe('pgnAnalyzer', function() {
         .toThrowError(`List of moves has to be provided, but '${undefined}' was provided instead`);
     });
   });
+  describe('cutToMatchLimit', () => {
+    it('reduces moves list length to specified moves transformed to ply', () => {
+      pgnAnalyzer.setMovesLimit(2);
+      expect(pgnAnalyzer.cutToMatchLimit(['d4', 'd5', 'Nf3', 'Nf6', 'c4', 'e6'])).toEqual(['d4', 'd5', 'Nf3']);
+    });
+  });
 });
