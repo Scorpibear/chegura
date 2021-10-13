@@ -26,7 +26,7 @@ function isOptimal(moves, base) {
     }
   }
   return true;
-};
+}
 
 function cutToMatchLimit(moves) {
   return moves.slice(0, plyLimit - 1);
@@ -34,7 +34,7 @@ function cutToMatchLimit(moves) {
 
 function setMovesLimit(newMovesLimit) {
   plyLimit = newMovesLimit * 2;
-};
+}
 
 function splitSequentially(base, moves) {
   let list = [];
@@ -50,7 +50,7 @@ function splitSequentially(base, moves) {
   if (list.length === 0)
     list.push(moves);
   return list;
-};
+}
 
 function areMovesWithinLimit(moves) {
   if(Array.isArray(moves)) {
@@ -58,6 +58,6 @@ function areMovesWithinLimit(moves) {
   } else {
     throw new Error(`List of moves has to be provided, but '${moves}' was provided instead`);
   }
-};
+}
 
-module.exports = {areMovesWithinLimit, cutToMatchLimit, isOptimal, setMovesLimit, splitSequentially, }
+module.exports = { areMovesWithinLimit, cutToMatchLimit, isOptimal, setMovesLimit, splitSequentially };
