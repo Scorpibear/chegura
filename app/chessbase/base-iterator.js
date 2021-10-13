@@ -51,7 +51,7 @@ module.exports.findLatestMainLine = function(base) {
   if(positionObject.s && positionObject.s.length>0) {
     positionObject = positionObject.s[0];
   }
-  while(positionObject && positionObject.hasOwnProperty('m')) {
+  while(positionObject && positionObject.m) {
     result.push(positionObject.m);
     if(positionObject.s && positionObject.s.length>0) {
       positionObject = positionObject.s[0];
@@ -72,7 +72,7 @@ module.exports.findMinDepthMainLinePath = function(base) {
     if(positionObject && positionObject.m) {
       currentPath.push(positionObject.m);
       if(!pgnAnalyzer.areMovesWithinLimit(currentPath)) break;
-      if(positionObject.hasOwnProperty('e') && positionObject.e.hasOwnProperty('d') && positionObject.e.d < minDepth) {
+      if(Object.prototype.hasOwnProperty.call(positionObject, 'e') && Object.prototype.hasOwnProperty.call(positionObject.e, 'd') && positionObject.e.d < minDepth) {
         minDepth = positionObject.e.d;
         // copy array via slice(), ordinary '=' will assign the same array by reference
         candidatePath = currentPath.slice();
@@ -83,7 +83,7 @@ module.exports.findMinDepthMainLinePath = function(base) {
 };
 
 module.exports.findPositionObject = function(movesPath, base) {
-  if(base && movesPath.hasOwnProperty('length')) {
+  if(base && Array.isArray(movesPath)) {
     let currentPositionObject = base;
     for (let i = 0; i < movesPath.length; i++) {
       currentPositionObject = this.findSubPositionObject(currentPositionObject, movesPath[i]);
