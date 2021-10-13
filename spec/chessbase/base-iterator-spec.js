@@ -105,8 +105,12 @@ describe('baseIterator', function () {
   });
   describe('findLatestMainLine', function() {
     it('returns latest', function() {
-      var base = {m: '', s:[{m: 'd4', s: [ {m: 'Nf6'}]}]};
+      let base = {m: '', s:[{m: 'd4', s: [ {m: 'Nf6'}]}]};
       expect(baseIterator.findLatestMainLine(base)).toEqual(['d4','Nf6']);
+    });
+    it('returns empty array if no subnodes at root', () => {
+      let base = {m: '', s:[]};
+      expect(baseIterator.findLatestMainLine(base)).toEqual([]);
     });
   });
   describe('findPositionObject', function() {
@@ -136,6 +140,14 @@ describe('baseIterator', function () {
           ]}]}]};
       let movesPath = baseIterator.findMinDepthMainLinePath(base);
       expect(movesPath).toEqual(['e4', 'e6']);
+    });
+    it('stops if move in the node is undefined', () => {
+      let base = {m: '', e: {v: 0.1, d: 47}, s:[
+        {m: 'e4', e: {v: 0.15, d: 38}, s:[
+          {m: undefined, e: {v: 0.12, d: 32}, s:[
+            {m: 'd4'}
+          ]}]}]};
+      expect(baseIterator.findMinDepthMainLinePath(base)).toEqual(['e4']);
     });
     it('finds lowest depth between high', function() {
       let base = {m: '', e: {v: 0.1, d: 47}, 

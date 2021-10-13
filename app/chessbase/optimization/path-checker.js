@@ -29,8 +29,8 @@ module.exports.isMaxDepth = function(pathToCheck, base) {
 
 const isMaxDepthForObject = positionObject => (
   positionObject && 
-  positionObject.hasOwnProperty('e') &&
-  positionObject.e.hasOwnProperty('d') &&
+  Object.prototype.hasOwnProperty.call(positionObject, 'e') &&
+  Object.prototype.hasOwnProperty.call(positionObject.e, 'd') &&
   positionObject.e.d >= MAX_DEPTH);
 
 module.exports.isGameOver = function(movesPath, base) {
