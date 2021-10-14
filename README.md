@@ -20,7 +20,8 @@ Create app.config.json with the following structure, specifying correct paths, m
     "optimize": false
   },
   "port": 9966,
-  "defaultDepth": 40,
+  "defaultDepth": 50,
+  "movesToStore": 25,
   "ricpaClient": {"hostname": "localhost", "port": "9977", "path": ""},
   "analysisQueueFile": "analysis-queue.json",
   "externalEvaluationsFile": "external-evaluations.json",

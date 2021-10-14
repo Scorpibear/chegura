@@ -1,6 +1,6 @@
 {
   "name": "chegura",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "scripts": {
     "start": "node app.js",
     "debug": "nodemon app.js",
