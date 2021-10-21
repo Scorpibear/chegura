@@ -51,6 +51,8 @@ GET /api/base
 
 GET /api/fenbase
 
+GET /api/fendata?fen=rnbqkb1r/pppppppp/5n2/8/3P4/5N2/PPP1PPPP/RNBQKB1R b KQkq - 2 2
+
 ## Demo
 
 See how it works with Melissa trainer at http://3kgm.online/
