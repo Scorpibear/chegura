@@ -5,7 +5,7 @@
     "start": "node app.js",
     "debug": "nodemon app.js",
     "test": "jasmine",
-    "tdd": "nodemon --exec jasmine",
+    "tdd": "nodemon --exec npx jasmine",
     "coverage": "nyc npm test",
     "tdd-coverage": "nodemon --exec npm run coverage",
     "report-coverage": "nyc npm test && nyc report --reporter=text-lcov > coverage.lcov && codecov",
