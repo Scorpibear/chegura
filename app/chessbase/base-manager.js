@@ -1,17 +1,17 @@
-const bestmovedb = require('bestmovedb');
-const fs = require('fs');
-const baseSerializer = require('./base-serializer');
-const baseOptimizer = require('./optimization/base-optimizer');
-const baseIterator = require('./base-iterator');
-const converter = require('../converter');
+const bestmovedb = require("bestmovedb");
+const fs = require("fs");
+const baseSerializer = require("./base-serializer");
+const baseOptimizer = require("./optimization/base-optimizer");
+const baseIterator = require("./base-iterator");
+const converter = require("../converter");
 
-var base = {m: '', n: 0, c: 'b', t: 'wb'};
-var filename = 'base.json';
+var base = { m: "", n: 0, c: "b", t: "wb" };
+var filename = "base.json";
 
-module.exports.getFen = ({fen, depth}) => {
-  const fenData = bestmovedb.getFen({fen, depth});
-  if(fenData && !fenData.sp) {
-    fenData.sp = fenData.score * 100;
+module.exports.getFen = ({ fen, depth }) => {
+  const fenData = bestmovedb.getFen({ fen, depth });
+  if (fenData && !fenData.cp) {
+    fenData.cp = fenData.score * 100;
   }
   return fenData;
 };
@@ -21,12 +21,12 @@ module.exports.getFenBase = () => bestmovedb.toJSON();
 let isSaving = false;
 
 module.exports.saveBaseSync = () => {
-  if(isSaving) return;
+  if (isSaving) return;
   isSaving = true;
   try {
     const content = baseSerializer.stringify(base, true);
     fs.writeFileSync(filename, content);
-  } catch(err) {
+  } catch (err) {
     console.error(err);
   } finally {
     isSaving = false;
@@ -34,24 +34,24 @@ module.exports.saveBaseSync = () => {
 };
 
 module.exports.saveBase = () => {
-  if(isSaving) return Promise.resolve();
-  return new Promise(resolve => {
+  if (isSaving) return Promise.resolve();
+  return new Promise((resolve) => {
     this.saveBaseSync();
     resolve();
   }).catch(console.error);
 };
 
-var createChildPositionObject = function(parentObject, childMove, isBest) {
+var createChildPositionObject = function (parentObject, childMove, isBest) {
   var n;
   var c;
-  if (parentObject.c === 'w') {
+  if (parentObject.c === "w") {
     n = parentObject.n;
-    c = 'b';
+    c = "b";
   } else {
     n = parentObject.n + 1;
-    c = 'w';
+    c = "w";
   }
-  var newChildObject = {m: childMove, n: n, c: c};
+  var newChildObject = { m: childMove, n: n, c: c };
   if (!parentObject.s) {
     parentObject.s = [];
   }
@@ -63,8 +63,8 @@ var createChildPositionObject = function(parentObject, childMove, isBest) {
   return newChildObject;
 };
 
-var improveEvaluation = function(positionObject, evaluationObject) {
-  if (!positionObject.e || (evaluationObject.d > positionObject.e.d)) {
+var improveEvaluation = function (positionObject, evaluationObject) {
+  if (!positionObject.e || evaluationObject.d > positionObject.e.d) {
     positionObject.e = evaluationObject;
   }
 };
@@ -75,8 +75,8 @@ module.exports.addToBase = (moves, bestMove, score, depth) => {
   bestmovedb.add({ fen, bestMove, score, depth });
 };
 
-module.exports.addToJsonBase = function(moves, bestAnswer, scoreValue, depth) {
-  var evaluationObject = {v: scoreValue, d: depth};
+module.exports.addToJsonBase = function (moves, bestAnswer, scoreValue, depth) {
+  var evaluationObject = { v: scoreValue, d: depth };
   var positionObject = base;
   var parent;
   for (var i = 0; i < moves.length; i++) {
@@ -86,11 +86,11 @@ module.exports.addToJsonBase = function(moves, bestAnswer, scoreValue, depth) {
       positionObject = createChildPositionObject(parent, moves[i]);
     }
   }
-  if(!positionObject.e || positionObject.e.d <= evaluationObject.d) {
+  if (!positionObject.e || positionObject.e.d <= evaluationObject.d) {
     improveEvaluation(positionObject, evaluationObject);
     parent = positionObject;
     var index;
-    var subPositionObject = (function() {
+    var subPositionObject = (function () {
       if (positionObject && positionObject.s) {
         let l = positionObject.s.length;
         for (index = 0; index < l; index++) {
@@ -111,12 +111,12 @@ module.exports.addToJsonBase = function(moves, bestAnswer, scoreValue, depth) {
   }
 };
 
-module.exports.getBase = function() {
+module.exports.getBase = function () {
   return base;
 };
 
 module.exports.index = () => {
-  console.log('base index start');
+  console.log("base index start");
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       try {
@@ -124,25 +124,25 @@ module.exports.index = () => {
       } catch (err) {
         reject(err);
       }
-      console.log('base index finished');
+      console.log("base index finished");
       resolve();
     }, 0);
-  }).catch(err => console.error(err));
+  }).catch((err) => console.error(err));
 };
 
-module.exports.readBase = function() {
+module.exports.readBase = function () {
   try {
     let baseFileContent = fs.readFileSync(filename);
     base = baseSerializer.parse(baseFileContent);
   } catch (err) {
-    console.error('Could not read ' + filename + ': ' + err);
+    console.error("Could not read " + filename + ": " + err);
   }
 };
 
-module.exports.getBaseAsString = function() {
+module.exports.getBaseAsString = function () {
   return baseSerializer.stringify(base);
 };
 
-module.exports.optimize = function({settings}) {
-  return baseOptimizer.optimize({base, baseIterator, settings});
+module.exports.optimize = function ({ settings }) {
+  return baseOptimizer.optimize({ base, baseIterator, settings });
 };
