@@ -72,6 +72,12 @@ describe("requestProcessor", () => {
         "POST analyze: incorrect body received: 'random body'. It should be {\"moves\": []} json"
       );
     });
+    it("sends 405 if it is GET instead of POST", () => {
+      const req = { method: "GET" };
+      spyOn(res, "writeHead");
+      requestProcessor.analyze(req, res);
+      expect(res.writeHead).toHaveBeenCalledWith(405, jasmine.anything());
+    });
   });
   describe("default", () => {
     it("sends response immediately", () => {
