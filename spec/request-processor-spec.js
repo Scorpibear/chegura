@@ -69,7 +69,7 @@ describe("requestProcessor", () => {
       spyOn(console, "error").and.stub();
       requestProcessor.analyze(req, res);
       expect(console.error).toHaveBeenCalledWith(
-        "POST analyze: incorrect body received: 'random body'. It should be {moves: []} object"
+        "POST analyze: incorrect body received: 'random body'. It should be {\"moves\": []} json"
       );
     });
   });
