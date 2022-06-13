@@ -59,11 +59,13 @@ class RequestProcessor {
         break;
       case "POST":
         let body = "";
-        req.on("data", (chunk) => (body += chunk));
+        req.on("data", (chunk) =>
+          typeof chunk == "object" ? (body = chunk) : (body += chunk)
+        );
         req.on("end", () => {
           let data;
           try {
-            data = JSON.parse(body);
+            data = typeof body == "string" ? JSON.parse(body) : body;
           } catch {}
           if (data && data.moves) {
             this.analyzer

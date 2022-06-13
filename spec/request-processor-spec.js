@@ -78,6 +78,19 @@ describe("requestProcessor", () => {
       requestProcessor.analyze(req, res);
       expect(res.writeHead).toHaveBeenCalledWith(405, jasmine.anything());
     });
+    it("supports body as object", () => {
+      const req = {
+        method: "POST",
+        on: (event, handler) => handler({ moves }),
+      };
+      spyOn(analyzer, "analyzeLater").and.returnValue(Promise.resolve());
+      requestProcessor.analyze(req, res);
+      expect(analyzer.analyzeLater).toHaveBeenCalledWith(
+        moves,
+        baseManager.getBase(),
+        1
+      );
+    });
   });
   describe("default", () => {
     it("sends response immediately", () => {
