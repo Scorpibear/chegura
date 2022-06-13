@@ -49,38 +49,49 @@ class RequestProcessor {
     res.end();
   }
   analyze(req, res) {
-    if (req.method === "OPTIONS") {
-      res.writeHead(200, {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Origin, Content-Type",
-      });
-      res.end("");
-    }
-    if (req.method === "POST") {
-      req.on("data", (chunk) => {
-        let data;
-        try {
-          data = JSON.parse(chunk);
-        } catch {}
-        if (data && data.moves) {
-          this.analyzer
-            .analyzeLater(
-              data.moves,
-              this.baseManager.getBase(),
-              analysisPriority.ExternalRequestsForNewPositions
-            )
-            .then(() => {
-              return this.queueProcessor.process();
-            })
-            .catch((err) => console.error(err));
-        } else {
-          console.error(
-            `POST analyze: incorrect body received: '${chunk}'. It should be {moves: []} object`
-          );
-        }
-      });
-      res.writeHead(200, { "Access-Control-Allow-Origin": "*" });
-      res.end("");
+    switch (req.method) {
+      case "OPTIONS":
+        res.writeHead(200, {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "Origin, Content-Type",
+        });
+        res.end("");
+        break;
+      case "POST":
+        let body = "";
+        req.on("data", (chunk) => (body += chunk));
+        req.on("end", () => {
+          let data;
+          try {
+            data = JSON.parse(body);
+          } catch {}
+          if (data && data.moves) {
+            this.analyzer
+              .analyzeLater(
+                data.moves,
+                this.baseManager.getBase(),
+                analysisPriority.ExternalRequestsForNewPositions
+              )
+              .then(() => {
+                return this.queueProcessor.process();
+              })
+              .catch((err) => console.error(err));
+            res.writeHead(200, { "Access-Control-Allow-Origin": "*" });
+            res.end(body);
+          } else {
+            const error =
+              "incorrect body received: '" +
+              JSON.stringify(body) +
+              '\'. It should be {"moves": []} json';
+            console.error("POST analyze: " + error);
+            res.writeHead(400, { "Access-Control-Allow-Origin": "*" });
+            res.end(error);
+          }
+        });
+        break;
+      default:
+        res.writeHead(405, { "Access-Control-Allow-Origin": "*" });
+        res.end('should be POST method with {"moves":[]} in the body');
     }
   }
   getUsersCount(req, res) {
