@@ -81,7 +81,7 @@ class RequestProcessor {
           } else {
             const error =
               "incorrect body received: '" +
-              JSON.stringify(body) +
+              body +
               '\'. It should be {"moves": []} json';
             console.error("POST analyze: " + error);
             res.writeHead(400, { "Access-Control-Allow-Origin": "*" });
