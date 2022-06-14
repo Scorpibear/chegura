@@ -59,14 +59,7 @@ class RequestProcessor {
         break;
       case "POST":
         let body = "";
-        req.on("data", (chunk) => {
-          console.debug("chunk:", chunk, "body:", body);
-          if (typeof chunk == "object" && chunk.type != "Buffer") {
-            body = chunk;
-          } else {
-            body += chunk;
-          }
-        });
+        req.on("data", (chunk) => (body += chunk));
         req.on("end", () => {
           let data = body;
           try {
