@@ -60,13 +60,17 @@ class RequestProcessor {
       case "POST":
         let body = "";
         req.on("data", (chunk) =>
-          typeof chunk == "object" ? (body = chunk) : (body += chunk)
+          typeof chunk == "object" && "moves" in chunk
+            ? (body = chunk)
+            : (body += chunk)
         );
         req.on("end", () => {
-          let data;
+          let data = body;
           try {
             data = typeof body == "string" ? JSON.parse(body) : body;
-          } catch {}
+          } catch (err) {
+            console.error(`POST /analyze: ${err}:`, body);
+          }
           if (data && data.moves) {
             this.analyzer
               .analyzeLater(
@@ -82,10 +86,10 @@ class RequestProcessor {
             res.end(body);
           } else {
             const error =
-              "incorrect body received: '" +
-              body +
-              '\'. It should be {"moves": []} json';
-            console.error("POST analyze: " + error);
+              "incorrect body received: " +
+              JSON.stringify(body) +
+              '. It should be {"moves": []} json';
+            console.error("POST /analyze: " + error, "data: ", data);
             res.writeHead(400, { "Access-Control-Allow-Origin": "*" });
             res.end(error);
           }

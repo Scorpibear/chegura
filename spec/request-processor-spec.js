@@ -69,7 +69,8 @@ describe("requestProcessor", () => {
       spyOn(console, "error").and.stub();
       requestProcessor.analyze(req, res);
       expect(console.error).toHaveBeenCalledWith(
-        "POST analyze: incorrect body received: 'random body'. It should be {\"moves\": []} json"
+        "POST /analyze: SyntaxError: Unexpected token r in JSON at position 0:",
+        "random body"
       );
     });
     it("sends 405 if it is GET instead of POST", () => {
